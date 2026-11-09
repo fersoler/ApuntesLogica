@@ -1,0 +1,127 @@
+% -*- coding: utf-8 -*-
+% Preámbulo común para la asignatura Lógica (Grado en Filosofía, Universidad de Sevilla)
+% Compatible tanto para compilación independiente (article) como en el manual conjunto (book/report)
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{amsmath,amssymb,amstext,amsthm,array}
+\usepackage[top=20mm,bottom=20mm,left=20mm,right=20mm,headsep=5mm,footskip=10mm]{geometry}
+\usepackage{enumerate}
+\usepackage{tikz}
+\usetikzlibrary{trees}
+
+% Paquete Fitch y reglas canónicas de la asignatura
+% Altura de línea algo menor que la predeterminada (4.5ex/3.5ex/1.5ex) para que
+% las derivaciones sean más compactas y den menos problemas de paginación.
+\usepackage[justsep=1em,rules=myrules,justformat=myjust,height=3.8ex,topheight=3.2ex,depth=1.3ex]{fitch}
+\newcommand{\myjust}[2]{#1 #2}
+\newcommand{\myrules}{
+ \ndrules
+ \def\ci{\by{$\to$I}}
+ \def\ce{\by{$\to$E}}
+ \def\x{\by{X}}
+ \def\ip{\by{IP}}
+ \def\ds{\by{DS}}
+ \def\mt{\by{MT}}
+ \def\lem{\by{LEM}}
+ \def\dne{\by{DNE}}
+ \def\dem{\by{DeM}}
+ \def\cq{\by{CQ}}
+ \def\bi{\by{$\leftrightarrow$I}}
+ \def\be{\by{$\leftrightarrow$E}}
+ \def\idi{\by{$=$I}}
+ \def\ide{\by{$=$E}}}
+
+% Enlaces hipertexto
+\usepackage[hidelinks,colorlinks=true,linkcolor=blue!60!black,urlcolor=blue!60!black]{hyperref}
+
+% Aplicaciones web de apoyo (GitHub Pages del repositorio fersoler/AplicacionesLogica).
+% Si cambia la dirección, basta cambiarla aquí.
+\newcommand{\urlaplicaciones}{https://fersoler.github.io/AplicacionesLogica/}
+\newcommand{\webaplicaciones}{\expandafter\url\expandafter{\urlaplicaciones}}
+\newcommand{\enlaceapp}[2]{\href{\urlaplicaciones #1/}{\emph{#2}}}
+\newcommand{\appsintaxis}{\enlaceapp{sintaxis}{Sintaxis de las fórmulas}}
+\newcommand{\appdeduccion}{\enlaceapp{deduccion}{Deducción natural}}
+\newcommand{\apptablas}{\enlaceapp{tablas}{Tablas de verdad}}
+\newcommand{\appkalmar}{\enlaceapp{kalmar}{La prueba de Kalmár}}
+\newcommand{\appmundo}{\enlaceapp{mundo}{El mundo de Tarski}}
+\newcommand{\apptableaux}{\enlaceapp{tableaux}{Tableaux semánticos}}
+% Nota breve tras una explicación: con qué aplicación se practica. Empieza con
+% el icono de un portátil (fontawesome5) en el color de los enlaces.
+\usepackage{fontawesome5}
+\newcommand{\practica}[1]{\par\smallskip\noindent{\small{\color{blue!60!black}\faLaptop}\enspace\textit{Para practicar.} #1\par}\smallskip}
+
+% Teoremas y entornos formales
+\ifcsname chapter\endcsname
+  \newtheorem{theorem}{Teorema}[chapter]
+\else
+  \newtheorem{theorem}{Teorema}[section]
+\fi
+\newtheorem{lemma}[theorem]{Lema}
+\newtheorem{definition}[theorem]{Definición}
+\newtheorem{definicion}[theorem]{Definición}
+\newtheorem{example}[theorem]{Ejemplo}
+\newtheorem{ejemplo}[theorem]{Ejemplo}
+\newtheorem{corollary}[theorem]{Corolario}
+\newtheorem{proposition}[theorem]{Proposición}
+\newtheorem{observacion}[theorem]{Observación}
+\newtheorem{nota}[theorem]{Nota}
+\newtheorem{aplicacion}[theorem]{Aplicación}
+
+\newenvironment{resumenbox}{%
+  \begin{quote}\small
+}{%
+  \end{quote}
+}
+
+% Ejercicios: en el manual (clase book) se numeran por tema (Ejercicio 4.12).
+% El título entre paréntesis va en redonda, como en los teoremas y ejemplos.
+\newcounter{preg}
+\ifcsname chapter\endcsname
+  \makeatletter\@addtoreset{preg}{chapter}\makeatother
+  \renewcommand{\thepreg}{\thechapter.\arabic{preg}}
+\fi
+\newenvironment{pregunta}[1][]{%
+  \par\addvspace{0.4cm}\refstepcounter{preg}\noindent\textbf{Ejercicio \thepreg}\if\relax\detokenize{#1}\relax\textbf{.}\else\ (#1)\textbf{.}\fi\enspace\ignorespaces
+}{%
+  \par\vspace{0.4cm}%
+}
+
+% Soluciones (apéndice de soluciones)
+% Dentro de una solución no se permite un salto de página entre el título y lo
+% que le sigue (por ejemplo, una derivación en un entorno center), ni que un
+% párrafo deje una sola línea al pie o al principio de una página.
+\newenvironment{solucion}[1]{%
+  \par\medskip
+  \csname @beginparpenalty\endcsname=10000\relax
+  \clubpenalty=10000\relax\widowpenalty=10000\relax
+  \noindent\textbf{Solución del ejercicio~\ref{#1}.}\enspace\ignorespaces
+}{%
+  \par\medskip%
+}
+
+% Derivación dentro de un recuadro de regla (tabla con \hline): deja un poco
+% de aire para que la línea vertical de la derivación no toque las líneas
+% horizontales de la tabla.
+\newcommand{\cajaregla}[1]{\vbox{\vskip 5pt\hbox{#1}\vskip 4pt}}
+
+% Marca para secciones de ampliación (no necesarias para seguir el curso)
+\newcommand{\ampliacion}{\texorpdfstring{\,$^{\star}$}{ (*)}}
+
+\newcounter{pregexamen}
+\newenvironment{preguntaexamen}[2]{%
+  \refstepcounter{pregexamen}%
+  \vspace{0.4cm}%
+  \noindent\textbf{Pregunta \arabic{pregexamen}} \hfill \textbf{[#1 puntos]}\\[0.15cm]%
+  \noindent\textit{#2}\\[0.2cm]%
+}{%
+  \vspace{0.3cm}%
+}
+
+\newtheorem{ejercicio}{Ejercicio}
+
+\newcounter{ejerciciocnt}
+\newcommand{\ejer}[1]{\vspace{1.5em}\noindent\stepcounter{ejerciciocnt}\textbf{Ejercicio \theejerciciocnt.} #1\vspace{0.5em}}
+
+\newenvironment{resumentema}{\begin{quote}\small\textbf{Resumen.}\enspace}{\end{quote}\bigskip}

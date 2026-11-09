@@ -1,0 +1,148 @@
+% -*- coding: utf-8 -*-
+\begin{quote}
+\small \textbf{Instrucciones metodológicas.} Trabaja las pruebas a lápiz o con la aplicación \appdeduccion{}, que contiene estos ejercicios y comprueba cada línea; su ayuda explica cómo escribir las fórmulas y las justificaciones. Cada nivel introduce una dificultad lógica nueva. En los ejercicios señalados como «plantilla guiada» debes completar las justificaciones que faltan (marcadas con «?») en la columna de la derecha. Salvo indicación en contra, puedes usar las reglas derivadas (MT, DS, DNE, LEM, DeM); pero en los ejercicios~\ref{e1-15} y~\ref{e1-22}, cuyo objetivo es obtener DS y el tercero excluido, usa solo reglas básicas, y en los ejercicios~\ref{e1-18} y~\ref{e1-23}, que piden derivar dos de las leyes de De Morgan, no uses DeM. Al final de los apuntes (apéndice~\ref{ap:soluciones}) hay soluciones de una selección de ejercicios.
+\end{quote}
+
+\section*{Nivel 1: reglas directas sin cajas ($\land$, $\to$E, $\lor$I)}
+\textit{Objetivo: aplicar reglas básicas de descomposición y composición sin abrir supuestos provisionales.}
+
+\begin{pregunta}[Conmutatividad de la conjunción]\label{e1-1}
+$p \land q \vdash q \land p$
+\end{pregunta}
+\begin{pregunta}[Encadenamiento de \emph{modus ponens}]\label{e1-2}
+$p, p \to q, q \to r \vdash r$
+\end{pregunta}
+\begin{pregunta}[Asociatividad de la conjunción]\label{e1-3}
+$p \land (q \land r) \vdash (p \land q) \land r$
+\end{pregunta}
+\begin{pregunta}\label{e1-4}
+$p \land q, p \to r, q \to s \vdash r \land s$
+\end{pregunta}
+\begin{pregunta}[Introducción de la disyunción]\label{e1-5}
+$p \vdash (p \lor q) \land (r \lor p)$
+\end{pregunta}
+\begin{pregunta}\label{e1-6}
+$(p \to q) \land p, (q \to r) \land s \vdash r \land s$
+\end{pregunta}
+
+\section*{Nivel 2: cajas simples e introducción del condicional ($\to$I)}
+\textit{Objetivo: abrir una hipótesis provisional para alcanzar una meta, cerrar la caja y justificar con $\to$I a la derecha.}
+
+\begin{pregunta}[Monotonía condicional con conjunción]\label{e1-7}
+$p \to q \vdash (p \land r) \to (q \land r)$
+
+\textbf{Plantilla guiada} (completa las justificaciones marcadas con «?»):
+\begin{center}
+$\begin{nd}[rules=myrules]
+    \hypo [1] {1} {p \to q} \by{Prem.}{}
+    \open
+        \hypo [2] {2} {p \land r} \by{Hip.}{}
+        \have [3] {3} {p} \by{$\land$E}{2}
+        \have [4] {4} {r} \by{?}{}
+        \have [5] {5} {q} \by{?}{}
+        \have [6] {6} {q \land r} \by{$\land$I}{5, 4}
+    \close
+    \have [7] {7} {(p \land r) \to (q \land r)} \ci{2-6}
+\end{nd}$
+\end{center}
+
+\end{pregunta}
+\begin{pregunta}\label{e1-8}
+$p \vdash q \to (p \land q)$
+\end{pregunta}
+\begin{pregunta}[Distributividad condicional]\label{e1-9}
+$(p \to q) \land (p \to r) \vdash p \to (q \land r)$
+\end{pregunta}
+\begin{pregunta}[Exportación: cajas anidadas]\label{e1-10}
+$(p \land q) \to r \vdash p \to (q \to r)$
+\end{pregunta}
+\begin{pregunta}[Teorema sin premisas]\label{e1-11}
+$\vdash p \to p$
+\end{pregunta}
+\begin{pregunta}[\emph{Verum ex quolibet}]\label{e1-12}
+$\vdash p \to (q \to p)$
+\end{pregunta}
+
+\section*{Nivel 3: negación, contradicción y razonamiento por casos ($\neg\text{I}, \lor\text{E}, \text{DS}$)}
+\textit{Objetivo: manejar la contradicción ($\bot$), la introducción de la negación ($\neg\text{I}$) y la prueba por casos con dos cajas paralelas.}
+
+\begin{pregunta}[Equivalencia del condicional]\label{e1-13}
+$p \to q \vdash \neg(p \land \neg q)$
+
+\textbf{Plantilla guiada} (completa la justificación marcada con «?»):
+\begin{center}
+$\begin{nd}[rules=myrules]
+    \hypo [1] {1} {p \to q} \by{Prem.}{}
+    \open
+        \hypo [2] {2} {p \land \lnot q} \by{Hip.}{}
+        \have [3] {3} {p} \by{$\land$E}{2}
+        \have [4] {4} {\lnot q} \by{$\land$E}{2}
+        \have [5] {5} {q} \ce{1, 3}
+        \have [6] {6} {\bot} \by{?}{}
+    \close
+    \have [7] {7} {\lnot(p \land \lnot q)} \ni{2-6}
+\end{nd}$
+\end{center}
+
+\end{pregunta}
+\begin{pregunta}[Razonamiento disyuntivo por casos]\label{e1-14}
+$p \lor q, p \to r \vdash r \lor q$
+\end{pregunta}
+\begin{pregunta}[Derivación del silogismo disyuntivo mediante casos y $\text{X}$]\label{e1-15}
+$p \lor q, \neg p \vdash q$
+\end{pregunta}
+\begin{pregunta}[Esquema de la paradoja del mentiroso]\label{e1-16}
+$p \leftrightarrow \neg p \vdash \bot$
+\end{pregunta}
+\begin{pregunta}[Conmutatividad de la disyunción]\label{e1-17}
+$p \lor q \vdash q \lor p$
+\end{pregunta}
+\begin{pregunta}[Ley de De Morgan]\label{e1-18}
+$\neg(p \lor q) \vdash \neg p \land \neg q$
+\end{pregunta}
+\begin{pregunta}[Principio de explosión]\label{e1-19}
+$p \land \neg p \vdash q$
+\end{pregunta}
+\begin{pregunta}\label{e1-20}
+$p \to (q \lor r), \neg q \vdash p \to r$
+\end{pregunta}
+
+\section*{Nivel 4: reducción al absurdo clásica (IP) y teoremas avanzados}
+\textit{Objetivo: dominar la prueba indirecta clásica (suponer $\neg A$ para deducir $A$), la doble negación y los teoremas con supuestos múltiples.}
+
+\begin{pregunta}[Principio de no contradicción]\label{e1-21}
+$\vdash \neg(p \land \neg p)$
+\end{pregunta}
+\begin{pregunta}[Principio del tercero excluido]\label{e1-22}
+$\vdash p \lor \neg p$
+
+\end{pregunta}
+\begin{pregunta}[Ley de De Morgan clásica]\label{e1-23}
+$\neg(p \land q) \vdash \neg p \lor \neg q$
+\end{pregunta}
+\begin{pregunta}[Ley de Peirce]\label{e1-24}
+$(p \to q) \to p \vdash p$
+\end{pregunta}
+\begin{pregunta}\label{e1-25}
+$\vdash ((p \to q) \to p) \to p$
+\end{pregunta}
+\begin{pregunta}[Contraposición clásica]\label{e1-26}
+$\neg p \to \neg q \vdash q \to p$
+\end{pregunta}
+\begin{pregunta}[Definición clásica del condicional]\label{e1-27}
+$p \to q \vdash \neg p \lor q$
+\end{pregunta}
+\begin{pregunta}\label{e1-28}
+$\neg p \lor q \vdash p \to q$
+\end{pregunta}
+\begin{pregunta}[Ley de linealidad o de Dummett]\label{e1-29}
+$\vdash (p \to q) \lor (q \to p)$
+\end{pregunta}
+\begin{pregunta}\label{e1-30}
+$p \leftrightarrow q \vdash (p \land q) \lor (\neg p \land \neg q)$
+\end{pregunta}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "ApuntesLogica"
+%%% End:

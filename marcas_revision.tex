@@ -1,0 +1,62 @@
+% -*- coding: utf-8 -*-
+% Marcas para la revisión manual de los apuntes. Instrucciones en COMO_REVISAR.md.
+%
+%   \comenta{texto}            comentario u observación
+%   \duda{texto}               pregunta o duda para resolver
+%   \pendiente{texto}          tarea pendiente
+%   \corrige{original}{nuevo}  propuesta de sustitución
+%   \borra{texto}              propuesta de eliminación
+%   \inserta{texto}            propuesta de inserción
+%   \respuesta{texto}          respuesta de Claude a una duda o comentario
+%
+% \revisiontrue  -> las marcas se ven en el PDF (con color y numeradas).
+% \revisionfalse -> PDF limpio: se ocultan comentarios, dudas y pendientes;
+%                   \corrige muestra la versión nueva, \borra elimina el texto
+%                   e \inserta lo muestra sin marcar.
+
+\usepackage[normalem]{ulem}   % \sout (tachado) y \uline (subrayado); normalem mantiene \emph en cursiva
+
+\newif\ifrevision
+\revisiontrue
+
+\definecolor{revComenta}{RGB}{0,90,170}
+\definecolor{revDuda}{RGB}{200,90,0}
+\definecolor{revPendiente}{RGB}{140,0,140}
+\definecolor{revBorra}{RGB}{190,0,0}
+\definecolor{revInserta}{RGB}{0,130,60}
+\definecolor{revRespuesta}{RGB}{90,90,90}
+
+\newcounter{marcarev}
+
+% Texto en modo texto aunque la marca se use dentro de una fórmula.
+\newcommand{\revtexto}[1]{\ifmmode\text{#1}\else#1\fi}
+
+% Marca numerada: #1 color, #2 tipo, #3 texto.
+\newcommand{\revmarca}[3]{%
+  \stepcounter{marcarev}%
+  \revtexto{\textcolor{#1}{\sffamily\small[\textbf{#2~\arabic{marcarev}:} #3]}}}
+
+\DeclareRobustCommand{\comenta}[1]{\ifrevision\revmarca{revComenta}{Nota}{#1}\fi}
+\DeclareRobustCommand{\duda}[1]{\ifrevision\revmarca{revDuda}{Duda}{#1}\fi}
+\DeclareRobustCommand{\pendiente}[1]{\ifrevision\revmarca{revPendiente}{Pendiente}{#1}\fi}
+\DeclareRobustCommand{\respuesta}[1]{\ifrevision\revmarca{revRespuesta}{Respuesta}{#1}\fi}
+
+% Tachado y subrayado. Dentro de una fórmula (por ejemplo, en una línea de
+% una derivación Fitch) el argumento se trata como fórmula.
+\newcommand{\revtachado}[1]{\ifmmode\text{\textcolor{revBorra}{\sout{$#1$}}}\else\textcolor{revBorra}{\sout{#1}}\fi}
+\newcommand{\revnuevo}[1]{\ifmmode\text{\textcolor{revInserta}{\uline{$#1$}}}\else\textcolor{revInserta}{\uline{#1}}\fi}
+
+\DeclareRobustCommand{\borra}[1]{\ifrevision\revtachado{#1}\fi}
+\DeclareRobustCommand{\inserta}[1]{\ifrevision\revnuevo{#1}\else#1\fi}
+\DeclareRobustCommand{\corrige}[2]{\ifrevision\revtachado{#1}\,\revnuevo{#2}\else#2\fi}
+
+% En los marcadores del PDF (hyperref) las marcas no se pueden componer:
+% se ignoran los comentarios y se usa la versión propuesta.
+\pdfstringdefDisableCommands{%
+  \def\comenta#1{}\def\duda#1{}\def\pendiente#1{}\def\respuesta#1{}%
+  \def\borra#1{}\def\inserta#1{#1}\def\corrige#1#2{#2}}
+
+% El índice se compone sin marcas (versión limpia), para que no se
+% dupliquen ni alteren la numeración de las marcas del texto.
+\let\revtableofcontentsoriginal\tableofcontents
+\renewcommand{\tableofcontents}{\begingroup\revisionfalse\revtableofcontentsoriginal\endgroup}

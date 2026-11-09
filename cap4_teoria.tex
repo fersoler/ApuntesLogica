@@ -1,0 +1,600 @@
+% -*- coding: utf-8 -*-
+\section{La insuficiencia de la lógica proposicional}
+
+En los tres primeros temas hemos analizado el razonamiento desde la óptica de la lógica proposicional. Sin embargo, consideremos este conocido argumento:
+\begin{quote}
+\textit{Todos los seres humanos son mortales.}\\
+\textit{Sócrates es un ser humano.}\\
+\textit{Por consiguiente, Sócrates es mortal.}
+\end{quote}
+Cualquier persona reconoce intuitivamente que este argumento es válido: la conclusión se sigue necesariamente de las premisas. Ahora bien, si intentamos traducirlo al lenguaje de la lógica proposicional, cada enunciado simple debe representarse con una variable proposicional distinta: premisas $p$ y $q$, conclusión $r$. Y como
+\[
+p, \ q \ \not\models \ r
+\]
+(basta $v(p) = v(q) = 1$ y $v(r) = 0$), desde el punto de vista proposicional el argumento resulta inválido: la lógica proposicional trata los enunciados simples como unidades indivisibles y es incapaz de analizar su estructura interna. La validez del silogismo no depende de cómo se conectan enunciados completos mediante conjunciones o condicionales, sino de la articulación interna entre sujetos (individuos particulares como Sócrates), propiedades (ser humano, mortal) y cantidades (todos, alguno).
+
+Para formalizar y derivar estos argumentos necesitamos enriquecer nuestro lenguaje formal:
+\begin{enumerate}
+    \item \textbf{Constantes individuales ($a, b, c, s, \dots$).} Nombres propios que designan objetos o individuos específicos de un dominio (por ejemplo, $s$: Sócrates).
+    \item \textbf{Variables individuales ($x, y, z, \dots$).} Pronombres indefinidos que actúan como posiciones abiertas («cualquiera», «algo»).
+    \item \textbf{Predicados ($P, Q, R, H, M, \dots$).} Expresan propiedades de individuos o relaciones entre varios individuos. Por ejemplo, $H(s)$ simboliza «Sócrates es humano», $M(s)$ simboliza «Sócrates es mortal» y $A(a,b)$ representa «Antonio ama a Belén».
+    \item \textbf{Cuantificadores:}
+    \begin{itemize}
+        \item Cuantificador universal ($\forall x$): «para todo $x$», «cualquiera que sea $x$».
+        \item Cuantificador existencial ($\exists x$): «existe al menos un $x$ tal que», «hay algún $x$».
+    \end{itemize}
+\end{enumerate}
+
+Estos recursos permiten formalizar el silogismo: 
+\[
+\forall x (H(x) \to M(x)), \ H(s) \ \vdash \ M(s)
+\]
+El objetivo de este tema es extender nuestro cálculo de Fitch con reglas de inferencia que permitan derivar conclusiones como esta. Las reglas del tema~\ref{cap:dn-prop}, básicas y derivadas (MT, DS, DNE, LEM y DeM), siguen valiendo cuando las fórmulas son de primer orden; lo que añadimos son las reglas de los cuantificadores y de la identidad.
+
+\section{Sintaxis básica, variables libres e instancias}\label{sec:sintaxis-lpo}
+
+Antes de formular las reglas de inferencia para los cuantificadores, debemos precisar la sintaxis formal de la lógica de primer orden y la operación básica que vincula una afirmación general con individuos concretos: la sustitución.
+
+\subsection{Términos, fórmulas y alcance}
+
+El lenguaje de primer orden distingue dos categorías de expresiones:
+\begin{enumerate}
+    \item \textbf{Términos.} Expresiones que designan o refieren a objetos del universo. En nuestro cálculo básico, los términos son las constantes individuales ($a, b, c, s, \dots$), que nombran individuos fijos, y las variables individuales ($x, y, z, \dots$), que sirven como marcadores de posición o pronombres indefinidos.
+    \item \textbf{Fórmulas.} Expresiones que dicen algo de los objetos y tienen un valor de verdad (o pueden adquirirlo al asignar valores a sus variables).
+\end{enumerate}
+
+\noindent Las fórmulas se definen inductivamente. Al mismo tiempo, definimos qué apariciones (\emph{ocurrencias}) de las variables en una fórmula son \textbf{libres} y cuáles están \textbf{ligadas}:
+\begin{itemize}
+    \item \textbf{Fórmulas atómicas.} Si $P$ es una letra de predicado $n$-aria y $t_1, \dots, t_n$ son términos, entonces $P(t_1, \dots, t_n)$ es una fórmula atómica (por ejemplo, $H(s)$, $R(x, y)$ o $P(c)$). Además, si $t_1$ y $t_2$ son términos, $t_1 = t_2$ es una fórmula atómica (identidad; véase la sección~\ref{sec:identidad}). En una fórmula atómica, todas las ocurrencias de variables son libres.
+    \item \textbf{Conectivas.} Si $A$ y $B$ son fórmulas, también lo son $\neg A$, $(A \land B)$, $(A \lor B)$, $(A \to B)$ y $(A \leftrightarrow B)$. Cada ocurrencia de una variable es libre o ligada en ellas según lo sea en $A$ o en $B$.
+    \item \textbf{Cuantificadores.} Si $A$ es una fórmula y $x$ es una variable individual, también lo son $\forall x A$ y $\exists x A$. La fórmula $A$ es el \textbf{alcance} (\emph{scope}) del cuantificador. Las ocurrencias de $x$ que eran libres en $A$ quedan \textbf{ligadas} por el cuantificador; las demás ocurrencias conservan su carácter. (La variable que acompaña al cuantificador, como la $x$ de $\forall x$, no se cuenta como una ocurrencia).
+\end{itemize}
+Por ejemplo, en $P(x) \land \forall x Q(x)$ la primera ocurrencia de $x$ es libre: está en la fórmula atómica $P(x)$ y no queda dentro del alcance de ningún cuantificador $\forall x$ o $\exists x$. La de $Q(x)$ está ligada: era libre en $Q(x)$, y $\forall x$ la liga. Una misma variable puede, por tanto, aparecer libre y ligada en distintas partes de una fórmula. En $\forall x (P(x) \to \exists x Q(x))$, el cuantificador $\forall x$ solo liga la $x$ de $P(x)$: la de $Q(x)$ ya no estaba libre en $P(x) \to \exists x Q(x)$, porque la había ligado $\exists x$.
+
+\subsection{Fórmulas abiertas y sentencias}
+
+La distinción entre ocurrencias libres y ligadas es necesaria para aplicar correctamente las reglas de inferencia. Decimos que una variable está \textbf{libre} en una fórmula si tiene en ella al menos una ocurrencia libre.
+
+Una fórmula que contiene al menos una variable libre se denomina fórmula \textbf{abierta} (por ejemplo, $H(x) \to M(x)$ o $R(x, c)$); no expresa una proposición completa mientras no se especifique a qué individuo refiere $x$. Una fórmula sin ninguna variable libre se denomina fórmula \textbf{cerrada}, \textbf{enunciado} o \textbf{sentencia} (por ejemplo, $\forall x (H(x) \to M(x))$ o $H(s)$); solo las sentencias tienen por sí mismas un valor de verdad en un modelo (para evaluar una fórmula abierta hay que asignar valores a sus variables libres, como veremos en el tema~\ref{cap:sem-lpo}). En las derivaciones de este tema todas las líneas son sentencias: las reglas de los cuantificadores operan con constantes, no con variables libres.
+
+\subsection{Sustitución e instancias}
+
+Con estos conceptos podemos definir con precisión la sustitución:
+
+\begin{definition}[Sustitución e instancia]
+Sea $A$ una fórmula y $x$ una variable libre en $A$. Si $c$ es una constante individual, denotamos por $A(c)$ (o $A[c/x]$) la fórmula que resulta de reemplazar todas las apariciones libres de la variable $x$ en $A$ por la constante $c$. La fórmula resultante $A(c)$ se denomina una \textbf{instancia} de $A$.
+\end{definition}
+
+\begin{ejemplo}[Ejemplos de sustitución]
+Consideremos los siguientes casos para ilustrar cómo opera la sustitución únicamente sobre las apariciones libres:
+\begin{itemize}
+    \item Si $A(x)$ es $H(x) \to M(x)$, entonces $A(s)$ es $H(s) \to M(s)$.
+    \item Si $A(x)$ es $P(x) \land \forall y R(x, y)$, entonces $A(c)$ es $P(c) \land \forall y R(c, y)$ (la variable ligada $y$ no cambia).
+    \item Si $A(x)$ es $R(x,c) \land \forall x P(x)$, entonces $A(b)$
+      es
+      $R(b,c) \land \forall x P(x)$ (la $x$ de $P(x)$ no
+      se sustituye porque está ligada por el cuantificador).
+\end{itemize}
+\end{ejemplo}
+
+\practica{En \appsintaxis{} puedes ver, para cualquier fórmula de primer orden, el alcance de cada cuantificador, qué apariciones de las variables son libres o ligadas y el resultado de sustituir variables libres por constantes. También propone ejercicios de variables libres y ligadas y de sustitución.}
+
+\section{Las reglas del cuantificador universal \texorpdfstring{($\forall$)}{(para todo)}}
+
+El cuantificador universal afirma que una propiedad se cumple para
+\emph{todos y cada uno} de los individuos del universo. Sus dos reglas
+de deducción natural se corresponden con la \textbf{instanciación} (ir de lo general a
+lo particular) y la \textbf{generalización} (ir de un caso genérico
+arbitrario a lo general). 
+
+\subsection{Eliminación del universal \texorpdfstring{($\forall\text{E}$)}{(Eliminacion del universal)}}
+
+La regla más intuitiva es la eliminación: si algo es verdadero para todos los individuos, entonces tiene que ser verdadero para cualquier individuo particular que elijamos.
+
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\textbf{Regla de eliminación del universal ($\forall\text{E}$)} \\
+\hline
+\cajaregla{$\begin{nd}[rules=myrules]
+    \have [m] {1} {\forall x A(x)} \by{}{}
+    \have [\mbox{}] {2} {A(c)} \Ae{1}
+\end{nd}$} \\ 
+\hline
+\end{tabular}
+\end{center}
+
+\noindent \textbf{Condiciones de aplicación:}
+\begin{itemize}
+    \item La constante $c$ puede ser cualquier constante individual: una que ya aparecía antes en las premisas o una nueva.
+    \item Se sustituyen todas las apariciones libres de $x$ en $A(x)$ por la misma constante $c$.
+\end{itemize}
+
+\begin{ejemplo}[Resolución formal del argumento socrático]
+Veamos cómo la regla $\forall\text{E}$ resuelve en solo dos pasos el silogismo clásico:
+\begin{center}
+$\begin{nd}[rules=myrules]
+    \hypo [1] {1} {\forall x (H(x) \to M(x))} \by{Prem.}{}
+    \hypo [2] {2} {H(s)} \by{Prem.}{}
+    \have [3] {3} {H(s) \to M(s)} \Ae{1}
+    \have [4] {4} {M(s)} \ce{3, 2}
+\end{nd}$
+\end{center}
+En la línea 3 instanciamos el principio universal al caso particular de Sócrates ($s$), y en la línea 4 aplicamos un simple \emph{modus ponens} proposicional.
+\end{ejemplo}
+
+\subsection{Introducción del universal \texorpdfstring{($\forall\text{I}$)}{(Introduccion del universal)}}\label{sec:forall-i}
+
+¿Cómo podemos llegar a demostrar que una propiedad vale para \emph{todos} los objetos? En un universo infinito o desconocido, no podemos revisar los individuos uno por uno.
+
+En lógica se utiliza el método del \textbf{caso arbitrario}: tomamos
+un individuo genérico $c$ del cual no asumimos ninguna propiedad
+particular, y demostramos $A(c)$. Puesto que no hemos
+utilizado ninguna peculiaridad de $c$, lo que hemos demostrado para
+$c$ vale para cualquiera. 
+
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\textbf{Regla de introducción del universal ($\forall\text{I}$)} \\
+\hline
+\cajaregla{$\begin{nd}[rules=myrules]
+    \have [m] {1} {A(c)} \by{}{}
+    \have [\mbox{}] {2} {\forall x A(x)} \Ai{1}
+\end{nd}$} \\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent Las dos restricciones de la constante propia o parámetro arbitrario $c$ son:
+\begin{enumerate}[(1)]
+    \item $c$ no debe aparecer en ninguna premisa ni en ninguna hipótesis activa (no descargada) en el momento de aplicar la regla;
+    \item $c$ no debe aparecer en la conclusión $\forall x A(x)$: hay que sustituir \emph{todas} sus apariciones por $x$.
+\end{enumerate}
+La restricción (1) es necesaria. Si $c$ apareciera en una premisa
+(por ejemplo, si una premisa dijera «Carlos es tenista», $T(c)$), entonces $c$ no sería un individuo arbitrario, sino uno con propiedades particulares asumidas. Si permitiéramos generalizar sobre $c$, deduciríamos la falsedad de que «todo individuo es tenista».
+
+La restricción (2) también es necesaria: de $\forall x R(x, x)$ obtenemos $R(c, c)$ por $\forall$E; si pudiéramos generalizar sustituyendo solo la primera aparición de $c$, obtendríamos $\forall x R(x, c)$, y de ahí $R(d, c)$ para cualquier $d$, lo que no se sigue de la premisa. Por último (y lo mismo valdrá para $\exists$I), la variable $x$ elegida no debe aparecer ya en $A(c)$, para que no quede capturada por otro cuantificador.
+
+\begin{ejemplo}[Demostración de $\forall x (P(x) \land Q(x)) \vdash \forall x P(x) \land \forall x Q(x)$]
+Queremos probar que si todo individuo tiene las propiedades $P$ y $Q$, entonces todos tienen $P$ y todos tienen $Q$.
+\begin{center}
+$\begin{nd}[rules=myrules]
+    \hypo [1] {1} {\forall x (P(x) \land Q(x))} \by{Prem.}{}
+    \have [2] {2} {P(c) \land Q(c)} \Ae{1}
+    \have [3] {3} {P(c)} \by{$\land$E}{2}
+    \have [4] {4} {Q(c)} \by{$\land$E}{2}
+    \have [5] {5} {\forall x P(x)} \Ai{3}
+    \have [6] {6} {\forall x Q(x)} \Ai{4}
+    \have [7] {7} {\forall x P(x) \land \forall x Q(x)} \by{$\land$I}{5, 6}
+\end{nd}$
+\end{center}
+\textbf{Comprobación de las restricciones.} La constante $c$ introducida en la línea 2 no aparece en la premisa 1 (donde solo está la variable ligada $x$), ni en las conclusiones de las líneas 5 y 6. Por tanto, $c$ es arbitraria y las aplicaciones de $\forall\text{I}$ en las líneas 5 y 6 son correctas.
+\end{ejemplo}
+
+\begin{ejemplo}[Silogismo clásico Barbara]
+Formalizamos la deducción aristotélica «todos los mamíferos son vertebrados ($M \to P$); todos los gatos son mamíferos ($S \to M$); por tanto, todos los gatos son vertebrados ($S \to P$)»:
+\[
+\forall x (M(x) \to P(x)), \ \forall x (S(x) \to M(x)) \ \vdash \ \forall x (S(x) \to P(x))
+\]
+\begin{center}
+$\begin{nd}[rules=myrules]
+    \hypo [1] {1} {\forall x (M(x) \to P(x))} \by{Prem.}{}
+    \hypo [2] {2} {\forall x (S(x) \to M(x))} \by{Prem.}{}
+    \open
+        \hypo [3] {3} {S(c)} \by{Hip.}{}
+        \have [4] {4} {S(c) \to M(c)} \Ae{2}
+        \have [5] {5} {M(c)} \ce{4, 3}
+        \have [6] {6} {M(c) \to P(c)} \Ae{1}
+        \have [7] {7} {P(c)} \ce{6, 5}
+    \close
+    \have [8] {8} {S(c) \to P(c)} \ci{3-7}
+    \have [9] {9} {\forall x (S(x) \to P(x))} \Ai{8}
+\end{nd}$
+\end{center}
+\textbf{Comentario.} Nótese la articulación de la prueba:
+\begin{enumerate}
+    \item La meta es un enunciado universal con un condicional ($\forall x (S(x) \to P(x))$). La estrategia consiste en derivar primero el condicional $S(c) \to P(c)$ para una constante arbitraria $c$ y aplicar después $\forall$I.
+    \item Para probar dicho condicional, abrimos una subprueba asumiendo el antecedente $S(c)$ (línea 3) y buscamos el consecuente $P(c)$.
+    \item Las premisas universales se instancian sobre la constante $c$ que está en juego en la subprueba (líneas 4 y 6).
+    \item Al cerrar la caja en la línea 8, la hipótesis $S(c)$ queda descargada. Puesto que $c$ no aparece en ninguna de las premisas de partida (líneas 1 y 2) ni en la conclusión, la regla $\forall$I en la línea 9 es legítima.
+\end{enumerate}
+\end{ejemplo}
+
+\section{Las reglas del cuantificador existencial \texorpdfstring{($\exists$)}{(existe)}}
+
+El cuantificador existencial afirma que \emph{existe al menos un individuo} que satisface la propiedad en cuestión.
+
+\subsection{Introducción del existencial \texorpdfstring{($\exists\text{I}$)}{(Introduccion del existencial)}}
+
+Si sabemos que un individuo concreto $c$ posee la propiedad $A$, se sigue inmediatamente que existe al menos alguien que la posee.
+
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\textbf{Regla de introducción del existencial ($\exists\text{I}$)} \\
+\hline
+\cajaregla{$\begin{nd}[rules=myrules]
+    \have [m] {1} {A(c)} \by{}{}
+    \have [\mbox{}] {2} {\exists x A(x)} \Ei{1}
+\end{nd}$} \\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent \textbf{Condiciones de aplicación:}
+\begin{itemize}
+    \item No tiene restricciones sobre la constante $c$. (Solo se exige que la variable $x$ elegida no aparezca ya en $A(c)$, para que no quede capturada por otro cuantificador: de $\forall x R(x, c)$ no podemos pasar a $\exists x \forall x R(x, x)$).
+    \item No es obligatorio sustituir todas las apariciones de $c$. Por ejemplo, de $R(c, c)$ podemos derivar tanto $\exists x R(x, x)$ («alguien se relaciona consigo mismo») como $\exists x R(x, c)$ («alguien se relaciona con $c$»).
+\end{itemize}
+
+\subsection{Eliminación del existencial \texorpdfstring{($\exists\text{E}$)}{(Eliminacion del existencial)}}
+
+La regla de eliminación del existencial es la más delicada del cálculo de primer orden. Captura el razonamiento mediante un \textbf{testigo provisional anónimo}.
+
+Si sabemos que «existe un culpable» ($\exists x C(x)$), no sabemos quién es con exactitud. Por ello, no podemos asumir que el culpable es Juan ($j$) o Pedro ($p$). Lo que hacemos es asignarle un nombre en clave provisional: «llamémosle $c$» ($C(c)$). Si, sin suponer de $c$ nada más que cometió el crimen, logramos deducir una conclusión $B$ que no menciona a $c$, entonces la conclusión $B$ queda establecida sin depender del nombre ficticio utilizado.
+
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\textbf{Regla de eliminación del existencial ($\exists\text{E}$)} \\
+\hline
+\cajaregla{$\begin{nd}[rules=myrules]
+    \have [m] {1} {\exists x A(x)} \by{}{}
+    \open
+        \hypo [i] {2} {A(c)} \by{Hip. testigo $c$}{}
+        \have [\mbox{}] {3} {\vdots}
+        \have [j] {4} {B} \by{}{}
+    \close
+    \have [\mbox{}] {5} {B} \Ee{1, 2-4}
+\end{nd}$} \\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent Las tres restricciones canónicas del testigo $c$ son:
+\begin{enumerate}
+    \item \textbf{Frescura.} La constante testigo $c$ no debe aparecer en las premisas ni en ninguna hipótesis activa (no descargada) previa al inicio de la subprueba. El propósito de esta exigencia es asegurar que sobre $c$ no recaiga ninguna asunción previa no justificada.
+    
+    \textit{Matiz formal sobre la frescura.} En muchos textos introductorios se dice informalmente que $c$ debe ser un nombre «completamente nuevo» en la demostración. Esa pauta práctica evita errores, pero la restricción lógica precisa solo prohíbe que $c$ figure en premisas o hipótesis activas:
+    \begin{itemize}
+        \item Si en líneas previas se aplicó $\forall\text{E}$ sobre $c$ a partir de premisas universales (por ejemplo, derivando $P(c) \to Q(c)$), esa línea depende solo de premisas en las que $c$ no aparece, de modo que vale para cualquier individuo; usar luego $c$ como testigo de un existencial no compromete la corrección. No obstante, para evitar confusiones es buena práctica elegir una constante no utilizada previamente.
+        \item Análogamente, si una constante aparecía en una hipótesis de una subprueba que ya se ha cerrado, esa hipótesis ya no está activa, y reutilizar la constante en un bloque posterior no es incorrecto.
+    \end{itemize}
+    \item \textbf{Independencia del supuesto.} La constante $c$ no debe aparecer en la propia fórmula cuantificada $\exists x A(x)$.
+    \item \textbf{No escape.} La constante $c$ no debe aparecer en la conclusión $B$. El nombre provisional del testigo no puede «fugarse» fuera de la caja de hipótesis.
+\end{enumerate}
+
+\begin{ejemplo}[Demostración de $\forall x (P(x) \to Q(x)), \ \exists x P(x) \ \vdash \ \exists x Q(x)$]
+Veamos cómo interactúan el universal y el existencial:
+\begin{center}
+$\begin{nd}[rules=myrules]
+    \hypo [1] {1} {\forall x (P(x) \to Q(x))} \by{Prem.}{}
+    \hypo [2] {2} {\exists x P(x)} \by{Prem.}{}
+    \open
+        \hypo [3] {3} {P(c)} \by{Hip. testigo $c$}{}
+        \have [4] {4} {P(c) \to Q(c)} \Ae{1}
+        \have [5] {5} {Q(c)} \ce{4, 3}
+        \have [6] {6} {\exists x Q(x)} \Ei{5}
+    \close
+    \have [7] {7} {\exists x Q(x)} \Ee{2, 3-6}
+\end{nd}$
+\end{center}
+\textbf{Análisis de las restricciones:}
+\begin{itemize}
+    \item $c$ es una constante fresca: no aparece ni en la premisa 1 ni en la premisa 2.
+    \item En la línea 4, instanciamos el universal de la premisa 1 sobre la constante testigo $c$ activa en la subprueba.
+    \item En la línea 6, generalizamos existencialmente sobre $c$ obteniendo $\exists x Q(x)$.
+    \item La conclusión de la subprueba (línea 6) es $\exists x Q(x)$, en la cual la constante $c$ ya no aparece. Por tanto, no hay escape de testigo y la aplicación de $\exists\text{E}$ en la línea 7 es correcta.
+\end{itemize}
+\end{ejemplo}
+
+\begin{ejemplo}[Silogismo clásico Darii: $\forall x (M(x) \to P(x)), \ \exists x (S(x) \land M(x)) \ \vdash \ \exists x (S(x) \land P(x))$]
+\begin{center}
+$\begin{nd}[rules=myrules]
+    \hypo [1] {1} {\forall x (M(x) \to P(x))} \by{Prem.}{}
+    \hypo [2] {2} {\exists x (S(x) \land M(x))} \by{Prem.}{}
+    \open
+        \hypo [3] {3} {S(c) \land M(c)} \by{Hip. testigo $c$}{}
+        \have [4] {4} {S(c)} \by{$\land$E}{3}
+        \have [5] {5} {M(c)} \by{$\land$E}{3}
+        \have [6] {6} {M(c) \to P(c)} \Ae{1}
+        \have [7] {7} {P(c)} \ce{6, 5}
+        \have [8] {8} {S(c) \land P(c)} \by{$\land$I}{4, 7}
+        \have [9] {9} {\exists x (S(x) \land P(x))} \Ei{8}
+    \close
+    \have [10] {10} {\exists x (S(x) \land P(x))} \Ee{2, 3-9}
+\end{nd}$
+\end{center}
+\textbf{Comentario.} Este ejemplo ilustra una secuencia habitual para combinar existenciales y universales:
+\begin{enumerate}
+    \item \textbf{Prioridad de apertura.} Conviene abrir en primer lugar la subprueba del existencial (línea 3) con una constante testigo fresca $c$, antes de operar con los universales.
+    \item \textbf{Instanciación dirigida.} Una vez fijado el testigo provisional $c$, instanciamos la premisa universal sobre esa misma constante (línea 6).
+    \item \textbf{Generalización previa al cierre.} Antes de cerrar la caja, generalizamos existencialmente (línea 9). De este modo, la constante de trabajo $c$ no aparece en la conclusión de la caja, y en la línea 10 no hay escape del testigo.
+\end{enumerate}
+\end{ejemplo}
+
+\practica{En \appdeduccion{} puedes practicar las reglas de los cuantificadores con los ejercicios de este tema. Al comprobar cada línea, la aplicación vigila las restricciones de $\forall$I y $\exists$E y dice cuál se incumple.}
+
+\section{Catálogo de falacias formales por violación de restricciones}
+
+Comprender las restricciones de las reglas de los cuantificadores no consiste en memorizar prohibiciones arbitrarias, sino en advertir qué falacias lógicas se producirían si las ignorásemos.
+
+\subsection{Falacia 1: generalización apresurada \texorpdfstring{(violación de $\forall\text{I}$)}{(violacion de forall I)}}
+Supongamos que sabemos que Juan es filósofo ($F(j)$). Si aplicáramos $\forall\text{I}$ sobre $j$, tendríamos la siguiente pseudoderivación:
+\begin{center}
+$\begin{nd}[rules=myrules]
+    \hypo [1] {1} {F(j)} \by{Prem.}{}
+    \have [2] {2} {\forall x F(x)} \by{¡Error $\forall$I! ($j$ está en
+      la premisa)}{1}
+\end{nd}$
+\end{center}
+\textbf{Error:} de que un individuo concreto posea un atributo no se sigue que todos lo posean. La restricción de que la constante de $\forall\text{I}$ no aparezca en las premisas bloquea esta falacia.
+
+\subsection{Falacia 2: fuga del testigo provisional a la conclusión \texorpdfstring{(violación de $\exists\text{E}$)}{(violacion de exists E)}}
+Supongamos que sabemos que «alguien es un ladrón» ($\exists x L(x)$):
+\begin{center}
+$\begin{nd}[rules=myrules]
+    \hypo [1] {1} {\exists x L(x)} \by{Prem.}{}
+    \open
+        \hypo [2] {2} {L(c)} \by{Hip. testigo $c$}{}
+    \close
+    \have [3] {3} {L(c)} \by{¡Error $\exists$E! ($c$ aparece en la conclusión)}{1, 2-2}
+\end{nd}$
+\end{center}
+\textbf{Error:} en la línea 3 se habría concluido categóricamente que una constante específica $c$ satisface $L$. Si la constante testigo $c$ pudiera transferirse a la conclusión exterior, a partir de la mera existencia indeterminada de alguien que cumple una propiedad se atribuiría dicha propiedad a un individuo particular. La regla de que el testigo no figure en la conclusión impide esta atribución arbitraria.
+
+\subsection{Falacia 3: fusión de testigos independientes \texorpdfstring{(violación de frescura en $\exists\text{E}$)}{(violacion de frescura en exists E)}}
+Consideremos las premisas «alguien es sabio» ($\exists x S(x)$) y «alguien es ignorante» ($\exists x I(x)$):
+\begin{center}
+$\begin{nd}[rules=myrules]
+    \hypo [1] {1} {\exists x S(x)} \by{Prem.}{}
+    \hypo [2] {2} {\exists x I(x)} \by{Prem.}{}
+    \open
+        \hypo [3] {3} {S(c)} \by{Hip. testigo $c$}{}
+        \open
+            \hypo [4] {4} {I(c)} \by{Hip. testigo $c$}{}
+            \have [5] {5} {S(c) \land I(c)} \by{$\land$I}{3, 4}
+            \have [6] {6} {\exists x (S(x) \land I(x))} \Ei{5}
+        \close
+        \have [7] {7} {\exists x (S(x) \land I(x))} \by{¡Error $\exists$E! ($c$ está en la hipótesis 3)}{2, 4-6}
+    \close
+    \have [8] {8} {\exists x (S(x) \land I(x))} \Ee{1, 3-7}
+\end{nd}$
+\end{center}
+\textbf{Error:} habríamos «demostrado» que existe una persona que es simultáneamente sabia e ignorante. El error está en la elección del testigo de la línea 4, que hace ilegítima la aplicación de $\exists$E de la línea 7: la constante $c$ ya aparecía en la hipótesis 3, todavía activa. Dos existenciales distintos afirman la existencia de individuos que pueden ser diferentes; por ello, cada caja de existencial debe introducir un testigo fresco (por ejemplo, $c$ para la primera y $d$ para la segunda).
+
+\section{Relaciones binarias y la asimetría de los cuantificadores}\label{sec:asimetria}
+
+Cuando formalizamos enunciados que involucran relaciones entre varios individuos (como el amor $A(x, y)$, el conocimiento o la causalidad), el orden de los cuantificadores importa.
+
+\subsection{Una inferencia válida: de \texorpdfstring{$\exists\forall$}{EA} a \texorpdfstring{$\forall\exists$}{AE}}
+El siguiente principio es lógicamente válido y demostrable en deducción natural:
+\[
+\exists x \forall y R(x, y) \ \vdash \ \forall y \exists x R(x, y)
+\]
+\textit{Lectura intuitiva:} «Si existe alguien que ama a todo el mundo, entonces para cualquier persona existe alguien que la ama».
+\begin{center}
+$\begin{nd}[rules=myrules]
+    \hypo [1] {1} {\exists x \forall y R(x, y)} \by{Prem.}{}
+    \open
+        \hypo [2] {2} {\forall y R(c, y)} \by{Hip. testigo $c$}{}
+        \have [3] {3} {R(c, d)} \Ae{2}
+        \have [4] {4} {\exists x R(x, d)} \Ei{3}
+        \have [5] {5} {\forall y \exists x R(x, y)} \Ai{4}
+    \close
+    \have [6] {6} {\forall y \exists x R(x, y)} \Ee{1, 2-5}
+\end{nd}$
+\end{center}
+\textbf{Examen de las constantes:}
+\begin{itemize}
+    \item En la línea 2, $c$ es un testigo fresco para el existencial exterior de la premisa 1.
+    \item En la línea 3, instanciamos el universal $\forall y$ con un parámetro arbitrario $d$.
+    \item En la línea 4, generalizamos existencialmente sobre $c$, obteniendo $\exists x R(x, d)$.
+    \item En la línea 5, generalizamos universalmente sobre $d$ ($\forall\text{I}$). Esto es correcto porque $d$ no aparece en la hipótesis 2 ni en las premisas.
+    \item En la línea 6, cerramos la caja de $\exists\text{E}$. Como $c$ no aparece en la fórmula de la línea 5, la aplicación de $\exists$E es correcta.
+\end{itemize}
+
+\begin{ejemplo}[Conmutatividad de cuantificadores homogéneos: $\forall x \forall y R(x, y) \vdash \forall y \forall x R(x, y)$]
+A diferencia del cruce entre existenciales y universales, dos cuantificadores del mismo tipo pueden permutar libremente:
+\begin{center}
+$\begin{nd}[rules=myrules]
+    \hypo [1] {1} {\forall x \forall y R(x, y)} \by{Prem.}{}
+    \have [2] {2} {\forall y R(a, y)} \Ae{1}
+    \have [3] {3} {R(a, b)} \Ae{2}
+    \have [4] {4} {\forall x R(x, b)} \Ai{3}
+    \have [5] {5} {\forall y \forall x R(x, y)} \Ai{4}
+\end{nd}$
+\end{center}
+\textbf{Comentario:}
+\begin{enumerate}
+    \item En las líneas 2 y 3 instanciamos sucesivamente con dos constantes arbitrarias distintas $a$ y $b$.
+    \item En la línea 4 generalizamos sobre $a$ ($\forall$I): esto es legal porque $a$ no figura en la premisa 1.
+    \item En la línea 5 generalizamos sobre $b$ ($\forall$I): igualmente legal porque $b$ tampoco aparece en las premisas.
+    \item La independencia de los dos parámetros arbitrarios explica por qué el orden de dos universales consecutivos no altera el significado. El caso de dos existenciales ($\exists\exists$) es análogo (véase el ejercicio~\ref{e4-15}).
+\end{enumerate}
+\end{ejemplo}
+
+\subsection{La falacia del orden inverso: ¿por qué la conversa no es derivable?}
+Consideremos ahora el argumento inverso:
+\[
+\forall y \exists x R(x, y) \ \nvdash \ \exists x \forall y R(x, y)
+\]
+\textit{Lectura intuitiva:} «Todo ser humano tiene una madre ($\forall y \exists x M(x, y)$); por tanto, existe una mujer que es madre de todos los seres humanos ($\exists x \forall y M(x, y)$)».
+
+Esta inferencia es una falacia. En nuestro cálculo de deducción natural, si intentáramos derivarla, las restricciones de las reglas bloquearían el intento:
+\begin{itemize}
+    \item Para eliminar el existencial interior de $\forall y \exists x R(x, y)$, primero tendríamos que instanciar $y$ con una constante $d$, obteniendo $\exists x R(x, d)$.
+    \item Al abrir la caja de testigo para este existencial, suponemos $R(c, d)$: el testigo $c$ se ha elegido para \emph{ese} $d$.
+    \item Si intentásemos generalizar con $\forall\text{I}$ sobre $d$ para formar $\forall y R(c, y)$, violaríamos la restricción (1) de $\forall$I, porque $d$ aparece en la hipótesis activa $R(c, d)$. Y si cerrásemos antes la caja de $\exists$E, el testigo $c$ no podría salir de ella.
+\end{itemize}
+Que este intento fracase no demuestra por sí solo que la inferencia sea inválida (podría haber otra derivación). La invalidez se demuestra semánticamente, con un contramodelo, como haremos en el tema~\ref{cap:sem-lpo}; y el teorema de corrección garantiza entonces que no existe ninguna derivación.
+
+\section{Reglas derivadas: conversión de cuantificadores (CQ)}\label{sec:cq}
+
+Al igual que en la lógica proposicional disponíamos de las leyes de De Morgan para transformar conjunciones en disyunciones mediante la negación, en la lógica de primer orden disponemos de la regla de \textbf{conversión de cuantificadores (CQ)}:
+
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Premisa} & \textbf{Conclusión por CQ} \\
+\hline
+$\neg \forall x A(x)$ & $\exists x \neg A(x)$ \\
+$\exists x \neg A(x)$ & $\neg \forall x A(x)$ \\
+$\neg \exists x A(x)$ & $\forall x \neg A(x)$ \\
+$\forall x \neg A(x)$ & $\neg \exists x A(x)$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{theorem}[Derivabilidad de CQ en el cálculo básico]
+La regla CQ es derivable: no añade nada que no pueda probarse con las reglas básicas de Fitch.
+\end{theorem}
+
+\begin{proof}
+A modo de ilustración, demostramos que de $\neg \forall x P(x)$ se deduce $\exists x \neg P(x)$ usando solo reglas básicas:
+\begin{center}
+$\begin{nd}[rules=myrules]
+    \hypo [1] {1} {\lnot \forall x P(x)} \by{Prem.}{}
+    \open
+        \hypo [2] {2} {\lnot \exists x \lnot P(x)} \by{Hip. IP}{}
+        \open
+            \hypo [3] {3} {\lnot P(c)} \by{Hip. IP}{}
+            \have [4] {4} {\exists x \lnot P(x)} \Ei{3}
+            \have [5] {5} {\bot} \by{$\neg$E}{2, 4}
+        \close
+        \have [6] {6} {P(c)} \ip{3-5}
+        \have [7] {7} {\forall x P(x)} \Ai{6}
+        \have [8] {8} {\bot} \by{$\neg$E}{1, 7}
+    \close
+    \have [9] {9} {\exists x \lnot P(x)} \ip{2-8}
+\end{nd}$
+\end{center}
+En la línea 7 la constante $c$ es elegible para $\forall\text{I}$ porque la hipótesis local 3 fue descargada en la línea 6, y ni la premisa 1 ni la hipótesis 2 mencionan a $c$. Las conversiones entre $\neg \exists x P(x)$ y $\forall x \neg P(x)$ son los ejercicios~\ref{e4-16} y~\ref{e4-17}; la que falta, de $\exists x \neg P(x)$ a $\neg \forall x P(x)$, se obtiene suponiendo $\forall x P(x)$ y abriendo una caja de $\exists$E con $\neg P(c)$. Al comprobar que la regla CQ es derivable, queda legitimado su uso como atajo en derivaciones complejas.
+\end{proof}
+
+\section{La identidad}\label{sec:identidad}
+
+Muchos razonamientos dependen de que dos nombres designen el mismo individuo: «Cicerón es Tulio; Cicerón era orador; luego Tulio era orador». Para analizarlos añadimos al lenguaje el símbolo lógico $=$: si $t_1$ y $t_2$ son términos, $t_1 = t_2$ es una fórmula atómica. Escribimos $t_1 \neq t_2$ como abreviatura de $\neg(t_1 = t_2)$. Su significado es fijo: $t_1 = t_2$ es verdadera exactamente cuando $t_1$ y $t_2$ designan el mismo objeto (tema~\ref{cap:sem-lpo}).
+
+\begin{center}
+\begin{tabular}{cc}
+\textbf{Introducción de la identidad ($=$I)} & \textbf{Eliminación de la identidad ($=$E)} \\[0.2cm]
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {c = c} \idi{}
+\end{nd}$ &
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {a = b}
+    \have [n] {2} {A(\dots a \dots a \dots)}
+    \have [\mbox{}] {3} {A(\dots b \dots a \dots)} \ide{1, 2}
+\end{nd}$
+\end{tabular}
+\end{center}
+
+\begin{itemize}
+    \item \textbf{$=$I} permite escribir $c = c$ en cualquier momento, para cualquier constante $c$, sin citar ninguna línea: todo objeto es idéntico a sí mismo.
+    \item \textbf{$=$E} permite, a partir de $a = b$ y de una fórmula en la que aparece $a$, sustituir \emph{una, varias o todas} las apariciones de $a$ por $b$. También se permite la sustitución en sentido inverso: de $a = b$ y una fórmula con $b$, sustituir apariciones de $b$ por $a$.
+\end{itemize}
+La regla $=$E recoge el principio de \textbf{indiscernibilidad de los idénticos} (a menudo llamado \emph{ley de Leibniz}): si $a$ y $b$ son el mismo objeto, todo lo que vale de uno vale del otro. El principio recíproco, la \emph{identidad de los indiscernibles} (si $a$ y $b$ tienen exactamente las mismas propiedades, son el mismo objeto), no es una ley de la lógica de primer orden.
+
+\begin{ejemplo}[Simetría de la identidad: $a = b \vdash b = a$]\mbox{}
+\begin{center}
+$\begin{nd}[rules=myrules]
+    \hypo [1] {1} {a = b} \by{Prem.}{}
+    \have [2] {2} {a = a} \idi{}
+    \have [3] {3} {b = a} \ide{1, 2}
+\end{nd}$
+\end{center}
+\textbf{Comentario.} En la línea 3 sustituimos la \emph{primera} aparición de $a$ en $a = a$ por $b$, como permite $=$E.
+\end{ejemplo}
+
+\begin{ejemplo}[Lo que distingue a dos individuos: $P(a), \neg P(b) \vdash a \neq b$]\mbox{}
+\begin{center}
+$\begin{nd}[rules=myrules]
+    \hypo [1] {1} {P(a)} \by{Prem.}{}
+    \hypo [2] {2} {\lnot P(b)} \by{Prem.}{}
+    \open
+        \hypo [3] {3} {a = b} \by{Hip.}{}
+        \have [4] {4} {P(b)} \ide{3, 1}
+        \have [5] {5} {\bot} \ne{2, 4}
+    \close
+    \have [6] {6} {\lnot(a = b)} \ni{3-5}
+\end{nd}$
+\end{center}
+\textbf{Comentario.} Es la forma habitual de probar que dos individuos son distintos: encontrar algo que vale de uno y no del otro (indiscernibilidad de los idénticos, en forma contrapositiva).
+\end{ejemplo}
+
+\section{Guía estratégica para construir pruebas en LPO}
+
+Para abordar con éxito las deducciones con cuantificadores, conviene seguir las siguientes heurísticas:
+
+\begin{enumerate}
+    \item \textbf{Estrategia con premisas existenciales (apertura temprana de subderivaciones).}  
+    Si tienes una premisa o línea disponible de la forma $\exists x A(x)$, es recomendable abrir la subprueba de $\exists\text{E}$ con una constante testigo $c$ lo antes posible. Aunque, como hemos precisado, un paso previo de $\forall\text{E}$ sobre $c$ no vulnera la frescura mientras $c$ no aparezca en premisas ni en hipótesis activas, abrir la caja existencial de inmediato ofrece una doble ventaja heurística: asegura la elección de un testigo limpio y revela sobre qué constante exacta convendrá instanciar a continuación las premisas universales mediante $\forall\text{E}$.
+    
+    \item \textbf{Estrategia con premisas universales (instanciación dirigida al objetivo).}  
+    Las fórmulas de la forma $\forall x A(x)$ son recursos universales que puedes instanciar tantas veces como necesites. No las instancies a ciegas: espera a ver qué constantes individuales han aparecido en las premisas, cuál has elegido como constante arbitraria para una meta universal o cuáles han introducido las cajas de los existenciales, y aplica $\forall\text{E}$ sobre esas constantes.
+    
+    \item \textbf{Estrategia con metas universales.}  
+    Si tu objetivo final (o intermedio) es demostrar $\forall x B(x)$, planifica derivar primero $B(c)$ para una constante $c$ arbitraria, que no aparezca en las premisas ni en las hipótesis activas, para rematar en el último paso aplicando $\forall\text{I}$.
+    
+    \item \textbf{Estrategia con metas existenciales.}  
+    Si tu objetivo es demostrar $\exists x B(x)$, busca construir $B(c)$ para alguna constante concreta disponible y aplica $\exists\text{I}$.
+    
+    \item \textbf{Gestión de negaciones y cuantificadores.}  
+    Si una fórmula comienza con la negación de un cuantificador ($\neg \forall x$ o $\neg \exists x$), aplica la regla derivada CQ para llevar la negación al interior, o bien recurre a una reducción al absurdo clásica (IP) asumiendo la negación de la meta.
+\end{enumerate}
+
+\section{Para saber más: de la deducción natural a los asistentes de demostración}\label{sec:asistentes}
+
+Como vimos al final del tema~\ref{cap:dn-prop}, \emph{comprobar} una derivación es una tarea mecánica: basta verificar que cada línea se ajusta a una regla y que se respetan las restricciones (accesibilidad, constantes frescas, etc.). \emph{Encontrar} una derivación, en cambio, exige ingenio, y en la lógica de primer orden no existe ningún algoritmo que decida en todos los casos si una fórmula es demostrable. En esta asimetría entre encontrar y comprobar se basan los asistentes de demostración.
+
+\paragraph{Asistentes de demostración.} Programas como \emph{Lean}, \emph{Isabelle} o \emph{Coq} (hoy llamado \emph{Rocq}) permiten escribir demostraciones en un lenguaje formal. Un núcleo relativamente pequeño del programa acepta una demostración solo si cada paso se ajusta a las reglas de su sistema lógico, que contiene análogos de las reglas que hemos estudiado. En Lean, por ejemplo, el silogismo hipotético del tema~\ref{cap:dn-prop} ($p \to q, q \to r \vdash p \to r$) se escribe así:
+\begin{verbatim}
+example (p q r : Prop) (h1 : p -> q) (h2 : q -> r) : p -> r := by
+  intro hp               -- suponemos p (introducción del condicional)
+  have hq : q := h1 hp   -- modus ponens con la premisa h1
+  exact h2 hq            -- modus ponens con la premisa h2: obtenemos r
+\end{verbatim}
+La instrucción \texttt{intro} abre la caja de $\to$I, y aplicar una hipótesis a otra (\texttt{h1 hp}) es $\to$E. Con herramientas de este tipo se han verificado por completo resultados matemáticos de gran complejidad, como el teorema de los cuatro colores (G. Gonthier, en Coq, 2005) o la conjetura de Kepler sobre el empaquetamiento de esferas (proyecto \emph{Flyspeck}, dirigido por T. Hales, 2014).
+
+Puedes comprobar este ejemplo, sin instalar nada, en el editor web de Lean.\footnote{\url{https://live.lean-lang.org/}} Basta copiarlo y ver si Lean lo acepta. Hay que respetar la sangría: las líneas que siguen a \texttt{by} deben empezar todas con el mismo número de espacios. Un buen ejercicio es pedir a un modelo de lenguaje que escriba en Lean demostraciones de otros ejercicios del tema~\ref{cap:dn-prop} y comprobar en el editor si las acepta; cuando no lo hace, Lean indica la línea en la que falla.
+
+\paragraph{Inteligencia artificial y verificación.} Los modelos de
+lenguaje generan textos que \emph{parecen} razonamientos correctos,
+pero pueden contener pasos falsos expresados con total
+seguridad. Combinarlos con un asistente de demostración separa dos
+tareas: el modelo (o la persona) \emph{propone} la demostración, y el
+verificador la \emph{comprueba} paso a paso, rechazando cualquier
+inferencia que no se ajuste a las reglas. Así, por ejemplo, el sistema
+AlphaProof (Google DeepMind, 2024) resolvió problemas de la Olimpiada
+Internacional de Matemáticas produciendo demostraciones comprobadas
+por Lean. En septiembre de 2026, OpenAI anunció que un sistema de
+agentes basado en un modelo de lenguaje había obtenido una
+demostración, acompañada de una formalización en Lean, de que las
+ecuaciones de Navier-Stokes tridimensionales para fluidos
+incompresibles, con una fuerza externa, pueden desarrollar
+singularidades en un tiempo finito.\footnote{Anuncio:
+  \url{https://openai.com/es-ES/index/navier-stokes-solution/}.} Según
+el enunciado oficial, eso bastaría para resolver uno de los siete
+problemas del Milenio del Instituto Clay. Por analogía con el
+\emph{vibe coding} (programar describiendo informalmente lo que se
+quiere a una IA), se habla a veces de \emph{vibe proving}: esbozar la
+idea de una prueba, dejar que una IA proponga los detalles y confiar
+el veredicto final al verificador formal. 
+
+\paragraph{Preguntas filosóficas.} Este esquema traslada la confianza: no es tan importante quién propone la prueba, sea un humano o una máquina, como el verificador y las reglas que aplica. Recuerda el ideal de Leibniz de resolver las disputas calculando (\emph{calculemus}), y plantea diversas preguntas filosóficas: qué cuenta como demostración, qué papel tiene la comprensión frente a la mera verificación, o qué reglas aceptamos como legítimas (¿lógica clásica o intuicionista?, por ejemplo). Casos como el de Navier-Stokes añaden otras: quién es el autor de una demostración obtenida así, si basta la comprobación de un programa para aceptar un resultado que ninguna persona ha leído, o qué garantiza que el enunciado formalizado dice lo mismo que el problema original. 
+
+\section*{Referencias bibliográficas}
+
+\begin{enumerate}
+    \item \textbf{Garrido, M.} (1974). \emph{Lógica simbólica}. Tecnos, Madrid. [Capítulo sobre el cálculo de predicados de primer orden].
+    \item \textbf{Gentzen, G.} (1934/1935). «Untersuchungen über das logische Schließen». \emph{Mathematische Zeitschrift}, vol. 39, pp. 176--210 y 405--431. [Introducción original de las reglas para cuantificadores].
+    \item \textbf{Magnus, P. D., Button, T., et al.} (2020). \emph{forall x: Calgary. An Introduction to Formal Logic}. Open Logic Project. [Partes IV (deducción natural proposicional) y VII (deducción natural de primer orden)].
+    \item \textbf{Prawitz, D.} (1965). \emph{Natural Deduction: A Proof-Theoretical Study}. Almqvist \& Wiksell, Estocolmo. [Normalización de las derivaciones y restricciones sobre las variables].
+\end{enumerate}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "ApuntesLogica"
+%%% End:

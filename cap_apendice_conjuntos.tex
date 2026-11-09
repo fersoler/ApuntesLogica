@@ -1,0 +1,461 @@
+% -*- coding: utf-8 -*-
+\section{La noción intuitiva de conjunto}
+
+La lógica contemporánea, especialmente a partir de los trabajos de
+Gottlob Frege, Bertrand Russell y Alfred Tarski, utiliza el lenguaje
+de la teoría de conjuntos como su principal herramienta para construir
+modelos semánticos y precisar las propiedades de los sistemas
+formales. Para comprender la
+semántica lógica no se requiere
+una fundamentación axiomática 
+(como la teoría formal de Zermelo-Fraenkel): basta adoptar el punto de vista de la \textbf{teoría
+  intuitiva de conjuntos} (\emph{naive set theory}). 
+
+\begin{definicion}[Conjunto y elemento]
+Un \textbf{conjunto} es una colección bien delimitada y definida de
+objetos. Los objetos que integran dicha colección se denominan
+\textbf{elementos} o \textbf{miembros} del conjunto. Si $a$ es un
+elemento del conjunto $B$, lo anotamos como $a\in B$. En otro caso,
+$a\notin B$. 
+\end{definicion}
+
+La identidad de un conjunto queda determinada por el \textbf{principio
+  de extensionalidad}: un conjunto se caracteriza única y
+exclusivamente por cuáles son sus elementos, sin que importe el orden
+en que se presenten ni el número de veces que se repitan en una
+descripción. Así:
+\[
+\{a, b, c\} = \{c, b, a\} = \{a, a, b, c, c\}
+\]
+En la práctica, existen dos formas complementarias de especificar un conjunto:
+\begin{enumerate}
+    \item \textbf{Definición por extensión (o enumeración).} Consiste
+      en enumerar explícitamente entre llaves todos y cada uno de los
+      elementos. Ejemplos: 
+    \begin{itemize}
+        \item $\{1, 0\}$ (el conjunto de los
+          valores de verdad de la lógica clásica).
+        \item $D = \{\text{Sócrates},
+          \text{Platón}, \text{Aristóteles}\}$ (un dominio de
+          individuos que podemos usar en un modelo). 
+    \end{itemize}
+
+    \item \textbf{Definición por comprensión (o especificación).}
+      Consiste en caracterizar el conjunto mediante una propiedad o
+      condición que deben satisfacer sus elementos. Se utiliza la
+      notación con barra vertical $\{x \in D \mid P(x)\}$, que se lee:
+      «el conjunto de los elementos $x$ pertenecientes a $D$ tales que
+      $x$ tiene la propiedad $P$». Ejemplos: 
+    \begin{itemize}
+        \item $\mathcal{F} = \{A \mid A \text{ es una fórmula bien formada del lenguaje}\}$.
+        \item La extensión de un predicado en un modelo tarskiano es el conjunto de individuos del dominio de los que el predicado es verdadero:
+        \[
+        I(\text{Filósofo}) = \{x \in D \mid x \text{ es filósofo}\}
+        \]
+    \end{itemize}
+\end{enumerate}
+
+\section{Pertenencia (\texorpdfstring{$\in$}{pertenece}) frente a inclusión (\texorpdfstring{$\subseteq$}{incluido})}
+
+Una de las confusiones conceptuales más recurrentes consiste en asimilar la relación de pertenencia a la relación de inclusión. Se trata, sin embargo, de dos relaciones diferentes:
+
+\begin{center}
+\begin{tabular}{|l|c|l|}
+\hline
+\textbf{Relación} & \textbf{Símbolo} & \textbf{Significado} \\
+\hline
+\textbf{Pertenencia} & $\in$ & Conecta un elemento con un conjunto: $x \in A$ \\
+\textbf{Inclusión} & $\subseteq$ & Conecta dos conjuntos: $A \subseteq B$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{definicion}[Subconjunto]
+Decimos que un conjunto $A$ es \textbf{subconjunto} de $B$ (o que $A$ está \textbf{incluido} en $B$), y escribimos $A \subseteq B$, si todo elemento que pertenece a $A$ pertenece también a $B$:
+\[
+A \subseteq B \iff \text{para todo } x, \text{ si } x \in A \text{ entonces } x \in B
+\]
+Si además existe al menos un elemento en $B$ que no está en $A$, decimos que $A$ es un subconjunto propio de $B$, escrito $A \subsetneq B$.
+\end{definicion}
+Por el principio de extensionalidad, si $A \subseteq B$ y $B \subseteq A$,
+entonces $A = B$ (ambos conjuntos tienen los mismos elementos). Esta es la
+forma habitual de demostrar que dos conjuntos son iguales. 
+
+\subsection{La distinción entre elemento y conjunto unitario}
+Un objeto o individuo $x$ no debe identificarse con el conjunto unitario (\emph{singleton}) cuyo único miembro es $x$:
+\[
+x \neq \{x\}
+\]
+Cuando un elemento $x$ pertenece a un conjunto $A$ ($x \in A$), esto implica que el conjunto unitario formado por dicho elemento es un subconjunto de $A$:
+\[
+x \in A \implies \{x\} \subseteq A
+\]
+Sin embargo, el hecho de que $x \in A$ en general no implica
+que $\{x\} \in A$. Podemos apreciar esta distinción con dos ejemplos:
+\begin{enumerate}
+    \item \textbf{Ejemplo negativo.} En el conjunto $A = \{a, b\}$ se cumple que $a \in \{a, b\}$ y, en consecuencia, $\{a\} \subseteq \{a, b\}$. Por el contrario, la afirmación $\{a\} \in \{a, b\}$ es falsa: los elementos de $A$ son los individuos $a$ y $b$, y ninguno de ellos es el conjunto unitario $\{a\}$. 
+    
+    \item \textbf{Ejemplo positivo.} Consideremos el conjunto $B = \{a, \{a\}\}$, donde figuran tanto el individuo $a$ como el conjunto unitario $\{a\}$. En este conjunto se verifican simultáneamente tres relaciones:
+    \begin{itemize}
+        \item $a \in \{a, \{a\}\}$ \quad (el individuo $a$ es elemento de $B$).
+        \item $\{a\} \subseteq \{a, \{a\}\}$ \quad (todo elemento perteneciente a $\{a\}$, a saber $a$, pertenece a $B$).
+        \item $\{a\} \in \{a, \{a\}\}$ \quad (el conjunto unitario $\{a\}$ figura explícitamente como elemento de $B$).
+    \end{itemize}
+\end{enumerate}
+
+\subsection{El conjunto vacío (\texorpdfstring{$\varnothing$}{vacio})}
+El conjunto que carece por completo de elementos se denomina
+\textbf{conjunto vacío} y se denota mediante el símbolo $\varnothing$: 
+\[
+\text{Para todo } x, \quad x \notin \varnothing
+\]
+El conjunto vacío está incluido en cualquier conjunto. Es decir, para cualquier conjunto $A$:
+\[
+\varnothing \subseteq A
+\]
+\begin{nota}[Justificación lógica por vacuidad]
+  La definición de $A \subseteq B$ exige: «para todo $x$, si $x \in A$, entonces
+  $x \in B$». Cuando $A = \varnothing$, el antecedente
+  «$x \in \varnothing$» es falso para cualquier $x$. En
+  lógica proposicional aprendimos que un condicional con
+  antecedente falso es verdadero. En consecuencia,
+  $\varnothing \subseteq B$ se cumple trivialmente (o por vacuidad) para todo conjunto
+  $B$.
+\end{nota}
+
+\begin{ejemplo}[Aplicación en metalógica]
+En el estudio de la deducción natural y la completud:
+\begin{itemize}
+    \item Denotamos por $\Gamma$ un conjunto de premisas o hipótesis.
+    \item Decir que $A \in \Gamma$ significa que la fórmula específica $A$ es una de las premisas asumidas.
+    \item Decir que $\Delta \subseteq \Gamma$ significa que $\Delta$ es un subconjunto de premisas seleccionadas (por ejemplo, el subconjunto finito de premisas efectivamente utilizadas en una deducción formal).
+    \item Escribir $\varnothing \vdash A$ significa que la fórmula $A$
+      es un \textbf{teorema lógico}: se demuestra formalmente sin
+      necesidad de premisa alguna, a partir de un conjunto vacío de
+      supuestos iniciales.
+    \item Escribir $\Gamma \models \bot$ significa que $\Gamma$ no es
+      satisfacible. Como ninguna interpretación hace verdadera $\bot$,
+      la condición «toda interpretación que satisface $\Gamma$
+      satisface $\bot$» solo puede cumplirse por vacuidad, es decir, porque
+      ninguna interpretación satisface $\Gamma$.
+\end{itemize}
+\end{ejemplo}
+
+\section{Conjunto potencia o de las partes (\texorpdfstring{$\mathcal{P}(A)$}{P(A)})}
+
+\begin{definicion}[Conjunto potencia]
+Dado un conjunto $A$, su \textbf{conjunto potencia} (denotado $\mathcal{P}(A)$ o $2^A$) es el conjunto cuyos elementos son todos los subconjuntos de $A$:
+\[
+\mathcal{P}(A) = \{X \mid X \subseteq A\}
+\]
+\end{definicion}
+
+Si un conjunto finito $A$ tiene $n$ elementos, su conjunto potencia posee exactamente $2^n$ elementos, ya que para formar un subconjunto arbitrario disponemos de dos opciones independientes para cada elemento: incluirlo o excluirlo.
+
+\begin{ejemplo}
+Consideremos el conjunto de individuos $D = \{a, b\}$:
+\[
+\mathcal{P}(D) = \{\varnothing, \{a\}, \{b\}, \{a, b\}\}
+\]
+Obsérvese que:
+\begin{itemize}
+    \item El conjunto vacío $\varnothing$ y el propio $D$ son elementos de $\mathcal{P}(D)$.
+    \item $\varnothing \subseteq D$ y a la vez $\varnothing \in \mathcal{P}(D)$.
+\end{itemize}
+\end{ejemplo}
+
+\begin{aplicacion}[Conexión con la semántica de primer orden (tema~\ref{cap:sem-lpo})]
+En una estructura de primer orden $\mathcal{M} = \langle D, I \rangle$, la interpretación de un predicado monádico (propiedad) $P$ consiste en asignar a $P$ el conjunto de individuos que poseen dicha propiedad. Por consiguiente, la extensión $I(P)$ es un subconjunto de $D$, lo que equivale a afirmar que pertenece al conjunto de las partes de $D$:
+\[
+I(P) \subseteq D \iff I(P) \in \mathcal{P}(D)
+\]
+Si el universo de discurso $D$ consta de 3 individuos, hay exactamente $2^3 = 8$ extensiones posibles para un predicado monádico (desde la que contiene a los tres individuos hasta la vacía).
+\end{aplicacion}
+
+\section{Operaciones booleanas sobre conjuntos y su paralelismo lógico}
+
+A mediados del siglo XIX, George Boole descubrió que ciertas reglas de razonamiento podían formularse algebraicamente estudiando las operaciones entre clases o conjuntos. Las operaciones básicas con conjuntos $A$ y $B$ de un universo de referencia $U$ son:
+
+\begin{itemize}
+    \item \textbf{Unión ($A \cup B$).} Colección de elementos que pertenecen a $A$, a $B$ o a ambos:
+    \[
+    A \cup B = \{x \mid x \in A \lor x \in B\}
+    \]
+    Corresponde a la disyunción lógica ($\lor$).
+
+    \item \textbf{Intersección ($A \cap B$).} Colección de elementos que pertenecen simultáneamente a $A$ y a $B$:
+    \[
+    A \cap B = \{x \mid x \in A \land x \in B\}
+    \]
+    Corresponde a la conjunción lógica ($\land$). Si $A \cap B = \varnothing$, decimos que $A$ y $B$ son \textbf{disjuntos}.
+
+    \item \textbf{Diferencia ($A \setminus B$).} Elementos que están en $A$ pero no están en $B$:
+    \[
+    A \setminus B = \{x \mid x \in A \land x \notin B\}
+    \]
+
+    \item \textbf{Complemento ($A^c$ o $\overline{A}$).} Elementos del universo $U$ que no pertenecen a $A$:
+    \[
+    A^c = U \setminus A = \{x \in U \mid x \notin A\}
+    \]
+    Corresponde a la negación lógica ($\neg$).
+\end{itemize}
+
+La correspondencia es exacta si se toma como universo $U$ el conjunto
+de todas las interpretaciones (asignaciones de verdad), como $A$ el
+conjunto de las interpretaciones que hacen verdadera $p$ y como $B$ el
+de las que hacen verdadera $q$. Entonces $A \cup B$ es el conjunto de
+las interpretaciones que hacen verdadera $p \lor q$; $A \cap B$, el de
+las que hacen verdadera $p \land q$; $A^c$, el de las que hacen
+verdadera $\neg p$, y así en cada fila de la tabla:
+
+\begin{center}
+\begin{tabular}{|l|c|l|c|}
+\hline
+\textbf{Conjuntos} & \textbf{Símbolo} & \textbf{Lógica proposicional} & \textbf{Fórmula} \\
+\hline
+Unión & $A \cup B$ & Disyunción & $p \lor q$ \\
+Intersección & $A \cap B$ & Conjunción & $p \land q$ \\
+Complemento & $A^c$ & Negación & $\neg p$ \\
+Unión de $A^c$ y $B$ & $A^c \cup B$ & Condicional & $p \to q$ \\
+Unión de $A \cap B$ y $A^c \cap B^c$ & $(A \cap B) \cup (A^c \cap B^c)$ & Bicondicional & $p \leftrightarrow q$ \\
+Conjunto vacío & $\varnothing$ & Contradicción / Absurdo & $\bot$ \\
+Universo total & $U$ & Tautología & $p \lor \neg p$ \\
+\hline
+\end{tabular}
+\end{center}
+
+Lo mismo vale si en lugar de $p$ y $q$ se toman fórmulas cualesquiera
+$F_A$ y $F_B$.
+Con esta lectura, las \emph{relaciones} entre conjuntos corresponden a
+relaciones entre fórmulas: la inclusión $A \subseteq B$ significa que
+toda interpretación que hace verdadera $F_A$ hace verdadera $F_B$, es
+decir, $F_A \models F_B$; y la igualdad $A = B$ significa que $F_A \equiv F_B$.
+
+Gracias a este paralelismo, las leyes de De Morgan rigen de manera idéntica en ambos campos:
+\[
+(A \cup B)^c = A^c \cap B^c \qquad \longleftrightarrow \qquad \neg (p \lor q) \equiv \neg p \land \neg q
+\]
+\[
+(A \cap B)^c = A^c \cup B^c \qquad \longleftrightarrow \qquad \neg (p \land q) \equiv \neg p \lor \neg q
+\]
+
+\section{Pares ordenados y producto cartesiano (\texorpdfstring{$A \times B$}{A x B})}
+
+En un conjunto ordinario, los elementos no guardan ninguna relación de
+prioridad o sucesión: $\{a, b\} = \{b, a\}$. Sin embargo, razonamos
+habitualmente con relaciones en las que importa el orden: «$a$ es más antiguo que $b$», «$a$ ama a $b$» o «$a$ divide a $b$». Para representar estas relaciones necesitamos fijar el orden.
+
+\begin{definicion}[Par ordenado]
+Un \textbf{par ordenado} $(a, b)$ es un objeto que consta de un primer componente $a$ y un segundo componente $b$. Dos pares ordenados son idénticos si y solo si coinciden componente a componente:
+\[
+(a, b) = (c, d) \iff a = c \text{ y } b = d
+\]
+En particular, si $a \neq b$, entonces $(a, b) \neq (b, a)$.
+\end{definicion}
+
+\begin{definicion}[Producto cartesiano]
+Dados dos conjuntos $A$ y $B$, su \textbf{producto cartesiano} $A \times B$ es el conjunto de todos los pares ordenados cuyo primer elemento proviene de $A$ y cuyo segundo elemento proviene de $B$:
+\[
+A \times B = \{(a, b) \mid a \in A \text{ y } b \in B\}
+\]
+De forma general, para $n \ge 2$, el producto cartesiano de $n$ conjuntos $A_1, \dots, A_n$ (denotado $A_1 \times \dots \times A_n$) y, en el caso particular en que todos los conjuntos coinciden, la potencia cartesiana $A^n$, son los conjuntos de las \textbf{tuplas ordenadas} (o $n$-tuplas) de longitud $n$:
+\begin{align*}
+  A_1 \times \dots \times A_n &= \{(a_1, \dots, a_n) \mid a_i \in A_i \text{ para cada } i \in \{1, \dots, n\}\}, \\
+  A^n &= \underbrace{A \times \dots \times A}_{n \text{ veces}} = \{(a_1, \dots, a_n) \mid a_1, \dots, a_n \in A\}.
+\end{align*}
+\end{definicion}
+
+\begin{ejemplo}
+Sean $A = \{1, 2\}$ y $B = \{x, y\}$. El producto cartesiano consta de $2 \times 2 = 4$ pares:
+\[
+A \times B = \{(1, x), (1, y), (2, x), (2, y)\}
+\]
+\[
+B \times A = \{(x, 1), (x, 2), (y, 1), (y, 2)\}
+\]
+Obsérvese que $A \times B \neq B \times A$.
+\end{ejemplo}
+
+\section{Relaciones binarias y relaciones de equivalencia}
+
+\begin{definicion}[Relación binaria]
+Una \textbf{relación binaria} $R$ entre los elementos de un conjunto $D$ es un subconjunto del producto cartesiano $D \times D$:
+\[
+R \subseteq D \times D
+\]
+Escribimos $a R b$ o bien $(a, b) \in R$ para expresar que el individuo $a$ está relacionado con $b$. Si una relación involucra $n$ argumentos, es una relación $n$-aria y se define formalmente como $R \subseteq D^n$.
+\end{definicion}
+
+\begin{aplicacion}[Relaciones en lógica de primer orden]
+En el tema~\ref{cap:dn-lpo} y el tema~\ref{cap:sem-lpo} formalizamos enunciados relacionales como $R(x, y)$ («$x$ admira a $y$»). En la semántica de Tarski, la interpretación $I(R)$ es un conjunto de pares ordenados del dominio:
+\[
+\mathcal{M} \models R(a, b) \iff (I(a), I(b)) \in I(R)
+\]
+\end{aplicacion}
+
+\subsection{Propiedades estructurales de las relaciones binarias}
+Una relación $R \subseteq D \times D$ puede satisfacer diversas
+propiedades. Entre ellas:
+
+\begin{itemize}
+    \item \textbf{Reflexividad.} Todo elemento está relacionado consigo mismo: para todo $x \in D$, $(x, x) \in R$.
+    \item \textbf{Irreflexividad.} Ningún elemento está relacionado consigo mismo: para todo $x \in D$, $(x, x) \notin R$.
+    \item \textbf{Simetría.} Si un elemento se relaciona con otro, la relación es mutua: si $(x, y) \in R$, entonces $(y, x) \in R$.
+    \item \textbf{Asimetría.} Si $(x, y) \in R$, entonces $(y, x) \notin R$.
+    \item \textbf{Antisimetría.} Si dos elementos se relacionan mutuamente, deben ser idénticos: si $(x, y) \in R$ y $(y, x) \in R$, entonces $x = y$.
+    \item \textbf{Transitividad.} La relación se transfiere a través de pasos intermedios: si $(x, y) \in R$ y $(y, z) \in R$, entonces $(x, z) \in R$.
+    \item \textbf{Serialidad.} Todo elemento está relacionado con alguno: para todo $x \in D$ existe $y \in D$ tal que $(x, y) \in R$.
+\end{itemize}
+Estas propiedades aparecen en varios ejercicios de los temas~\ref{cap:dn-lpo} y~\ref{cap:sem-lpo} (por ejemplo, toda relación asimétrica es irreflexiva). Nótese que los nombres «irreflexiva» y «asimétrica» no significan «no reflexiva» y «no simétrica»: una relación puede no ser reflexiva sin ser irreflexiva.
+
+\subsection{Relaciones de equivalencia y clases de equivalencia}
+Cuando una relación reúne simultáneamente las propiedades de ser reflexiva, simétrica y transitiva, se denomina \textbf{relación de equivalencia} (y suele denotarse con el símbolo $\sim$ o $\equiv$).
+
+Las relaciones de equivalencia capturan formalmente la idea de «ser indistinguible respecto a cierto criterio». Su propiedad más importante es que dividen el dominio en bloques disjuntos llamados \textbf{clases de equivalencia}:
+\begin{definicion}[Clase de equivalencia]
+Sea $\sim$ una relación de equivalencia en $D$. Para cada $a \in D$, la \textbf{clase de equivalencia} de $a$ (escrita $[a]$) es el conjunto de todos los elementos equivalentes a $a$:
+\[
+[a] = \{x \in D \mid a \sim x\}
+\]
+El conjunto de todas las clases de equivalencia se denomina \textbf{conjunto cociente} y se denota $D / \sim$.
+\end{definicion}
+Las clases de equivalencia forman una \textbf{partición} de $D$: cada clase es no vacía (pues $a \in [a]$, por la reflexividad), la unión de todas las clases es $D$, y dos clases diferentes son disjuntas. En concreto, $[a] = [b]$ si $a \sim b$, y $[a] \cap [b] = \varnothing$ si no (la simetría y la transitividad garantizan este hecho).
+
+\begin{aplicacion}[El modelo canónico con igualdad de Henkin]
+En la demostración del teorema de completud de primer orden (apéndice~\ref{ap:henkin}), si el lenguaje contiene el predicado de identidad ($=$), los
+individuos del modelo canónico no pueden ser simplemente las constantes
+del lenguaje, porque dos constantes distintas $c_1$ y $c_2$
+(como dos nombres de Venus: «el lucero del alba» y «el lucero vespertino»)
+pueden designar el mismo objeto según la teoría ($(c_1 = c_2) \in \Gamma^*$). 
+
+La solución consiste en definir una relación de equivalencia entre constantes ($c_1 \sim c_2 \iff (c_1 = c_2) \in \Gamma^*$), comprobar con las reglas de la identidad que es compatible con los predicados (si $c_1 \sim c_2$, entonces $P(c_1) \in \Gamma^*$ si y solo si $P(c_2) \in \Gamma^*$), y construir el dominio canónico mediante las clases de equivalencia:
+\[
+D^* = \{[c] \mid c \text{ es una constante del lenguaje ampliado}\}
+\]
+Cada individuo de $D^*$ es una clase de nombres que la teoría declara idénticos. El apéndice~\ref{ap:henkin} desarrolla la demostración para lenguajes sin identidad y solo esboza este caso.
+\end{aplicacion}
+
+\section{Funciones o aplicaciones (\texorpdfstring{$f: X \to Y$}{f: X -> Y})}
+
+Una función es un caso particular de relación: podemos verla como un
+dispositivo que asocia a cada entrada exactamente una salida. 
+
+\begin{definicion}[Función]
+Una \textbf{función} o \textbf{aplicación} $f$ de un conjunto $X$ (llamado \textbf{dominio}) en un conjunto $Y$ (llamado \textbf{codominio}), denotada $f: X \to Y$, es una relación $f \subseteq X \times Y$ que cumple la condición de \textbf{univalencia y totalidad}:
+\[
+\text{Para todo } x \in X, \text{ existe un \emph{único} } y \in Y \text{ tal que } (x, y) \in f
+\]
+A dicho elemento único lo llamamos la \textbf{imagen} de $x$ bajo $f$, y escribimos $f(x) = y$. El conjunto de todos los valores efectivamente alcanzados se denomina \textbf{imagen o recorrido} de la función: $\operatorname{Im}(f) = \{f(x) \mid x \in X\} \subseteq Y$.
+\end{definicion}
+
+\subsection{Clasificación de funciones}
+\begin{itemize}
+    \item \textbf{Inyectiva (uno a uno).} Elementos distintos del dominio producen siempre imágenes distintas en el codominio:
+    \[
+    x_1 \neq x_2 \implies f(x_1) \neq f(x_2) \quad (\text{o equivalentemente: } f(x_1) = f(x_2) \implies x_1 = x_2)
+    \]
+    Una función inyectiva no confunde individuos diferentes.
+
+    \item \textbf{Sobreyectiva (exhaustiva).} Todo elemento del codominio es imagen de al menos un elemento del dominio:
+    \[
+    \text{Para todo } y \in Y, \text{ existe al menos un } x \in X \text{ tal que } f(x) = y \quad (\operatorname{Im}(f) = Y)
+    \]
+    Una función sobreyectiva no deja ningún elemento del codominio sin cubrir.
+
+    \item \textbf{Biyectiva (correspondencia biunívoca).} La función es simultáneamente inyectiva y sobreyectiva. Permite emparejar de manera reversible cada elemento de $X$ con exactamente un elemento de $Y$.
+\end{itemize}
+
+\subsection{El papel de las funciones en la semántica}
+Hemos encontrado funciones en tres lugares de la semántica:
+\begin{enumerate}
+    \item \textbf{Interpretaciones o asignaciones de verdad (tema~\ref{cap:sem-prop}).} Una interpretación $v$ es una función que asigna a cada variable proposicional $p$ un valor booleano:
+    \[
+    v: \text{Prop} \to \{1, 0\}
+    \]
+    Esta función se extiende de manera composicional a todas las fórmulas complejas del lenguaje formal.
+
+    \item \textbf{Asignaciones de variables en LPO (tema~\ref{cap:sem-lpo}).} Para definir cuándo una fórmula abierta $P(x)$ es satisfecha por una estructura, Tarski introduce una función de asignación $g$ que asocia a cada variable individual $x$ un objeto del dominio:
+    \[
+    g: \text{Var} \to D
+    \]
+
+    \item \textbf{Interpretación de constantes y símbolos funcionales (tema~\ref{cap:sem-lpo}).} La interpretación semántica asigna a cada símbolo de constante $c$ un individuo concreto: $I(c) \in D$. Y si el lenguaje incorpora símbolos de función $f$ de $n$ argumentos (como la suma, de dos, o el sucesor, de uno), la semántica les asigna una función:
+    \[
+    I(f): D^n \to D
+    \]
+\end{enumerate}
+
+\section{Finitud, infinitud y numerabilidad}
+
+En la metalógica (como el teorema de Kalmár en el tema~\ref{cap:meta-prop} o la demostración
+de Henkin del tema~\ref{cap:sem-lpo} y el apéndice~\ref{ap:henkin}), la distinción entre lo finito y los distintos
+órdenes de infinito desempeña un importante papel teórico. 
+
+\begin{definicion}[Conjuntos finitos e infinitos]
+Un conjunto $A$ es \textbf{finito} si consta de un número natural $n \in \mathbb{N}$ de elementos (incluyendo el conjunto vacío, donde $n = 0$). Un conjunto es \textbf{infinito} si no es finito; es decir, contiene una cantidad ilimitada de elementos.
+\end{definicion}
+
+\subsection{El infinito numerable (\texorpdfstring{$\aleph_0$}{alef-0})}
+Georg Cantor descubrió que no todos los conjuntos infinitos tienen el
+mismo «tamaño» o cardinalidad. El nivel más elemental de infinitud
+(y el de menor cardinalidad posible) es la numerabilidad:
+
+\begin{definicion}[Conjunto numerable]
+Un conjunto infinito $A$ es \textbf{numerable} (o contable) si puede ponerse en biyección con el conjunto de los números naturales $\mathbb{N} = \{0, 1, 2, 3, \dots\}$.
+
+De manera intuitiva: un conjunto infinito es numerable si y solo si es posible disponer todos sus elementos en una lista sin repeticiones ni omisiones:
+\[
+A = \{a_0, a_1, a_2, a_3, \dots\}
+\]
+\end{definicion}
+
+Son conjuntos infinitos numerables:
+\begin{itemize}
+    \item El conjunto de los números naturales $\mathbb{N}$.
+    \item El conjunto de los números enteros $\mathbb{Z} = \{0, 1, -1, 2, -2, \dots\}$.
+    \item El conjunto de los números racionales (fracciones) $\mathbb{Q}$.
+    \item \textbf{El conjunto de las fórmulas de un lenguaje formal.} Toda fórmula es una cadena finita de símbolos. Si el alfabeto es finito, basta ordenar las fórmulas por longitud y, a igual longitud, alfabéticamente. Si el alfabeto es infinito numerable ($s_1, s_2, s_3, \dots$), como ocurre cuando hay infinitas constantes, ese orden no sirve (habría infinitas cadenas de longitud 1), pero podemos proceder por etapas: en la etapa $n$ listamos las fórmulas, en número finito, de longitud como mucho $n$ que solo usan los símbolos $s_1, \dots, s_n$ y que no hayan aparecido antes. Toda fórmula aparece en alguna etapa, de modo que obtenemos una lista:
+    \[
+    \mathcal{F} = \{A_0, A_1, A_2, A_3, \dots\}
+    \]
+\end{itemize}
+
+Por el contrario, el conjunto de los números reales $\mathbb{R}$ es \textbf{no numerable} (su cardinalidad es estrictamente mayor que la de los números naturales, como muestra el argumento diagonal de Cantor).
+
+\subsection{La numerabilidad en la metalógica del curso}
+La numerabilidad interviene en varios de los resultados teóricos que
+hemos estudiado:
+
+\begin{enumerate}
+    \item \textbf{Lema de Lindenbaum-Henkin.}  
+    Para ampliar un conjunto consistente $\Gamma$ hasta convertirlo en un conjunto maximalmente consistente con testigos, Henkin aprovecha que las sentencias del lenguaje ampliado forman una lista infinita numerable:
+    \[
+    A_0, A_1, A_2, \dots
+    \]
+    El lema procede paso a paso por inducción: en el paso 0 toma
+    $\Gamma_0 = \Gamma$; en el paso $n+1$ examina la fórmula $A_n$ y
+    decide si añadirla o no. Si el lenguaje no fuera numerable, este
+    procedimiento paso a paso no podría definirse del mismo modo. 
+
+    \item \textbf{El teorema de Löwenheim-Skolem.}  
+    En su versión más sencilla, el teorema afirma que todo conjunto de sentencias de un lenguaje numerable sin identidad que tenga algún modelo tiene también un modelo numerable. ¿Por qué ocurre esto? Porque el modelo canónico de Henkin utiliza como universo de discurso las propias constantes del lenguaje ampliado, y estas, al ser cadenas finitas sobre un alfabeto numerable, forman un conjunto numerable.
+
+    \item \textbf{Ramas infinitas y semidecidibilidad.}  
+    En el cálculo de tableaux de primer orden, un árbol con fórmulas existenciales y universales puede no cerrarse nunca y desarrollar una rama infinita numerable. Si el árbol se construye de modo sistemático, cada rama infinita describe un conjunto de Hintikka, que proporciona un contramodelo con dominio numerable. Por eso la validez en primer orden solo es semidecidible: si un argumento con un número finito de premisas es válido, el tableau sistemático se cierra en un número finito de pasos; si no lo es, puede no terminar (sección~\ref{sec:ramas-infinitas}).
+\end{enumerate}
+
+\section*{Referencias bibliográficas}
+
+\begin{enumerate}
+    \item \textbf{Enderton, H. B.} (1977). \emph{Elements of Set Theory}. Academic Press, Nueva York. [Introducción a la teoría axiomática de Zermelo-Fraenkel].
+    \item \textbf{Halmos, P. R.} (1960). \emph{Naive Set Theory}. Van Nostrand, Princeton. Traducción española: \emph{Teoría intuitiva de los conjuntos}, CECSA, México, 1965. [Introducción breve y clásica a la teoría intuitiva de conjuntos].
+    \item \textbf{Hrbacek, K., \& Jech, T.} (1999). \emph{Introduction to Set Theory} (3.ª ed.). Marcel Dekker, Nueva York. [Teoría axiomática, cardinales y ordinales].
+    \item \textbf{Ivorra, C.} \emph{Lógica y teoría de conjuntos}. Universitat de València. \url{https://www.uv.es/ivorra/Libros/Logica.pdf}. [Apuntes gratuitos en castellano; versión elemental, que el autor ya no actualiza].
+    \item \textbf{Mosterín, J.} (1980). \emph{Teoría axiomática de conjuntos} (2.ª ed.; 1.ª ed., 1971). Ariel, Barcelona. [Exposición en castellano de la axiomática de Zermelo-Fraenkel].
+\end{enumerate}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "ApuntesLogica"
+%%% End:

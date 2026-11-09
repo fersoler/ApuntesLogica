@@ -1,0 +1,382 @@
+% -*- coding: utf-8 -*-
+\section{Introducción: el teorema de completud y el teorema del modelo}
+
+El principal objetivo metateórico de la lógica clásica de primer orden es demostrar la coincidencia entre la consecuencia semántica ($\models$) y la derivabilidad sintáctica en deducción natural ($\vdash$):
+\[
+\Gamma \vdash A \iff \Gamma \models A
+\]
+El sentido directo ($\Gamma \vdash A \implies \Gamma \models A$) es el
+\textbf{teorema de corrección}. Al igual que en la lógica proposicional
+(donde se demostró por inducción sobre la longitud de las deducciones en el
+tema~\ref{cap:meta-prop}), la corrección en primer orden garantiza que el cálculo deductivo
+no lleva de premisas verdaderas a conclusiones falsas. Se demuestra
+comprobando que cada línea de una derivación es consecuencia lógica de las
+premisas e hipótesis activas en ella. Para las reglas $\forall\text{I}$ y
+$\exists\text{E}$ esto no significa que cada paso preserve la verdad en
+una estructura fija; lo que se preserva es la validez, gracias a las restricciones sobre parámetros arbitrarios y
+constantes testigo analizadas en el tema~\ref{cap:dn-lpo}.
+
+El sentido inverso ($\Gamma \models A \implies \Gamma \vdash A$) es el
+\textbf{teorema de completud}, demostrado por primera vez por Kurt
+Gödel en 1930 y demostrado de nuevo por Leon Henkin en 1949 mediante un método
+que destaca por su generalidad, dado que es posible adaptarlo a
+diversos sistemas formales. 
+
+\paragraph{Supuestos.} Para simplificar, en este apéndice suponemos que el lenguaje $\mathcal{L}$ es numerable, que dispone de infinitas constantes individuales (como $a, b, \dots$ con subíndices) y que no contiene ni el símbolo de identidad ni símbolos de función (el tema~\ref{cap:dn-lpo} sí incluye la identidad). Además, $\Gamma$ y $A$ denotan siempre sentencias (fórmulas sin variables libres), igual que en las derivaciones del tema~\ref{cap:dn-lpo}. En la sección~\ref{sec_henkin_identidad} indicamos qué cambia si se añade la identidad.
+
+El punto de partida de Henkin es que la completud fuerte equivale a un enunciado sobre la existencia de modelos para conjuntos consistentes (sección~\ref{sec:consistencia-satisfacibilidad}, donde se definen la consistencia y la satisfacibilidad, y lema~\ref{lema_reduccion}):
+\begin{quote}
+\textbf{Teorema del modelo:} si $\Gamma$ es consistente ($\Gamma \nvdash \bot$), entonces existe una estructura $\mathcal{M}$ tal que $\mathcal{M} \models \Gamma$.
+\end{quote}
+
+La estrategia de Henkin se reduce, por tanto, a un objetivo: dada una teoría consistente arbitraria $\Gamma$, construir una estructura semántica $\mathcal{M}$ que la haga verdadera.
+
+\section{Paso 1: el enriquecimiento del lenguaje con testigos frescos}
+
+Sea $\mathcal{L}$ un lenguaje de primer orden numerable. Para poder dotar de «nombres» a todos los individuos cuya existencia afirmen las fórmulas existenciales de la teoría, Henkin amplía el lenguaje añadiendo un conjunto infinito numerable de nuevas constantes individuales, llamadas \textbf{testigos de Henkin}:
+\[
+C = \{c_1, c_2, c_3, \dots\}
+\]
+Definimos el lenguaje enriquecido como $\mathcal{L}^* = \mathcal{L} \cup C$. Puesto que tanto los símbolos originales como las nuevas constantes son numerables, el conjunto de todas las sentencias de $\mathcal{L}^*$ es numerable (véase el apéndice~\ref{ap:conjuntos}) y puede ser ordenado en una secuencia infinita:
+\[
+A_0, A_1, A_2, A_3, \dots
+\]
+
+\section{Paso 2: el lema de Lindenbaum-Henkin}
+
+\begin{definition}[Conjunto de Henkin]
+Un conjunto de sentencias $\Gamma^*$ de $\mathcal{L}^*$ es un \textbf{conjunto de Henkin} si satisface:
+\begin{enumerate}
+    \item \textbf{Consistencia.} $\Gamma^* \nvdash \bot$.
+    \item \textbf{Maximalidad.} Para toda sentencia $A$ de $\mathcal{L}^*$, $A \in \Gamma^*$ o bien $\neg A \in \Gamma^*$.
+    \item \textbf{Propiedad de los testigos.} Para toda fórmula existencial $\exists x B(x)$, si $\exists x B(x) \in \Gamma^*$, entonces existe una constante $c \in C$ tal que $B(c) \in \Gamma^*$.
+\end{enumerate}
+\end{definition}
+
+\begin{lemma}[Lema de Lindenbaum-Henkin]\label{lema_lindenbaum_henkin}
+Todo conjunto consistente de sentencias $\Gamma$ de $\mathcal{L}$ puede extenderse a un conjunto de Henkin $\Gamma^*$ en el lenguaje enriquecido $\mathcal{L}^*$ tal que $\Gamma \subseteq \Gamma^*$.
+\end{lemma}
+
+\begin{proof}
+Construimos inductivamente una cadena creciente de conjuntos consistentes $\Gamma_0 \subseteq \Gamma_1 \subseteq \Gamma_2 \subseteq \dots$ como sigue:
+\begin{enumerate}
+    \item \textbf{Base.} Definimos $\Gamma_0 = \Gamma$. Puesto que $\Gamma$ es consistente en $\mathcal{L}$, sigue siendo consistente en $\mathcal{L}^*$. En efecto, si hubiera una derivación de $\bot$ a partir de $\Gamma$ en $\mathcal{L}^*$, como las constantes nuevas no aparecen en $\Gamma$, podríamos sustituir cada una de las (finitas) constantes nuevas que aparecen en ella por una constante de $\mathcal{L}$ que no aparezca en la derivación (una distinta para cada constante nueva); el resultado sigue siendo una derivación correcta (las restricciones de $\forall$I y $\exists$E se conservan) y sería una derivación de $\bot$ en $\mathcal{L}$.
+    \item \textbf{Paso inductivo.} Dado el conjunto $\Gamma_n$ consistente, consideramos la fórmula $A_n$ de la enumeración:
+    \begin{itemize}
+        \item \textbf{Caso 1.} Si $\Gamma_n \cup \{A_n\}$ es \textbf{inconsistente}, definimos:
+        \[
+        \Gamma_{n+1} = \Gamma_n.
+        \]
+        \item \textbf{Caso 2.} Si $\Gamma_n \cup \{A_n\}$ es \textbf{consistente}:
+        \begin{itemize}
+            \item Si $A_n$ no es una fórmula existencial, definimos:
+            \[
+            \Gamma_{n+1} = \Gamma_n \cup \{A_n\}.
+            \]
+            \item Si $A_n$ es una fórmula existencial de la forma $\exists x B(x)$, elegimos la primera constante $c \in C$ que no ocurra en $\Gamma_n$ ni en $A_n$ (lo cual siempre es posible porque $C$ es infinito, $\Gamma$ no contiene constantes de $C$ y hasta la etapa $n$ solo se han añadido a $\Gamma$ un número finito de sentencias, que contienen un número finito de constantes de $C$), y definimos:
+            \[
+            \Gamma_{n+1} = \Gamma_n \cup \{\exists x B(x), B(c)\}.
+            \]
+        \end{itemize}
+    \end{itemize}
+\end{enumerate}
+
+\paragraph{Verificación de la consistencia en el caso existencial.}  
+Debemos asegurarnos de que al añadir $B(c)$ para una constante fresca $c$, el conjunto $\Gamma_{n+1}$ sigue siendo consistente. Si no lo fuera, tendríamos $\Gamma_n \cup \{\exists x B(x), B(c)\} \vdash \bot$. Por deducción natural proposicional, esto equivale a:
+\[
+\Gamma_n \cup \{\exists x B(x)\} \vdash \neg B(c).
+\]
+Pero la constante $c$ no aparece en $\Gamma_n$ ni en $\exists x B(x)$ (ni, por tanto, en $\forall x \neg B(x)$). Aplicando la regla de introducción del universal ($\forall\text{I}$), obtenemos:
+\[
+\Gamma_n \cup \{\exists x B(x)\} \vdash \forall x \neg B(x).
+\]
+Por la regla de conversión de cuantificadores (CQ), $\forall x \neg B(x)$ equivale a $\neg \exists x B(x)$. Por tanto:
+\[
+\Gamma_n \cup \{\exists x B(x)\} \vdash \neg \exists x B(x),
+\]
+lo que implicaría que $\Gamma_n \cup \{\exists x B(x)\} \vdash \bot$, contradiciendo que estábamos en el Caso 2, donde $\Gamma_n \cup \{A_n\}$ era consistente. Por consiguiente, $\Gamma_{n+1}$ es consistente.
+
+\paragraph{Definición de $\Gamma^*$.} Definimos el conjunto límite como la unión infinita:
+\[
+\Gamma^* = \bigcup_{n=0}^{\infty} \Gamma_n.
+\]
+Comprobamos que $\Gamma^*$ cumple las propiedades requeridas:
+\begin{enumerate}
+    \item \textbf{$\Gamma^*$ es consistente.} Toda derivación en deducción natural es un objeto finito que solo utiliza un número finito de premisas. Si $\Gamma^* \vdash \bot$, esas finitas premisas pertenecerían todas a un mismo $\Gamma_k$ (la cadena es creciente), lo que contradice que cada $\Gamma_k$ es consistente.
+    \item \textbf{$\Gamma^*$ es maximal.} Consideremos cualquier sentencia $A$ de $\mathcal{L}^*$. Dado que la lista $A_0, A_1, \dots$ contiene todas las sentencias del lenguaje, tanto $A$ como su negación $\neg A$ aparecen en dicha enumeración (digamos $A = A_n$ y $\neg A = A_k$).
+    
+    Si $A_n \notin \Gamma^*$, es porque en el paso $n$ el conjunto $\Gamma_n \cup \{A_n\}$ era inconsistente ($\Gamma_n \cup \{A_n\} \vdash \bot$), lo que implica que $\Gamma_n \vdash \neg A_n$ y, por ende, $\Gamma^* \vdash \neg A_n$. Cuando el proceso inductivo alcanza el paso $k$ correspondiente a la fórmula $\neg A_n$, el conjunto $\Gamma_k \cup \{\neg A_n\}$ tiene que ser consistente; en efecto, si $\Gamma_k \cup \{\neg A_n\} \vdash \bot$, se tendría $\Gamma_k \vdash A_n$, y en consecuencia $\Gamma^*$ deduciría tanto $A_n$ como $\neg A_n$ ($\Gamma^* \vdash \bot$), lo cual contradiría que $\Gamma^*$ es consistente (punto 1). Como además $\neg A_n$ no es existencial, en el paso $k$ se aplicó el Caso 2 y se incorporó $\neg A_n \in \Gamma_{k+1} \subseteq \Gamma^*$. Por tanto, para toda sentencia $A$, o bien $A \in \Gamma^*$ o bien $\neg A \in \Gamma^*$.
+    \item \textbf{$\Gamma^*$ tiene la propiedad de los testigos.} Supongamos que $\exists x B(x) \in \Gamma^*$ y sea $A_n = \exists x B(x)$ su lugar en la enumeración. Como $\Gamma_n \cup \{A_n\} \subseteq \Gamma^*$ y $\Gamma^*$ es consistente, $\Gamma_n \cup \{A_n\}$ es consistente; luego en el paso $n$ se aplicó el Caso 2 y se añadió $B(c) \in \Gamma_{n+1} \subseteq \Gamma^*$.
+\end{enumerate}
+El lema queda demostrado.
+\end{proof}
+
+\begin{observacion}[Clausura deductiva y propiedades booleanas de $\Gamma^*$]\label{obs_clausura_deductiva}
+Como consecuencia directa de su consistencia y maximalidad, el conjunto de Henkin $\Gamma^*$ satisface las siguientes propiedades:
+\begin{enumerate}
+    \item \textbf{Clausura deductiva.} Para cualquier sentencia $A$,
+    \[
+    \Gamma^* \vdash A \iff A \in \Gamma^*.
+    \]
+    \emph{Demostración.} La implicación $(\Leftarrow)$ es inmediata (si $A \in \Gamma^*$, se deduce tomando $A$ como premisa). Para $(\Rightarrow)$, si $\Gamma^* \vdash A$ y fuera $A \notin \Gamma^*$, por la maximalidad de $\Gamma^*$ tendríamos $\neg A \in \Gamma^*$; esto implicaría que $\Gamma^* \vdash A$ y $\Gamma^* \vdash \neg A$, de modo que $\Gamma^* \vdash \bot$, contradiciendo que $\Gamma^*$ es consistente. Por consiguiente, $A \in \Gamma^*$.
+    \item \textbf{Comportamiento homomórfico respecto a conectivas.}
+    \begin{itemize}
+        \item $\neg A \in \Gamma^* \iff A \notin \Gamma^*$.
+        \item $B \land C \in \Gamma^* \iff B \in \Gamma^* \text{ y } C \in \Gamma^*$.
+        \item $B \lor C \in \Gamma^* \iff B \in \Gamma^* \text{ o } C \in \Gamma^*$.
+        \item $B \to C \in \Gamma^* \iff (B \in \Gamma^* \implies C \in \Gamma^*)$.
+        \item $B \leftrightarrow C \in \Gamma^* \iff (B \in \Gamma^* \iff C \in \Gamma^*)$.
+        \item $\bot \notin \Gamma^*$ (por la consistencia).
+    \end{itemize}
+    Cada equivalencia se comprueba con las reglas de introducción y eliminación de la conectiva correspondiente y de la negación, la clausura deductiva, la consistencia y la maximalidad. Por ejemplo, si $B \lor C \in \Gamma^*$ pero $B \notin \Gamma^*$ y $C \notin \Gamma^*$, entonces $\neg B, \neg C \in \Gamma^*$, y con $\lor$E se deriva $\bot$ de $\Gamma^*$, lo que es imposible.
+    \item \textbf{Universales.} Si $\forall x B(x) \in \Gamma^*$, entonces $B(c) \in \Gamma^*$ para toda constante $c$ de $\mathcal{L}^*$ (por $\forall$E y la clausura deductiva).
+\end{enumerate}
+\end{observacion}
+
+\section{Paso 3: construcción del modelo canónico de términos}
+
+Disponemos ahora de un conjunto de Henkin $\Gamma^*$. Henkin construye
+a partir de él una estructura $\mathcal{M}_{\Gamma^*} = \langle D, I
+\rangle$ del siguiente modo:
+
+\begin{definition}[Modelo canónico]
+Sea $\Gamma^*$ un conjunto de Henkin. Definimos la estructura $\mathcal{M}_{\Gamma^*} = \langle D, I \rangle$ como:
+\begin{enumerate}
+    \item \textbf{Dominio de discurso ($D$).} El conjunto de todas las constantes individuales del lenguaje $\mathcal{L}^*$, es decir, las de $\mathcal{L}$ junto con los testigos de $C$. Es un conjunto infinito numerable. Como el lenguaje no tiene símbolos de función, las constantes son precisamente los términos cerrados; por eso se habla de \emph{modelo de términos}.
+    \item \textbf{Interpretación ($I$).} Cada constante se interpreta a sí misma: $I(c) = c$. Para cualquier símbolo de predicado $n$-ario $P$ y constantes $c_1, \dots, c_n \in D$, la interpretación de $P$ es:
+    \[
+    (c_1, \dots, c_n) \in I(P) \iff P(c_1, \dots, c_n) \in \Gamma^*.
+    \]
+\end{enumerate}
+\end{definition}
+
+\section{Paso 4: el lema de verdad (\emph{Truth Lemma})}
+
+El corazón de la demostración es probar que, en el modelo canónico, la verdad semántica coincide con la pertenencia sintáctica a la teoría:
+
+\begin{lemma}[Lema de verdad]\label{lema_verdad}
+Para cualquier fórmula cerrada $A$ del lenguaje $\mathcal{L}^*$:
+\[
+\mathcal{M}_{\Gamma^*} \models A \iff A \in \Gamma^*.
+\]
+\end{lemma}
+
+\begin{proof}
+Procedemos por inducción sobre la complejidad sintáctica de la fórmula $A$ (número de conectivas y cuantificadores):
+
+\paragraph{Caso base ($A$ es una fórmula atómica $P(c_1, \dots, c_n)$).}  
+Por definición tarskiana de satisfacción en $\mathcal{M}_{\Gamma^*}$:
+\[
+\mathcal{M}_{\Gamma^*} \models P(c_1, \dots, c_n) \iff (I(c_1), \dots, I(c_n)) \in I(P) \iff (c_1, \dots, c_n) \in I(P).
+\]
+Por la definición de $I(P)$ en el modelo canónico, esto equivale a que $P(c_1, \dots, c_n) \in \Gamma^*$. Si $A$ es $\bot$, el lema también se cumple: $\mathcal{M}_{\Gamma^*} \not\models \bot$ y, por la consistencia, $\bot \notin \Gamma^*$.
+
+\paragraph{Paso inductivo.}  
+Asumimos como hipótesis de inducción (HI) que el lema se cumple para todas las sentencias de menor complejidad que $A$. No basta con las subfórmulas de $A$: en los casos de los cuantificadores aplicaremos la HI a instancias $B(c)$, que no son subfórmulas de $\exists x B(x)$ pero tienen menor complejidad.
+
+Usaremos también un hecho sencillo: como $I(c) = c$, satisfacer $B(x)$ con una asignación que da a $x$ el valor $c$ equivale a que sea verdadera la sentencia $B(c)$; es decir, $\mathcal{M}_{\Gamma^*}, g[x \mapsto c] \models B(x) \iff \mathcal{M}_{\Gamma^*} \models B(c)$.
+
+\begin{itemize}
+    \item \textbf{Caso de la negación ($A = \neg B$):}
+    \begin{align*}
+    \mathcal{M}_{\Gamma^*} \models \neg B &\iff \mathcal{M}_{\Gamma^*}
+                                            \not\models B &
+                                                            \text{(Semántica
+                                                            de $\neg$)} \\
+    &\iff B \notin \Gamma^* & \text{(Por hipótesis de inducción aplicada a $B$)} \\
+    &\iff \neg B \in \Gamma^* & \text{(Por consistencia y maximalidad de $\Gamma^*$)}
+    \end{align*}
+
+    \item \textbf{Caso de la conjunción ($A = B \land C$):}
+    \begin{align*}
+    \mathcal{M}_{\Gamma^*} \models B \land C &\iff \mathcal{M}_{\Gamma^*} \models B \text{ y } \mathcal{M}_{\Gamma^*} \models C & \text{(Semántica de $\land$)} \\
+    &\iff B \in \Gamma^* \text{ y } C \in \Gamma^* & \text{(Por HI)} \\
+    &\iff B \land C \in \Gamma^* & \text{(Por reglas $\land$I y $\land$E en $\Gamma^*$)}
+    \end{align*}
+
+    \item \textbf{Caso del condicional ($A = B \to C$):}
+    \begin{align*}
+    \mathcal{M}_{\Gamma^*} \models B \to C &\iff (\mathcal{M}_{\Gamma^*} \models B \implies \mathcal{M}_{\Gamma^*} \models C) & \text{(Semántica de $\to$)} \\
+    &\iff (B \in \Gamma^* \implies C \in \Gamma^*) & \text{(Por HI)} \\
+    &\iff B \to C \in \Gamma^* & \text{(Observación~\ref{obs_clausura_deductiva})}
+    \end{align*}
+    Los casos de la disyunción y el bicondicional se tratan igual, usando las equivalencias correspondientes de la observación~\ref{obs_clausura_deductiva}.
+
+    \item \textbf{Caso del existencial ($A = \exists x B(x)$):}
+    \begin{itemize}
+        \item [$(\Rightarrow)$] Supongamos que $\mathcal{M}_{\Gamma^*} \models \exists x B(x)$. Por la semántica de Tarski, existe algún elemento del dominio (una constante $c$) tal que $\mathcal{M}_{\Gamma^*}, g[x \mapsto c] \models B(x)$, es decir, $\mathcal{M}_{\Gamma^*} \models B(c)$. Por hipótesis de inducción aplicada a la fórmula más simple $B(c)$, tenemos que $B(c) \in \Gamma^*$. Aplicando la regla de introducción del existencial ($\exists\text{I}$) en deducción natural, de $B(c)$ se deduce formalmente $\exists x B(x)$ ($\Gamma^* \vdash \exists x B(x)$). Dado que $\Gamma^*$ es cerrado bajo deducción (observación~\ref{obs_clausura_deductiva}), concluimos que $\exists x B(x) \in \Gamma^*$.
+        \item [$(\Leftarrow)$] Supongamos que $\exists x B(x) \in \Gamma^*$. Por la propiedad de los testigos que caracteriza al conjunto de Henkin $\Gamma^*$, existe una constante $c \in C$ tal que $B(c) \in \Gamma^*$. Por hipótesis de inducción aplicada a $B(c)$, tenemos que $\mathcal{M}_{\Gamma^*} \models B(c)$. Dado que $c$ es un elemento del dominio $D$, por la semántica de Tarski para el existencial se concluye inmediatamente que $\mathcal{M}_{\Gamma^*} \models \exists x B(x)$.
+    \end{itemize}
+
+    \item \textbf{Caso del universal ($A = \forall x B(x)$):} 
+    \begin{itemize}
+        \item [$(\Leftarrow)$] Si $\forall x B(x) \in \Gamma^*$, entonces $B(c) \in \Gamma^*$ para toda constante $c$ (observación~\ref{obs_clausura_deductiva}). Por HI, $\mathcal{M}_{\Gamma^*} \models B(c)$ para toda constante $c$. Como todo elemento del dominio es una constante, $\mathcal{M}_{\Gamma^*} \models \forall x B(x)$.
+        \item [$(\Rightarrow)$] Si $\forall x B(x) \notin \Gamma^*$, por maximalidad $\neg \forall x B(x) \in \Gamma^*$, y por CQ y la clausura deductiva $\exists x \neg B(x) \in \Gamma^*$. Por la propiedad de los testigos, $\neg B(c) \in \Gamma^*$ para alguna constante $c$, luego $B(c) \notin \Gamma^*$ (por consistencia). Por HI, $\mathcal{M}_{\Gamma^*} \not\models B(c)$, y por tanto $\mathcal{M}_{\Gamma^*} \not\models \forall x B(x)$.
+    \end{itemize}
+    Obsérvese que el caso universal, igual que el existencial, necesita la propiedad de los testigos.
+\end{itemize}
+El lema de verdad queda así demostrado para cualquier fórmula cerrada de $\mathcal{L}^*$.
+\end{proof}
+
+\begin{observacion}[Fórmulas cerradas y el método canónico de Henkin]\label{obs_cerradas_henkin}
+Conviene resaltar por qué el lema de verdad se formula específicamente
+para fórmulas cerradas (enunciados o sentencias sin variables
+libres). La construcción canónica de Henkin introduce constantes
+testigo ($c \in C$) para las sentencias existenciales ($\exists
+x B(x)$), y el conjunto maximalmente consistente $\Gamma^*$
+solo contiene sentencias del lenguaje ampliado
+$\mathcal{L}^*$. Ninguna fórmula abierta pertenece a $\Gamma^*$, aunque algunas, como $P(x) \lor \neg P(x)$, son verdaderas en $\mathcal{M}_{\Gamma^*}$; por eso el lema solo puede valer para sentencias. En el modelo canónico, el universo está formado por
+las propias constantes y la noción primaria es la verdad de enunciados
+cerrados. Como veremos a continuación en el teorema de completud, este resultado se formula para sentencias, que constituyen el objeto propio de las teorías lógicas y matemáticas.
+\end{observacion}
+
+\section[Corolarios de la completud: compacidad y
+Löwenheim-Skolem]{Conclusión de la completud y corolarios: compacidad
+  y\\ Löwenheim-Skolem}
+
+A partir del lema de verdad, la demostración del teorema de completud
+fuerte para sentencias es inmediata:
+
+\begin{theorem}[Teorema de completud fuerte para sentencias]
+El cálculo de deducción natural de primer orden es fuertemente completo para enunciados cerrados: para cualquier conjunto de sentencias (fórmulas cerradas) $\Gamma$ y cualquier sentencia $A$,
+\[
+\Gamma \models A \implies \Gamma \vdash A.
+\]
+\end{theorem}
+
+\begin{proof}
+Procedemos por reducción al absurdo. Supongamos que $\Gamma \models A$ y $\Gamma \nvdash A$:
+\begin{enumerate}
+    \item El conjunto $\Gamma \cup \{\neg A\}$ es sintácticamente consistente. En efecto, si tuviéramos $\Gamma \cup \{\neg A\} \vdash \bot$, bastaría tomar $\neg A$ como hipótesis de una caja que llegue a $\bot$ y aplicar IP para deducir $\Gamma \vdash A$, en contra de lo supuesto.
+    \item Por el lema de Lindenbaum-Henkin (\ref{lema_lindenbaum_henkin}), $\Gamma \cup \{\neg A\}$ puede extenderse a un conjunto de Henkin $\Gamma^*$ en el lenguaje ampliado $\mathcal{L}^*$, con $\Gamma \cup \{\neg A\} \subseteq \Gamma^*$.
+    \item Por el lema de verdad (\ref{lema_verdad}), el modelo
+      canónico de términos $\mathcal{M}_{\Gamma^*}$ satisface todas
+      las sentencias de $\Gamma^*$ (y lo mismo hace la
+      $\mathcal{L}$-estructura que no interpreta las constantes nuevas, pues $\Gamma$ y $A$ no las contienen):
+    \[
+    \mathcal{M}_{\Gamma^*} \models \Gamma \quad \text{y} \quad \mathcal{M}_{\Gamma^*} \models \neg A.
+    \]
+    \item La semántica de la negación establece que $\mathcal{M}_{\Gamma^*} \models \neg A \iff \mathcal{M}_{\Gamma^*} \not\models A$.
+    \item Por consiguiente, $\mathcal{M}_{\Gamma^*}$ es un modelo que
+      hace verdaderas todas las sentencias de $\Gamma$ y falsa la
+      sentencia $A$, de modo que $\Gamma
+      \not\models A$. 
+\end{enumerate}
+Esto contradice la suposición $\Gamma \models A$; por tanto, $\Gamma \models A \implies \Gamma \vdash A$.
+\end{proof}
+
+\begin{observacion}[Fórmulas abiertas: anomalías semánticas y deductivas]\label{obs_formulas_abiertas}
+Veamos por qué el teorema de completud se enuncia para
+sentencias y qué problemas surgen al emplear
+fórmulas abiertas (con variables libres) como premisas o conclusión. 
+
+En la práctica, las teorías axiomáticas (como los axiomas de Peano
+para la aritmética o ZFC para la teoría de conjuntos) y los teoremas
+que se pretenden demostrar suelen ser sentencias
+(enunciados sin variables libres) o se entienden como sus clausuras universales. Las fórmulas abiertas son
+predicados incompletos que solo adquieren un valor de verdad definido
+cuando se fija una asignación para sus variables libres, o cuando estas quedan ligadas por cuantificadores o sustituidas
+por constantes. 
+
+Si consideramos fórmulas abiertas como premisas, aparecen 
+anomalías tanto en la semántica como en el cálculo: 
+\begin{itemize}
+    \item \textbf{Anomalía semántica (fallo del teorema de la
+        deducción).} Tal como se definió en el tema~\ref{cap:sem-lpo}, una fórmula
+      abierta es verdadera en una estructura ($\mathcal{M} \models B(x)$)
+      si resulta satisfecha bajo \emph{toda} asignación de variables
+      (se evalúa igual que $\mathcal{M} \models \forall x B(x)$). Bajo
+      esta convención, la inferencia $P(x) \models P(y)$ es
+      formalmente válida: si todo individuo del dominio cumple $P$,
+      cualquier otro individuo también lo cumple. Sin embargo,
+      falla el teorema de la deducción semántico: $P(x) \to P(y)$
+      no es universalmente válida. En efecto,
+      basta una estructura con $D = \{1, 2\}$, $I(P) = \{1\}$ y una
+      asignación con $g(x) = 1$ y $g(y) = 2$ para que
+      $\mathcal{M}, g \not\models P(x) \to P(y)$ (pues $\text{V} \to \text{F} = \text{F}$). 
+    \item \textbf{Anomalía sintáctica.}
+      En el cálculo del tema~\ref{cap:dn-lpo} las líneas de una derivación son siempre
+      sentencias (las reglas de los cuantificadores operan con
+      constantes), de modo que «$P(x) \vdash P(y)$» ni siquiera está
+      definido. En los cálculos de deducción natural que sí admiten fórmulas abiertas, la
+      regla $\forall\text{I}$ prohíbe generalizar sobre una variable
+      libre en las premisas, y por eso $P(x) \nvdash P(y)$: la
+      correspondencia con $\models$ se rompería. 
+\end{itemize}
+Si una premisa ha de tener fuerza universal,
+debe explicitarse en el lenguaje formal mediante su cuantificación:
+$\forall x P(x)$. Y a partir de ahí, se verifican tanto la
+derivabilidad ($\forall x P(x) \vdash \forall y P(y)$) como el teorema
+de la deducción semántico ($\models \forall x P(x) \to \forall y P(y)$). 
+
+La formulación del teorema de completud para sentencias asegura así
+que la correspondencia entre $\models$ y $\vdash$ se establece sobre
+sentencias, en las que se conservan las propiedades metateóricas
+habituales. 
+\end{observacion}
+
+\subsection{El teorema de compacidad como corolario inmediato}
+
+Una de las consecuencias del teorema de completud es que el
+\textbf{teorema de compacidad} no requiere una demostración
+independiente; surge como corolario de la finitud sintáctica: 
+
+\begin{corollary}[Teorema de compacidad de primer orden]
+Un conjunto de sentencias $\Gamma$ (de un lenguaje numerable) es satisfacible si y solo si todo subconjunto finito $\Gamma_0 \subseteq \Gamma$ es satisfacible.
+\end{corollary}
+
+\begin{proof}\mbox{}
+\begin{itemize}
+    \item $(\Rightarrow)$ Inmediato: si existe una estructura $\mathcal{M}$ tal que $\mathcal{M} \models \Gamma$, entonces directamente $\mathcal{M} \models \Gamma_0$ para cualquier subconjunto $\Gamma_0 \subseteq \Gamma$.
+    \item $(\Leftarrow)$ Supongamos que todo subconjunto finito
+      $\Gamma_0 \subseteq \Gamma$ es satisfacible. Veamos, en primer
+      lugar, que $\Gamma$ es sintácticamente consistente ($\Gamma
+      \nvdash \bot$). En efecto, si $\Gamma$ fuera inconsistente,
+      existiría una deducción formal $\Gamma \vdash \bot$. Pero toda
+      derivación en deducción natural consta de un número finito de
+      pasos y, por tanto, solo puede utilizar un conjunto finito de
+      premisas $\Gamma_0 \subseteq \Gamma$. Tendríamos entonces
+      $\Gamma_0 \vdash \bot$. Por el teorema de corrección, $\Gamma_0
+      \models \bot$, lo que significaría que $\Gamma_0$ no tiene
+      ningún modelo, contradiciendo nuestra hipótesis.   
+    Por consiguiente, $\Gamma$ debe ser consistente ($\Gamma \nvdash \bot$). Por el teorema del modelo, que la construcción de Henkin demuestra (lema de Lindenbaum-Henkin y lema de verdad), $\Gamma$ es satisfacible. \qedhere
+\end{itemize}
+\end{proof}
+
+\subsection{El teorema de Löwenheim-Skolem}
+
+\begin{corollary}[Teorema de Löwenheim-Skolem]
+Si un conjunto de sentencias $\Gamma$ de un lenguaje numerable (sin identidad) tiene un modelo, entonces tiene un modelo numerable.
+\end{corollary}
+
+\begin{proof}
+Si $\Gamma$ tiene un modelo, por el teorema de corrección $\Gamma$ es sintácticamente consistente. Aplicando la construcción de Henkin, el modelo canónico $\mathcal{M}_{\Gamma^*}$ tiene como dominio el conjunto de las constantes de $\mathcal{L}^*$, que es infinito numerable. Por tanto, la estructura construida por Henkin es un modelo numerable de $\Gamma$.
+\end{proof}
+
+\subsection{Lenguajes con identidad}\label{sec_henkin_identidad}
+Si el lenguaje contiene el símbolo $=$, el cálculo incluye las reglas
+$=$I y $=$E del tema~\ref{cap:dn-lpo}, y el modelo canónico no puede
+tomar como dominio las propias constantes: si $(c_1 = c_2) \in
+\Gamma^*$, ambas constantes deben denotar el mismo objeto. Se define
+entonces $c_1 \sim c_2 \iff (c_1 = c_2) \in \Gamma^*$, se comprueba
+con las reglas de la identidad que $\sim$ es una relación de
+equivalencia compatible con los predicados, y se toma como dominio el
+conjunto cociente de las constantes por $\sim$ (véase el
+apéndice~\ref{ap:conjuntos}). El resto de la demostración es igual, con $I(c) = [c]$ y un caso más en el lema de verdad: el de las sentencias atómicas $c_1 = c_2$. En
+ese caso el dominio puede ser finito, y para obtener la versión de
+Löwenheim-Skolem con un modelo \emph{infinito} numerable (a partir de
+un modelo infinito) se necesita un paso adicional: añadir infinitas constantes nuevas $d_1, d_2, \dots$ con las sentencias $d_i \neq d_j$ ($i \neq j$), que el modelo infinito satisface interpretándolas como elementos distintos.
+
+\section*{Referencias bibliográficas}
+
+\begin{enumerate}
+    \item \textbf{Henkin, L.} (1949). «The completeness of the first-order functional calculus». \emph{Journal of Symbolic Logic}, vol. 14, n.º 3, pp. 159--166.
+    \item \textbf{Mendelson, E.} (1997). \emph{Introduction to Mathematical Logic} (4.ª ed.). Chapman \& Hall. [§2.7, «Completeness Theorems», pp. 84--94: lema de Lindenbaum (prop. 2.14), modelo numerable de toda teoría consistente por el método de Henkin (prop. 2.17) y teorema de completud de Gödel (cor. 2.19)].
+    \item \textbf{Shoenfield, J. R.} (1967). \emph{Mathematical Logic}. Addison-Wesley. [Capítulo 4, «The Characterization Problem»; §4.2, «The completeness theorem», pp. 43--48: el teorema en sus dos formas, la demostración de Henkin y el teorema de Lindenbaum (p. 47)].
+    \item \textbf{Tarski, A.} (1930). «Fundamentale Begriffe der Methodologie der deduktiven Wissenschaften. I». \emph{Monatshefte für Mathematik und Physik}, vol. 37, pp. 361--404. [§7, teorema I.56 (p. 394), que Tarski atribuye a Lindenbaum: todo conjunto consistente de enunciados puede extenderse a uno consistente y completo].
+\end{enumerate}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "ApuntesLogica"
+%%% End:

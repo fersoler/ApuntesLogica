@@ -1,0 +1,428 @@
+% -*- coding: utf-8 -*-
+\section{De la deducción a la verdad: dos perspectivas sobre la lógica}
+
+Hasta ahora hemos trabajado con la lógica desde una perspectiva
+\textbf{sintáctica o inferencial}: afirmar 
+$\Gamma \vdash A$ significa que existe una prueba formal en el cálculo
+de deducción natural que, partiendo de las premisas $\Gamma$, alcanza
+la conclusión $A$ aplicando correctamente reglas de introducción y
+eliminación. 
+
+Sin embargo, también nos interesa responder otra pregunta: 
+\emph{¿qué relación guardan nuestras demostraciones con la verdad?}
+Cuando decimos que un argumento es válido, exigimos que la verdad de
+las premisas asegure necesariamente la verdad de la conclusión. Para formalizar esta intuición necesitamos una \textbf{semántica formal}: una teoría que defina con precisión qué significa que una fórmula sea verdadera o falsa en una interpretación dada.
+
+\section{Interpretaciones y funciones de verdad}
+
+En lógica proposicional, el valor de verdad de un enunciado complejo
+depende solo del valor de verdad de los enunciados que lo componen: las conectivas son \emph{veritativo-funcionales}. Es un caso particular del principio de composicionalidad, que suele atribuirse a Frege.
+
+\begin{definition}[Interpretación o asignación de verdad]
+Sea $\text{Prop} = \{p, q, r, \dots\}$ el conjunto de variables proposicionales. Una \textbf{interpretación} (o asignación de verdad) $v$ es una función que asigna a cada variable proposicional exactamente un valor de verdad del conjunto $\{1, 0\}$, donde $1$ representa la verdad y $0$ la falsedad:
+\[
+v: \text{Prop} \to \{1, 0\}
+\]
+\end{definition}
+
+Una vez fijado el valor de verdad de las variables proposicionales mediante $v$, el valor de verdad de cualquier fórmula compleja $A$ queda determinado unívocamente mediante las \textbf{condiciones semánticas de las conectivas}:
+
+\begin{enumerate}
+    \item \textbf{Negación ($\neg A$).} Invierte el valor de verdad.
+    \[
+    v(\neg A) = 1 \iff v(A) = 0
+    \]
+    \item \textbf{Conjunción ($A \land B$).} Verdadera si y solo si ambos miembros son verdaderos.
+    \[
+    v(A \land B) = 1 \iff v(A) = 1 \text{ y } v(B) = 1
+    \]
+    \item \textbf{Disyunción ($A \lor B$).} Verdadera si y solo si al menos uno de los miembros es verdadero.
+    \[
+    v(A \lor B) = 1 \iff v(A) = 1 \text{ o } v(B) = 1
+    \]
+    \item \textbf{Condicional ($A \to B$).} Falso únicamente cuando el antecedente es verdadero y el consecuente es falso.
+    \[
+    v(A \to B) = 1 \iff \text{no ocurre que } (v(A) = 1 \text{ y } v(B) = 0)
+    \]
+    \item \textbf{Bicondicional ($A \leftrightarrow B$).} Verdadero si y solo si ambas fórmulas tienen el mismo valor de verdad.
+    \[
+    v(A \leftrightarrow B) = 1 \iff v(A) = v(B)
+    \]
+    \item \textbf{Absurdo ($\bot$).} Es falso en toda interpretación: $v(\bot) = 0$ para toda $v$.
+\end{enumerate}
+
+\begin{ejemplo}[Evaluación composicional paso a paso]
+Consideremos una asignación concreta $v$ dada por $v(p) = 1$, $v(q) = 0$ y $v(r) = 1$. Deseamos calcular el valor de verdad de la fórmula compleja:
+\[
+A = (p \land \neg q) \to (q \lor \neg r)
+\]
+Para evitar confusiones, procedemos de dentro hacia afuera, evaluando las subfórmulas según su orden jerárquico de complejidad:
+\begin{enumerate}
+    \item \textbf{Negaciones de letras proposicionales:}
+    \begin{itemize}
+        \item Como $v(q) = 0$, la inversión de la negación nos da $v(\neg q) = 1$.
+        \item Como $v(r) = 1$, la inversión nos da $v(\neg r) = 0$.
+    \end{itemize}
+    \item \textbf{Subfórmula del antecedente ($p \land \neg q$).} Disponemos de $v(p) = 1$ y $v(\neg q) = 1$. Dado que ambos miembros son verdaderos, la conjunción es verdadera: $v(p \land \neg q) = 1$.
+    \item \textbf{Subfórmula del consecuente ($q \lor \neg r$).} Tenemos $v(q) = 0$ y $v(\neg r) = 0$. Al ser ambos miembros falsos, la disyunción es falsa: $v(q \lor \neg r) = 0$.
+    \item \textbf{Conectiva principal ($\to$).} El antecedente toma valor $1$ y el consecuente valor $0$. Aplicando la semántica del condicional, $v(A) = 0$.
+\end{enumerate}
+\textbf{Comentario.} Este procedimiento ilustra el carácter veritativo-funcional de las conectivas: el valor de verdad de la fórmula completa se calcula a partir de los valores asignados a las letras proposicionales.
+\end{ejemplo}
+
+\subsection{Tablas de verdad características de las conectivas}
+
+Estas definiciones se resumen en tablas de verdad:
+
+\vspace{0.3cm}
+\begin{center}
+\begin{tabular}{c|c}
+$A$ & $\neg A$ \\
+\hline
+1 & 0 \\
+0 & 1
+\end{tabular}
+\qquad
+\begin{tabular}{cc|c}
+$A$ & $B$ & $A \land B$ \\
+\hline
+1 & 1 & 1 \\
+1 & 0 & 0 \\
+0 & 1 & 0 \\
+0 & 0 & 0
+\end{tabular}
+\qquad
+\begin{tabular}{cc|c}
+$A$ & $B$ & $A \lor B$ \\
+\hline
+1 & 1 & 1 \\
+1 & 0 & 1 \\
+0 & 1 & 1 \\
+0 & 0 & 0
+\end{tabular}
+\qquad
+\begin{tabular}{cc|c}
+$A$ & $B$ & $A \to B$ \\
+\hline
+1 & 1 & 1 \\
+1 & 0 & 0 \\
+0 & 1 & 1 \\
+0 & 0 & 1
+\end{tabular}
+\\[1cm]
+\begin{tabular}{cc|c}
+$A$ & $B$ & $A \leftrightarrow B$ \\
+\hline
+1 & 1 & 1 \\
+1 & 0 & 0 \\
+0 & 1 & 0 \\
+0 & 0 & 1
+\end{tabular}
+\end{center}
+\vspace{0.3cm}
+
+\subsection{El condicional material y sus «paradojas»}\label{sec:condicional-material}
+
+La tabla del condicional suele sorprender: $A \to B$ es verdadero siempre que $A$ sea falso o $B$ sea verdadero, haya o no alguna relación entre ambos. Este condicional veritativo-funcional se llama \textbf{condicional material} (o \emph{filónico}, por Filón de Megara, quien defendió este criterio de verdad para las proposiciones condicionales).
+
+\paragraph{¿Por qué esta tabla?} Si queremos un condicional veritativo-funcional, la tabla está prácticamente forzada:
+\begin{itemize}
+    \item La fila $1, 0$ debe dar $0$: si no, el \emph{modus ponens} no sería válido.
+    \item Las filas $1, 1$ y $0, 0$ deben dar $1$: si no, $p \to p$ no sería siempre verdadera.
+    \item La fila $0, 1$ debe dar $1$: si diera $0$, la tabla sería la del bicondicional y «si es un perro, es un mamífero» equivaldría a «si es un mamífero, es un perro».
+\end{itemize}
+Además, esta tabla encaja con las reglas del tema~\ref{cap:dn-prop}: con ellas se derivan $q \vdash p \to q$ (suponemos $p$, reiteramos $q$ y aplicamos $\to$I) y $\neg p \vdash p \to q$ (suponemos $p$, obtenemos $\bot$ y, por X, $q$). Un condicional verdadero siempre que el consecuente sea verdadero o el antecedente falso es justo lo que piden esas reglas.
+
+\paragraph{Las «paradojas».} El precio de esta elección son consecuencias que chocan con el uso ordinario de «si\ldots{} entonces». Las escribimos con la notación de la consecuencia lógica, que se define más adelante en este tema ($\Gamma \models A$ indica que toda interpretación que hace verdaderas las fórmulas de $\Gamma$ hace verdadera $A$, y $\models A$, que $A$ es verdadera en toda interpretación):
+\[
+q \models p \to q \qquad\qquad \neg p \models p \to q \qquad\qquad \models (p \to q) \lor (q \to p)
+\]
+Por ejemplo, como París está en Francia, es verdadero (materialmente) que «si la Luna es de queso, París está en Francia»; y es verdadero que «o bien si llueve hace sol, o bien si hace sol llueve». No son contradicciones, sino síntomas de que el condicional material ignora toda conexión de contenido entre antecedente y consecuente.
+
+\paragraph{Tres respuestas filosóficas.}
+\begin{enumerate} 
+    \item \textbf{Pragmática (H. P. Grice).} El condicional material recoge las \emph{condiciones de verdad} de «si\ldots{} entonces», es decir, lo que se \emph{dice}. Pero al hablar comunicamos más: lo que el oyente infiere suponiendo que el hablante colabora en la conversación, las \emph{implicaturas conversacionales}. Quien afirma «si llueve, se suspenderá el partido» da a entender que tiene razones que enlazan una cosa con la otra y que no sabe todavía si lloverá ni si se suspenderá; si supiera que no va a llover, o que el partido se suspenderá, lo cooperativo sería decir eso. Esa conexión no forma parte de las condiciones de verdad, sino de lo que se da a entender al usar un condicional. Los ejemplos anteriores resultan extraños porque quien los afirmara daría a entender una conexión que no existe, aunque lo que dice sea verdadero.
+    \item \textbf{Otros condicionales.} C. I. Lewis propuso la \emph{implicación estricta} (es necesario que no ocurra $A$ sin $B$), y las \emph{lógicas de la relevancia} (A. R. Anderson y N. Belnap) exigen que antecedente y consecuente compartan contenido.
+    \item \textbf{Los contrafácticos no son veritativo-funcionales.} «Si hubiera soltado el vaso, se habría caído» parece verdadero y «si hubiera soltado el vaso, habría salido volando» parece falso, aunque si no he soltado el vaso ambos tienen antecedente falso. Por tanto, su valor no depende solo de los valores de sus partes. Compárense también «si Oswald no mató a Kennedy, lo hizo otra persona» (verdadero) y «si Oswald no hubiera matado a Kennedy, lo habría hecho otra persona» (probablemente falso), un ejemplo de E. Adams. Para los contrafácticos se han propuesto semánticas de mundos posibles (R. Stalnaker, D. Lewis).
+\end{enumerate}
+En este curso usamos el condicional material: es el que corresponde a las reglas $\to$I y $\to$E y basta para analizar la validez de una gran parte de los argumentos. Pero conviene recordar estos límites al formalizar, sobre todo los condicionales en subjuntivo (véase el ejercicio~\ref{e2-cond}).
+
+\section{Tablas de verdad y clasificación semántica de fórmulas}
+
+Si una fórmula contiene $n$ variables proposicionales distintas, su valor solo depende de los valores de esas $n$ variables, que pueden combinarse de $2^n$ maneras. Una \textbf{tabla de verdad} calcula el valor de la fórmula en cada uno de esos $2^n$ casos evaluando progresivamente sus subfórmulas de menor a mayor complejidad.
+
+\begin{ejemplo}[Tabla de verdad del silogismo hipotético]
+Evaluemos la fórmula $((p \to q) \land (q \to r)) \to (p \to r)$, que contiene 3 variables ($2^3 = 8$ combinaciones de valores):
+\begin{center}
+\small
+\begin{tabular}{ccc|c|c|c|c|c}
+$p$ & $q$ & $r$ & $p \to q$ & $q \to r$ & $(p \to q) \land (q \to r)$ & $p \to r$ & Fórmula completa \\
+\hline
+1 & 1 & 1 & 1 & 1 & 1 & 1 & \textbf{1} \\
+1 & 1 & 0 & 1 & 0 & 0 & 0 & \textbf{1} \\
+1 & 0 & 1 & 0 & 1 & 0 & 1 & \textbf{1} \\
+1 & 0 & 0 & 0 & 1 & 0 & 0 & \textbf{1} \\
+0 & 1 & 1 & 1 & 1 & 1 & 1 & \textbf{1} \\
+0 & 1 & 0 & 1 & 0 & 0 & 1 & \textbf{1} \\
+0 & 0 & 1 & 1 & 1 & 1 & 1 & \textbf{1} \\
+0 & 0 & 0 & 1 & 1 & 1 & 1 & \textbf{1}
+\end{tabular}
+\end{center}
+\textbf{Comentario.} Como la columna de la fórmula
+completa solo contiene unos, la
+fórmula es verdadera en toda interpretación, con independencia de lo
+que representen sus letras: es una tautología (escribiremos $\models ((p \to q) \land (q \to
+r)) \to (p \to r)$). 
+\end{ejemplo}
+
+\begin{ejemplo}[Tabla de verdad de una fórmula contingente]
+Analicemos la fórmula $(p \lor q) \to (p \land q)$ ($2^2 = 4$ casos):
+\begin{center}
+\begin{tabular}{cc|c|c|c}
+$p$ & $q$ & $p \lor q$ & $p \land q$ & $(p \lor q) \to (p \land q)$ \\
+\hline
+1 & 1 & 1 & 1 & \textbf{1} \\
+1 & 0 & 1 & 0 & \textbf{0} \\
+0 & 1 & 1 & 0 & \textbf{0} \\
+0 & 0 & 0 & 0 & \textbf{1}
+\end{tabular}
+\end{center}
+\textbf{Comentario.} La columna final combina unos y ceros. Por tanto, no es una tautología sino una fórmula contingente: es verdadera cuando $p$ y $q$ tienen el mismo valor y falsa cuando lo tienen distinto (de hecho, equivale a $p \leftrightarrow q$).
+\end{ejemplo}
+
+\subsection{Clasificación de fórmulas}
+
+Según el resultado de su evaluación en el conjunto de todas las interpretaciones posibles, toda fórmula proposicional pertenece a exactamente una de las siguientes categorías:
+
+\begin{itemize}
+    \item \textbf{Tautología (o verdad lógica).} Una fórmula $A$ es una tautología si y solo si es verdadera en \emph{todas} las interpretaciones posibles ($v(A) = 1$ para toda $v$). Se denota:
+    \[
+    \models A
+    \]
+    En su tabla de verdad, la columna final solo contiene unos.
+    \item \textbf{Contradicción.} Una fórmula $A$ es contradictoria si y solo si es falsa en \emph{todas} las interpretaciones posibles ($v(A) = 0$ para toda $v$).
+    \item \textbf{Fórmula contingente.} Una fórmula que no es ni tautología ni contradicción; es verdadera en al menos una interpretación y falsa en al menos otra. Su verdad depende de los hechos que representen las variables.
+\end{itemize}
+
+\begin{definition}[Satisfacibilidad]
+Una fórmula $A$ es \textbf{satisfacible} si y solo si existe al menos una interpretación $v$ tal que $v(A) = 1$, e \textbf{insatisfacible} en caso contrario. Son satisfacibles las tautologías y las fórmulas contingentes; las fórmulas insatisfacibles son, por tanto, las contradicciones.
+Un conjunto de fórmulas $\Gamma$ es satisfacible si existe alguna
+interpretación que haga verdaderas a la vez todas las fórmulas de $\Gamma$, e insatisfacible en caso contrario.
+\end{definition}
+
+\practica{En la aplicación \apptablas{} se rellena la tabla de verdad de una o varias fórmulas y se comprueba. Después pregunta cómo es cada fórmula, si el conjunto es satisfacible y, con dos fórmulas, si son equivalentes (sección siguiente). Su pestaña «Una interpretación» calcula paso a paso el valor de una fórmula en una interpretación.}
+
+\section{Equivalencia lógica (\texorpdfstring{$\equiv$}{equivalencia})}
+
+\begin{definition}[Equivalencia lógica]
+Dos fórmulas $A$ y $B$ son \textbf{lógicamente equivalentes} (denotado $A \equiv B$) si y solo si toman el mismo valor de verdad en toda interpretación posible:
+\[
+A \equiv B \iff \text{para toda } v: (v(A) = v(B)) 
+\]
+Equivalentemente, $A \equiv B$ si y solo si la fórmula bicondicional $A \leftrightarrow B$ es una tautología ($\models A \leftrightarrow B$).
+\end{definition}
+
+\subsection{Leyes notables de equivalencia}
+
+\begin{itemize}
+    \item \textbf{Doble negación:} $\neg\neg A \equiv A$
+    \item \textbf{Leyes de De Morgan:} 
+    \[
+    \neg(A \land B) \equiv \neg A \lor \neg B \qquad\qquad \neg(A \lor B) \equiv \neg A \land \neg B
+    \]
+    \item \textbf{Definición del condicional:} $A \to B \equiv \neg A \lor B \equiv \neg(A \land \neg B)$
+    \item \textbf{Contraposición:} $A \to B \equiv \neg B \to \neg A$
+    \item \textbf{Distributividad:} 
+    \[
+    A \land (B \lor C) \equiv (A \land B) \lor (A \land C) \qquad\qquad A \lor (B \land C) \equiv (A \lor B) \land (A \lor C)
+    \]
+\end{itemize}
+
+Las leyes de De Morgan se corresponden con la regla derivada DeM del tema~\ref{cap:dn-prop}, que en una prueba permite pasar de cada lado de estas equivalencias al otro.
+
+\section{Formalización: del lenguaje natural a las fórmulas}\label{sec:formalizacion}
+
+Para analizar un argumento del lenguaje natural hay que \textbf{formalizarlo}: traducir sus enunciados a fórmulas que conserven lo que importa para la validez.
+\begin{enumerate}
+    \item Identifica los enunciados simples y asigna a cada uno una letra, formulándolos en \emph{forma afirmativa} («llueve», no «no llueve»; la negación se expresa con $\neg$). Escribe este diccionario explícitamente.
+    \item Identifica las conectivas y, sobre todo, su \emph{alcance}: qué parte del enunciado afecta a cada una.
+    \item Escribe la fórmula y comprueba, leyéndola de nuevo en castellano, que dice lo mismo que el original.
+\end{enumerate}
+
+Las conectivas del lenguaje natural no siempre tienen una única traducción. La tabla recoge las más frecuentes:
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{|p{9cm}|l|}
+\hline
+\textbf{Expresión} & \textbf{Formalización} \\
+\hline
+no $A$; no es cierto que $A$; es falso que $A$ & $\neg A$ \\
+$A$ y $B$; $A$ pero $B$; $A$ aunque $B$; $A$, sin embargo, $B$ & $A \land B$ \\
+$A$ o $B$ (inclusiva: quizá ambas) & $A \lor B$ \\
+o bien $A$ o bien $B$ (si el contexto indica que no ambas) & $A \leftrightarrow \lnot B$ \\
+ni $A$ ni $B$ & $\neg A \land \neg B$ \\
+no a la vez $A$ y $B$ & $\neg(A \land B)$ \\
+si $A$, $B$; $B$ si $A$; cuando $A$, $B$; siempre que $A$, $B$ & $A \to B$ \\
+$A$ solo si $B$; solo si $B$, $A$ & $A \to B$ \\
+$A$ es condición suficiente para $B$ & $A \to B$ \\
+$A$ es condición necesaria para $B$ & $B \to A$ \\
+$A$ si y solo si $B$; $A$ exactamente cuando $B$ & $A \leftrightarrow B$ \\
+$A$ a menos que $B$; $A$ salvo que $B$ & $\neg B \to A$ \quad (equivale a $A \lor B$) \\
+\hline
+\end{tabular}
+\end{center}
+
+Algunas observaciones:
+\begin{itemize}
+    \item \textbf{«Pero», «aunque», «sin embargo».} Todas se formalizan con $\land$: el matiz de contraste que añaden no afecta a la verdad del enunciado ni a la validez.
+    \item \textbf{«Solo si».} Es la fuente de errores más frecuente. «Voy al cine (c) solo si acabo pronto (a)» ($c \to a$) dice que acabar pronto es condición \emph{necesaria} para ir al cine, no que baste con acabar pronto para ir: no equivale a $a \to c$.
+    \item \textbf{«A menos que».} «Iré a la playa a menos que llueva» se formaliza $\neg l \to p$ (o $p \lor l$): si no llueve, iré. A menudo se entiende además que si llueve no iré ($p \leftrightarrow \neg l$); como esa lectura más fuerte no siempre es la intencionada, la formalización habitual es la débil.
+    \item \textbf{Alcance de la negación.} «No es cierto que Juan venga y María se quede» es $\neg(j \land m)$; «Juan no viene y María se queda» es $\neg j \land m$.
+    \item \textbf{Condicionales en subjuntivo.} Su formalización con $\to$ es solo aproximada (véase la sección~\ref{sec:condicional-material}).
+\end{itemize}
+
+\begin{ejemplo}[Formalización de un enunciado filosófico]
+«Si el determinismo es verdadero y no hay libre albedrío, la responsabilidad moral es una ilusión, a menos que el compatibilismo sea correcto.»
+
+\noindent Diccionario: $d$: «el determinismo es verdadero»; $l$: «hay libre albedrío»; $r$: «la responsabilidad moral es una ilusión»; $c$: «el compatibilismo es correcto». El «a menos que» afecta a todo el condicional:
+\[
+\neg c \to ((d \land \neg l) \to r)
+\]
+\end{ejemplo}
+
+\practica{La pestaña «Formalizar» de \apptablas{} propone frases con su diccionario y compara tu fórmula con una formalización correcta en todas las interpretaciones. Si no son equivalentes, muestra una interpretación en la que difieren.}
+
+\section{Consecuencia lógica (\texorpdfstring{$\models$}{consecuencia})}
+
+La consecuencia lógica es el concepto central de la
+semántica. Formaliza la noción de argumento deductivamente válido:  
+
+\begin{definition}[Consecuencia lógica]
+Sean $\Gamma$ un conjunto de fórmulas (premisas) y $A$ una fórmula (conclusión). Decimos que $A$ es \textbf{consecuencia lógica} de $\Gamma$, y escribimos
+\[
+\Gamma \models A
+\]
+si y solo si no existe ninguna interpretación $v$ que haga verdaderas todas las premisas de $\Gamma$ y falsa la conclusión $A$.
+
+Dicho en términos positivos: toda interpretación que hace verdaderas
+todas las premisas de $\Gamma$ hace verdadera la
+conclusión $A$. Si $\Gamma$ es finito, en la tabla de verdad conjunta de todas las fórmulas
+de $\Gamma$ y $A$ no hay ninguna fila que haga verdaderas todas
+las fórmulas de $\Gamma$ y falsa $A$. 
+\end{definition}
+
+\subsection{Contraejemplos semánticos y el método de asignación directa}
+
+Para comprobar si se cumple $\Gamma \models A$, construir
+la tabla de verdad completa resulta largo cuando hay muchas variables proposicionales. El \textbf{método de asignación directa} (o reducción al absurdo semántica) suele ser más rápido: \emph{intentar construir un contraejemplo} y ver si el intento fracasa. Cuando una condición admite varias posibilidades (por ejemplo, una disyunción que debe ser verdadera o una conjunción que debe ser falsa), hay que examinar cada caso por separado: el argumento es válido si y solo si \emph{todos} los casos conducen a contradicción.
+
+\begin{definition}[Contraejemplo]
+Un contraejemplo para la inferencia $\Gamma \models A$ es una interpretación concreta $v$ tal que:
+\begin{enumerate}
+    \item $v(B) = 1$ para toda premisa $B \in \Gamma$.
+    \item $v(A) = 0$ (la conclusión es falsa).
+\end{enumerate}
+\end{definition}
+
+
+\begin{ejemplo}[Demostración de invalidez mediante contraejemplo: falacia de afirmación del consecuente]
+Consideremos el argumento con premisas $p \to q$ y $q$ y conclusión $p$. Para averiguar si se cumple $p \to q, q \models p$, intentamos construir un contraejemplo:
+\begin{enumerate}
+    \item Forzamos la conclusión como falsa: exigimos que $v(p) = 0$.
+    \item Forzamos la segunda premisa como verdadera: exigimos que $v(q) = 1$.
+    \item Comprobamos si la primera premisa puede ser simultáneamente verdadera: evaluamos $v(p \to q) = 1$.
+\end{enumerate}
+La asignación obtenida $v = \{p: 0, q: 1\}$ hace verdaderas todas las premisas y falsa la conclusión sin generar ningún conflicto. Por consiguiente, $v$ es un contraejemplo y el argumento es inválido: $\{p \to q, q\} \not\models p$.
+\end{ejemplo}
+
+\begin{ejemplo}[Demostración de validez por reducción al absurdo semántica: \emph{modus tollens}]
+Analicemos si se cumple $p \to q, \neg q \models \neg p$.
+Intentamos construir un contraejemplo:
+\begin{enumerate}
+    \item Forzamos la conclusión a falso: $v(\neg p) = 0$, lo que obliga a que $v(p) = 1$.
+    \item Forzamos la segunda premisa a verdadero: $v(\neg q) = 1$, lo que obliga a que $v(q) = 0$.
+    \item Evaluamos ahora la primera premisa con los valores
+      obligados: $v(p \to q) =  0$.
+    Esto genera una contradicción: la primera premisa toma necesariamente el valor $0$, por lo que resulta imposible hacerla verdadera simultáneamente con las restantes condiciones.
+\end{enumerate}
+\textbf{Comentario.} Como no puede construirse ningún contraejemplo, la inferencia es válida ($p \to q, \neg q \models \neg p$), y lo hemos comprobado sin construir la tabla de verdad completa.
+\end{ejemplo}
+
+\practica{En la pestaña «Consecuencia lógica» de \apptablas{} se rellena la tabla conjunta de las premisas y la conclusión, se marcan los contraejemplos y se decide si el argumento es válido. También resuelve el argumento por asignación directa, paso a paso.}
+
+\section{Propiedades fundamentales de la consecuencia lógica}
+
+La relación $\models$ satisface las siguientes propiedades (las tres primeras se llaman \emph{estructurales}):
+
+\begin{enumerate}
+    \item \textbf{Reflexividad.} Cualquier fórmula es consecuencia
+      lógica de un conjunto que la contenga:
+    \[
+    \Gamma \cup \{A\} \models A
+    \]
+    \item \textbf{Monotonía.} Si una conclusión se sigue de ciertas premisas, sigue siendo consecuencia si añadimos premisas adicionales:
+    \[
+    \text{Si } \Gamma \models A, \text{ entonces } \Gamma \cup \Delta \models A
+    \]
+    \item \textbf{Transitividad o corte.} Si $A$ se sigue de $\Gamma \cup \{B\}$ y a su vez $B$ es consecuencia de $\Delta$, entonces $A$ es consecuencia de $\Gamma \cup \Delta$:
+    \[
+    \frac{\Gamma \cup \{B\} \models A \qquad \Delta \models B}{\Gamma \cup \Delta \models A}
+    \]
+    \item \textbf{Teorema de la deducción (versión semántica).} Una
+      fórmula $B$ se sigue de un conjunto ampliado con $A$ si y solo
+      si el condicional $A \to B$ se sigue del conjunto original:
+    \[
+    \Gamma \cup \{A\} \models B \iff \Gamma \models A \to B
+    \]
+    En particular, $\{B_1, \dots, B_k\} \models A$ si y solo si
+    $\models (B_1 \land \dots \land B_k) \to A$. (Compruébalo: ambas
+    afirmaciones dicen que no hay ninguna interpretación que haga
+    verdaderas las $B_i$ y falsa $A$). 
+\end{enumerate}
+
+\subsection{El principio de refutación (conexión con contradicciones)}
+
+La consecuencia lógica puede expresarse en términos de satisfacibilidad:
+\[
+\Gamma \models A \iff \Gamma \cup \{\neg A\} \text{ es insatisfacible}
+\]
+Un argumento es válido si y solo si suponer que las premisas son
+verdaderas y la conclusión es falsa genera una contradicción. Esta
+propiedad es la contrapartida semántica de la regla de reducción al
+absurdo (IP) del cálculo y la base del método de tableaux (tema~\ref{cap:tableaux}) y
+de muchos métodos automáticos de demostración. 
+
+\section{Hacia la metalógica: el diálogo entre sintaxis y semántica}
+
+Al término de estos dos temas disponemos de dos herramientas independientes para evaluar argumentos:
+\begin{itemize}
+    \item \textbf{Deducibilidad:} $\Gamma \vdash A$ (demostrabilidad paso a paso mediante reglas).
+    \item \textbf{Consecuencia lógica:} $\Gamma \models
+      A$ (preservación de la verdad en todas las interpretaciones posibles).
+\end{itemize}
+
+Surgen así dos preguntas que constituyen el núcleo de la metalógica:
+\begin{enumerate}
+    \item \textbf{¿Es nuestro cálculo correcto?} Si derivamos $A$ a partir de $\Gamma$ en el cálculo ($\Gamma \vdash A$), ¿tenemos la garantía de que $A$ es consecuencia lógica de $\Gamma$ ($\Gamma \models A$)?
+    \item \textbf{¿Es nuestro cálculo completo?} Si $A$ es consecuencia lógica de $\Gamma$ ($\Gamma \models A$), ¿existe siempre una derivación de $A$ a partir de $\Gamma$ en el cálculo ($\Gamma \vdash A$)?
+\end{enumerate}
+Estas dos cuestiones son el contenido del
+siguiente tema.
+
+\section*{Referencias bibliográficas}
+
+\begin{enumerate}
+    \item \textbf{Adams, E. W.} (1970). «Subjunctive and indicative conditionals». \emph{Foundations of Language}, vol. 6, n.º 1, pp. 89--94. [El ejemplo de Oswald y Kennedy].
+    \item \textbf{Anderson, A. R. y Belnap, N. D.} (1975). \emph{Entailment: The Logic of Relevance and Necessity}, vol. I. Princeton University Press, Princeton. [Obra de referencia de las lógicas de la relevancia].
+    \item \textbf{Bennett, J.} (2003). \emph{A Philosophical Guide to Conditionals}. Clarendon Press, Oxford. [Introducción general a los debates sobre condicionales indicativos y contrafácticos].
+    \item \textbf{Grice, H. P.} (1975). «Logic and conversation». En P. Cole y J. L. Morgan (eds.), \emph{Syntax and Semantics 3: Speech Acts}. Academic Press, Nueva York, pp. 41--58. [Las implicaturas conversacionales y la defensa pragmática del condicional material].
+    \item \textbf{Lewis, C. I.} (1912). «Implication and the algebra of logic». \emph{Mind}, vol. 21, n.º 84, pp. 522--531. [Crítica de la implicación material y primera propuesta de la implicación estricta].
+    \item \textbf{Lewis, C. I.} (1918). \emph{A Survey of Symbolic Logic}. University of California Press, Berkeley. [Primera presentación sistemática de la implicación estricta].
+    \item \textbf{Lewis, D.} (1973). \emph{Counterfactuals}. Blackwell, Oxford. [Semántica de los contrafácticos basada en la semejanza entre mundos posibles].
+    \item \textbf{Stalnaker, R. C.} (1968). «A theory of conditionals». En N. Rescher (ed.), \emph{Studies in Logical Theory}. Blackwell, Oxford, pp. 98--112. [Semántica de mundos posibles para los condicionales].
+\end{enumerate}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "ApuntesLogica"
+%%% End:

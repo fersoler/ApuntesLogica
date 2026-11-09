@@ -1,0 +1,522 @@
+% -*- coding: utf-8 -*-
+\section{La lógica como teoría de la inferencia formal}
+
+El objetivo central de la lógica es el estudio de los argumentos válidos: aquellos en los que la conclusión se sigue de las premisas. En este tema estudiamos una manera de mostrarlo: obtener la conclusión a partir de las premisas mediante reglas de inferencia que solo atienden a la forma de las fórmulas. En el tema~\ref{cap:sem-prop} veremos qué significa, desde el punto de vista semántico, que una conclusión se siga de unas premisas, y en el tema~\ref{cap:meta-prop}, que las dos perspectivas coinciden. Para analizar la validez de un argumento, aislamos su estructura formal distinguiendo entre enunciados básicos o proposiciones atómicas (representadas por letras como $p, q, r, \dots$) y partículas de enlace o \textbf{conectivas lógicas} («y», «o», «no», «si\ldots{} entonces», «si y solo si»).
+
+En 1934, el lógico Gerhard Gentzen (y, de forma independiente,
+Stanisław Jaśkowski) propuso un sistema formal diseñado
+para reflejar la manera en que razonamos en la
+práctica: la \textbf{deducción natural}. En este marco, cada conectiva
+lógica queda caracterizada por las reglas que establecen su uso en una demostración:
+
+\begin{enumerate}
+    \item \textbf{Regla de introducción (I).} Determina bajo qué condiciones o pasos previos estamos autorizados a afirmar una fórmula que contiene dicha conectiva como operador principal.
+    \item \textbf{Regla de eliminación (E).} Determina qué consecuencias podemos extraer cuando disponemos de una fórmula con dicha conectiva como operador principal.
+\end{enumerate}
+
+\subsection{Sintaxis, precedencia y asociatividad de las conectivas}\label{sec:precedencia}
+
+El lenguaje formal de la lógica proposicional se construye a partir de letras o variables proposicionales ($p, q, r, \dots$) y las conectivas lógicas: negación ($\neg$), conjunción ($\land$), disyunción ($\lor$), condicional ($\to$) y bicondicional ($\leftrightarrow$). Usaremos además el símbolo $\bot$ (lo absurdo, la contradicción), que se comporta como una fórmula siempre falsa.
+
+Las \textbf{fórmulas} se definen inductivamente:
+\begin{itemize}
+    \item Las variables proposicionales y $\bot$ son fórmulas (fórmulas \textbf{atómicas}).
+    \item Si $A$ y $B$ son fórmulas, también lo son $\neg A$, $(A \land B)$, $(A \lor B)$, $(A \to B)$ y $(A \leftrightarrow B)$.
+    \item Solo son fórmulas las expresiones que se obtienen aplicando un número finito de veces las dos cláusulas anteriores.
+\end{itemize}
+La conectiva que se aplica en el último paso de la construcción es la \textbf{conectiva principal} (u operador principal) de la fórmula, y las fórmulas a las que se aplica son sus \textbf{subfórmulas inmediatas}: $A$ en $\neg A$; $A$ y $B$ en $(A \land B)$, $(A \lor B)$, $(A \to B)$ y $(A \leftrightarrow B)$. Por ejemplo, la conectiva principal de $((p \land q) \to r)$ es $\to$, y sus subfórmulas inmediatas son $(p \land q)$ y $r$. Las \textbf{subfórmulas} de una fórmula son ella misma, sus subfórmulas inmediatas, las subfórmulas inmediatas de estas, y así sucesivamente.
+
+En la notación presentada, cada aplicación de una conectiva binaria requiere paréntesis que delimiten su alcance exacto, como en $((p \land q) \to r)$. No obstante, para simplificar la escritura y facilitar la lectura de fórmulas complejas, adoptamos las convenciones estándar de \textbf{precedencia} y \textbf{asociatividad} (análogas a las de la aritmética ordinaria, donde en $7 \times 2 + 8$ la multiplicación precede a la suma):
+
+\begin{enumerate}
+    \item \textbf{Jerarquía de precedencia (de mayor a menor fuerza de enlace):}
+    \[
+    \neg \quad \succ \quad \land \quad \succ \quad \lor \quad \succ \quad \to \quad \succ \quad \leftrightarrow
+    \]
+    \begin{itemize}
+        \item El negador ($\neg$) tiene la máxima precedencia: afecta solo a la fórmula más breve que le sigue (una letra, otra negación o una expresión entre paréntesis). Así, $\neg p \land q$ representa siempre $(\neg p) \land q$, y no $\neg(p \land q)$.
+        \item La conjunción ($\land$) y la disyunción ($\lor$) poseen mayor fuerza de enlace que el condicional ($\to$) y el bicondicional ($\leftrightarrow$). Por consiguiente, $p \land q \to r$ se interpreta como $(p \land q) \to r$, y $p \to q \lor r$ como $p \to (q \lor r)$. Entre ellas, la conjunción precede a la disyunción: $p \land q \lor r$ se lee $(p \land q) \lor r$.
+        \item El bicondicional ($\leftrightarrow$) es el operador con menor precedencia relativa, de modo que abarca las subfórmulas completas situadas a su izquierda y derecha. Así, $p \to q \leftrightarrow \neg q \to \neg p$ se lee como $(p \to q) \leftrightarrow (\neg q \to \neg p)$.
+    \end{itemize}
+
+    \item \textbf{Asociatividad por la derecha para el condicional.}
+    Cuando varios condicionales se suceden consecutivamente sin paréntesis que especifiquen el orden, se asocia por la derecha:
+    \[
+    p \to q \to r \quad \text{equivale a} \quad p \to (q \to r)
+    \]
+    Esta convención se corresponde de forma natural con la estructura deductiva: afirma que a partir del supuesto $p$ se infiere el condicional $q \to r$.
+\end{enumerate}
+
+En caso de duda, o siempre que se desee forzar un agrupamiento distinto (como en $(p \lor q) \land r$), el empleo explícito de paréntesis prevalece sobre estas convenciones abreviadas.
+
+Cuando se encadenan varias conjunciones, o varias disyunciones, a veces se omiten los paréntesis interiores, como en $p \land q \land r$. Todas las agrupaciones tienen el mismo valor de verdad (tema~\ref{cap:sem-prop}), así que en una formalización da igual cuál se lea; pero en una derivación (y en un tableau, tema~\ref{cap:tableaux}) hay que fijar una, por ejemplo $(p \land q) \land r$, porque las reglas solo separan los dos miembros de una conjunción.
+
+\practica{La aplicación \appsintaxis{} ilustra lo que se presenta en esta sección: da la conectiva principal, las subfórmulas y el árbol de formación de cualquier fórmula, y propone ejercicios para reconocer la conectiva principal y cómo se agrupa una fórmula según estas convenciones.}
+
+\section{Estructura de las pruebas de Fitch: premisas, hipótesis y cajas}
+
+En el formato de Fitch (popularizado por Frederic Fitch en 1952), una deducción consiste en una secuencia ordenada de líneas numeradas con barras verticales que delimitan el \textbf{alcance} (\emph{scope}) de cada hipótesis. A las subpruebas delimitadas por esas barras las llamaremos también \emph{cajas}:
+
+\begin{itemize}
+    \item \textbf{Premisas.} Enunciados que se asumen como punto de
+      partida en una prueba.
+    \item \textbf{Hipótesis provisionales (subpruebas o cajas).} Suposiciones que abrimos temporalmente («supongamos por un momento que $A$»). Se representan visualmente mediante una barra vertical subordinada.
+    \item \textbf{Líneas accesibles.} En cada paso solo se pueden citar líneas anteriores que estén en la prueba principal o dentro de una caja que siga abierta en ese punto. Las líneas de una caja ya cerrada no pueden citarse sueltas; solo la caja completa (por ejemplo, «3--5») puede citarse, y únicamente por las reglas que cierran hipótesis.
+    \item \textbf{Descarga o cierre de hipótesis.} Al cerrar una caja, la hipótesis interior queda sellada (no se puede volver a invocar aisladamente), pero la caja completa nos autoriza a afirmar una nueva conclusión en el nivel exterior (como un condicional o una negación).
+\end{itemize}
+
+Escribimos $\Gamma \vdash A$ para indicar que existe una derivación cuya última línea es $A$, cuyas premisas pertenecen al conjunto $\Gamma$ y en la que todas las hipótesis provisionales han sido descargadas. Cuando no hace falta ninguna premisa escribimos $\vdash A$ y decimos que $A$ es un \textbf{teorema}. Usaremos como sinónimos \emph{derivación}, \emph{deducción}, \emph{prueba} y \emph{demostración} (formal).
+
+A la derecha de cada línea se escribe su justificación: «Prem.» en las premisas, «Hip.» en las hipótesis («Hip. IP» si se abren para aplicar la prueba indirecta, IP) y, en las demás líneas, la regla aplicada con los números de las líneas o cajas que cita. En los esquemas de las reglas, $m, n, i, j, \dots$ representan números de línea cualesquiera y los puntos verticales, pasos intermedios.
+
+\practica{En la aplicación \appdeduccion{} puedes construir derivaciones con las reglas de este tema y del tema~\ref{cap:dn-lpo}. Comprueba cada línea mientras escribes y explica los errores. Contiene los ejercicios de deducción natural de los dos temas, sin sus soluciones.}
+
+\section{Reglas básicas del cálculo proposicional}
+
+\subsection{Reiteración y conjunción (\texorpdfstring{$\land$}{y})}
+
+La conjunción une dos afirmaciones. Se introduce cuando tenemos demostradas ambas partes por separado, y se elimina extrayendo cualquiera de ellas. La regla de reiteración permite copiar una línea accesible en el contexto actual.
+
+\vspace{0.3cm}
+\begin{center}
+\begin{tabular}{cc}
+\textbf{Reiteración (R)} & \textbf{Introducción de la conjunción ($\land$I)} \\[0.2cm]
+$\begin{nd}[justformat=myjust]
+    \have [m] {1} A 
+    \have [\mbox{}] {2} A \r{1}
+\end{nd}$ &
+$\begin{nd}
+    \have [m] {1} A
+    \have [n] {2} B
+    \have [\mbox{}] {3} {A \land B} \ai{1,2}
+\end{nd}$ \\[1.2cm]
+\multicolumn{2}{c}{\textbf{Eliminación de la conjunción ($\land$E)}} \\[0.2cm]
+$\begin{nd}
+    \have [m] {1} {A \land B}
+    \have [\mbox{}] {2} {A} \ae{1}
+\end{nd}$ &
+$\begin{nd}
+    \have [m] {1} {A \land B}
+    \have [\mbox{}] {2} {B} \ae{1}
+\end{nd}$
+\end{tabular}
+\end{center}
+
+\begin{ejemplo}[Demostración directa con conjunción]
+Demostremos que a partir de las premisas $p$ y $q \land r$ se deduce formalmente la conclusión $r \land p$:
+\[
+p, \ q \land r \ \vdash \ r \land p
+\]
+\begin{center}
+$\begin{nd}[rules=myrules]
+    \hypo [1] {1} {p} \by{Prem.}{}
+    \hypo [2] {2} {q \land r} \by{Prem.}{}
+    \have [3] {3} {r} \ae{2}
+    \have [4] {4} {r \land p} \ai{3, 1}
+\end{nd}$
+\end{center}
+\textbf{Comentario:} 
+\begin{itemize}
+    \item Las líneas 1 y 2 registran las premisas iniciales del argumento.
+    \item La meta es construir la conjunción $r \land p$. La regla de introducción ($\land$I) exige disponer de sus dos componentes por separado. Como la premisa 1 ya nos proporciona $p$, el único subobjetivo pendiente es aislar $r$.
+    \item Aplicamos la regla de eliminación ($\land$E) sobre la premisa 2 para extraer su miembro derecho $r$ (línea 3).
+    \item Con $r$ y $p$ disponibles en líneas accesibles del nivel principal, aplicamos $\land$I combinando las líneas 3 y 1 para alcanzar la conclusión en la línea 4. Nótese que la justificación en el margen derecho cita con exactitud las dos líneas utilizadas.
+\end{itemize}
+\end{ejemplo}
+
+\subsection{Condicional (\texorpdfstring{$\to$}{entonces})}
+
+El condicional representa el paso deductivo de un antecedente a un consecuente. 
+\begin{itemize}
+    \item \textbf{Introducción ($\to$I).} Para justificar $A \to B$, abrimos una caja asumiendo provisionalmente la hipótesis $A$. Si dentro de esa caja logramos alcanzar $B$, cerramos la caja y afirmamos fuera: $A \to B$.
+    \item \textbf{Eliminación ($\to$E / \emph{modus ponens}).} Si disponemos de $A \to B$ y además tenemos $A$, obtenemos directamente $B$.
+\end{itemize}
+
+\vspace{0.3cm}
+\begin{center}
+\begin{tabular}{cc}
+\textbf{Introducción del condicional ($\to$I)} & \textbf{Eliminación del condicional ($\to$E)} \\[0.2cm]
+$\begin{nd}[rules=myrules]
+    \open
+    \hypo [i] {1} {A}
+    \have [\mbox{}] {} {\vdots}
+    \have [j] {2} {B}
+    \close
+    \have [\mbox{}] {3} {A \to B} \ci{1-2}
+\end{nd}$ &
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {A \to B}
+    \have [n] {2} {A}
+    \have [\mbox{}] {3} {B} \ce{1,2}
+\end{nd}$
+\end{tabular}
+\end{center}
+
+\begin{ejemplo}[Silogismo hipotético y apertura de hipótesis]
+Demostremos la transitividad del condicional formalizando el silogismo hipotético:
+\[
+p \to q, \ q \to r \ \vdash \ p \to r
+\]
+\begin{center}
+$\begin{nd}[rules=myrules]
+    \hypo [1] {1} {p \to q} \by{Prem.}{}
+    \hypo [2] {2} {q \to r} \by{Prem.}{}
+    \open
+        \hypo [3] {3} {p} \by{Hip.}{}
+        \have [4] {4} {q} \ce{1, 3}
+        \have [5] {5} {r} \ce{2, 4}
+    \close
+    \have [6] {6} {p \to r} \ci{3-5}
+\end{nd}$
+\end{center}
+\textbf{Comentario:} 
+\begin{itemize}
+    \item La conclusión que pretendemos alcanzar es un condicional: $p \to r$. La estrategia natural para probar un condicional es aplicar su regla de introducción ($\to$I): abrimos una caja subordinada asumiendo provisionalmente su antecedente $p$ (línea 3) y nos fijamos como único objetivo dentro de la caja alcanzar el consecuente $r$.
+    \item Dentro de la caja disponemos de $p$ y de la premisa 1 ($p \to q$). Aplicando la eliminación del condicional ($\to$E / \emph{modus ponens}) obtenemos $q$ (línea 4).
+    \item Con $q$ recién obtenido y la premisa 2 ($q \to r$), aplicamos nuevamente $\to$E para alcanzar $r$ (línea 5).
+    \item Habiendo completado el objetivo interno, cerramos la
+      caja. Fuera de ella afirmamos $p \to r$,
+      justificando mediante $\to$I que cita el rango continuo de la
+      subprueba (3--5). A partir de la línea 6, la hipótesis $p$ queda
+      descargada e inaccesible. 
+\end{itemize}
+\end{ejemplo}
+
+\begin{ejemplo}[Interacción de condicional y conjunción: ley de importación]
+Veamos cómo se combinan las reglas del condicional con las de la conjunción:
+\[
+p \to (q \to r) \ \vdash \ (p \land q) \to r
+\]
+\begin{center}
+$\begin{nd}[rules=myrules]
+    \hypo [1] {1} {p \to (q \to r)} \by{Prem.}{}
+    \open
+        \hypo [2] {2} {p \land q} \by{Hip.}{}
+        \have [3] {3} {p} \ae{2}
+        \have [4] {4} {q} \ae{2}
+        \have [5] {5} {q \to r} \ce{1, 3}
+        \have [6] {6} {r} \ce{5, 4}
+    \close
+    \have [7] {7} {(p \land q) \to r} \ci{2-6}
+\end{nd}$
+\end{center}
+\textbf{Comentario.} Para demostrar el condicional exterior abrimos la hipótesis $p \land q$ (línea 2). Dentro de la caja, descomponemos de inmediato la conjunción mediante $\land$E para obtener tanto $p$ como $q$ (líneas 3 y 4). Esto nos permite aplicar dos veces el \emph{modus ponens}, primero con la premisa 1 y después con la línea 5, hasta alcanzar $r$, cerrando la caja con $\to$I.
+\end{ejemplo}
+
+\subsection{Negación y contradicción (\texorpdfstring{$\neg, \bot$}{no, absurdo})}
+
+El símbolo $\bot$ representa una contradicción o absurdo lógico.
+\begin{itemize}
+    \item \textbf{Eliminación de la negación ($\neg$E).} De una fórmula $A$ y su negación $\neg A$ se concluye $\bot$.
+    \item \textbf{Introducción de la negación ($\neg$I).} Si asumiendo $A$ llegamos a una contradicción $\bot$, cerramos la caja y concluimos $\neg A$.
+    \item \textbf{Principio de explosión ($\text{X}$).} De una contradicción $\bot$ se sigue cualquier fórmula $B$.
+    \item \textbf{Prueba indirecta (IP / reducción al absurdo).} Si asumiendo $\neg A$ alcanzamos $\bot$, cerramos la caja y concluimos $A$.
+\end{itemize}
+
+\vspace{0.3cm}
+\begin{center}
+\begin{tabular}{cc}
+\textbf{Eliminación de la negación ($\neg$E)} & \textbf{Introducción de la negación ($\neg$I)} \\[0.2cm]
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {\lnot A}
+    \have [n] {2} {A}
+    \have [\mbox{}] {3} {\bot} \ne{1,2}
+\end{nd}$ &
+$\begin{nd}[rules=myrules]
+    \open
+    \hypo [i] {1} {A}
+    \have [\mbox{}] {} {\vdots}
+    \have [j] {2} {\bot}
+    \close 
+    \have [\mbox{}] {3} {\lnot A} \ni{1-2}  
+\end{nd}$ \\[1.2cm]
+\textbf{Explosión ($\text{X}$)} & \textbf{Prueba indirecta (IP)} \\[0.2cm]
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {\bot}
+    \have [\mbox{}] {2} {B} \x{1}
+\end{nd}$ &
+$\begin{nd}[rules=myrules]
+    \open
+    \hypo [i] {1} {\lnot A}
+    \have [\mbox{}] {} {\vdots}
+    \have [j] {2} {\bot}
+    \close 
+    \have [\mbox{}] {3} {A} \ip{1-2}  
+\end{nd}$
+\end{tabular}
+\end{center}
+
+\begin{ejemplo}[Introducción de la negación]
+Demostremos que si una fórmula implica su propia negación, podemos derivar formalmente la negación de dicha fórmula:
+\[
+p \to \neg p \ \vdash \ \neg p
+\]
+\begin{center}
+$\begin{nd}[rules=myrules]
+    \hypo [1] {1} {p \to \lnot p} \by{Prem.}{}
+    \open
+        \hypo [2] {2} {p} \by{Hip.}{}
+        \have [3] {3} {\lnot p} \ce{1, 2}
+        \have [4] {4} {\bot} \ne{3, 2}
+    \close
+    \have [5] {5} {\lnot p} \ni{2-4}
+\end{nd}$
+\end{center}
+\textbf{Comentario:} 
+\begin{itemize}
+    \item La meta es demostrar la negación $\neg p$. La regla $\neg$I nos indica el camino: abrir una subprueba asumiendo temporalmente lo contrario, es decir, la afirmación positiva $p$ (línea 2).
+    \item Mediante el \emph{modus ponens} con la premisa 1 obtenemos $\neg p$ (línea 3).
+    \item En la línea 4 confrontamos $\neg p$ con la hipótesis $p$ mediante la eliminación de la negación ($\neg$E), produciendo el absurdo formal $\bot$.
+    \item Habiendo demostrado que la hipótesis $p$ conduce a una
+      contradicción, cerramos la caja y concluimos fuera $\neg p$
+      mediante $\neg$I (2--4). 
+\end{itemize}
+\end{ejemplo}
+
+\begin{ejemplo}[Prueba indirecta o reducción al absurdo: la regla IP]
+En el cálculo deductivo clásico, si la suposición provisional de la negación de una fórmula ($\neg A$) conduce a una contradicción formal ($\bot$), la regla IP permite descargar dicha hipótesis y derivar la fórmula afirmativa ($A$). A modo de ilustración, derivamos la regla de eliminación de la doble negación ($\neg\neg p \vdash p$):
+\begin{center}
+$\begin{nd}[rules=myrules]
+    \hypo [1] {1} {\lnot\lnot p} \by{Prem.}{}
+    \open
+        \hypo [2] {2} {\lnot p} \by{Hip. IP}{}
+        \have [3] {3} {\bot} \ne{1, 2}
+    \close
+    \have [4] {4} {p} \ip{2-3}
+\end{nd}$
+\end{center}
+\textbf{Comentario.} Nótese la diferencia entre ambas reglas: mientras que la introducción de la negación ($\neg$I) es una regla constructiva que parte de una hipótesis $A$ para establecer su negación $\neg A$, la prueba indirecta clásica (IP) tiene un carácter no constructivo, pues parte del supuesto negativo $\neg A$ para derivar la afirmación $A$. Por esta razón, reservamos el nombre tradicional de \emph{reducción al absurdo} para la regla clásica IP, distinguiéndola de la \emph{introducción de la negación} ($\neg$I).
+\end{ejemplo}
+
+\subsection{Disyunción (\texorpdfstring{$\lor$}{o})}
+
+La disyunción expresa alternativas.
+\begin{itemize}
+    \item \textbf{Introducción ($\lor$I).} Si tenemos probado $A$, podemos concluir $A \lor B$ (o $B \lor A$) para cualquier fórmula $B$.
+    \item \textbf{Eliminación ($\lor$E / razonamiento por casos).} Si disponemos de $A \lor B$, para alcanzar una conclusión común $C$ debemos examinar ambos supuestos por separado: en una primera caja suponemos $A$ y derivamos $C$; en una segunda caja paralela suponemos $B$ y derivamos también $C$. Al tener $C$ garantizado en ambos casos, afirmamos $C$ fuera de las cajas.
+\end{itemize}
+
+\vspace{0.3cm}
+\begin{center}
+\begin{tabular}{cc}
+\textbf{Introducción de la disyunción ($\lor$I)} & \textbf{Eliminación de la disyunción ($\lor$E)} \\[0.2cm]
+$\begin{nd}
+    \have [m] {1} {A}
+    \have [\mbox{}] {2} {A \lor B} \oi{1}
+\end{nd}$\quad
+$\begin{nd}
+    \have [m] {1} {B}
+    \have [\mbox{}] {2} {A \lor B} \oi{1}
+\end{nd}$ &
+$\begin{nd}
+    \have [m] {1} {A \lor B}
+    \open
+    \hypo [i] {2} {A}
+    \have [\mbox{}] {} {\vdots}
+    \have [j] {3} {C}
+    \close 
+    \open
+    \hypo [k] {4} {B}
+    \have [\mbox{}] {} {\vdots}
+    \have [l] {5} {C}
+    \close 
+    \have [\mbox{}] {6} {C} \oe{1,2-3, 4-5}    
+\end{nd}$
+\end{tabular}
+\end{center}
+
+\begin{ejemplo}[Eliminación de la disyunción en un dilema constructivo simple: $p \lor q, p \to r, q \to r \vdash r$]
+Supongamos que sabemos que «llueve o nieva» ($p \lor q$), que «si llueve, el suelo se moja» ($p \to r$) y que «si nieva, el suelo se moja» ($q \to r$). Queremos concluir que «el suelo se moja» ($r$).
+
+\begin{center}
+$\begin{nd}[rules=myrules]
+    \hypo [1] {1} {p \lor q} \by{Prem.}{}
+    \hypo [2] {2} {p \to r} \by{Prem.}{}
+    \hypo [3] {3} {q \to r} \by{Prem.}{}
+    \open
+        \hypo [4] {4} {p} \by{Hip.}{}
+        \have [5] {5} {r} \ce{2, 4}
+    \close
+    \open
+        \hypo [6] {6} {q} \by{Hip.}{}
+        \have [7] {7} {r} \ce{3, 6}
+    \close
+    \have [8] {8} {r} \oe{1, 4-5, 6-7}
+\end{nd}$
+\end{center}
+\textbf{Comentario.} La regla $\lor$E formaliza el razonamiento por casos. Nótese que:
+\begin{enumerate}
+    \item Para justificar la línea 8 se citan tres elementos: la disyunción de partida (línea 1) y los dos intervalos completos de subdemostración (líneas 4--5 y 6--7).
+    \item Ambas cajas deben derivar \emph{exactamente la misma fórmula final} ($r$).
+    \item Las hipótesis temporales $p$ y $q$ quedan descargadas al cerrar cada caja; no se pueden volver a citar fuera. Lo único que se extrae es $r$, que queda establecido sea cual sea el disyunto del que se parta.
+\end{enumerate}
+\end{ejemplo}
+
+\subsection{Bicondicional (\texorpdfstring{$\leftrightarrow$}{si y solo si})}
+
+El bicondicional $A \leftrightarrow B$ funciona como un condicional en ambos sentidos. Se introduce demostrando ambas direcciones en dos subpruebas independientes, y se elimina actuando como condicional en cualquiera de los dos sentidos.
+
+\vspace{0.3cm}
+\begin{center}
+\begin{tabular}{cc}
+\textbf{Introducción del bicondicional ($\leftrightarrow$I)} & \textbf{Eliminación del bicondicional ($\leftrightarrow$E)} \\[0.2cm]
+$\begin{nd}[rules=myrules]
+    \open
+    \hypo [i] {1} {A}
+    \have [\mbox{}] {} {\vdots}
+    \have [j] {2} {B}
+    \close 
+    \open
+    \hypo [k] {3} {B}
+    \have [\mbox{}] {} {\vdots}
+    \have [l] {4} {A}
+    \close 
+    \have [\mbox{}] {5} {A \leftrightarrow B} \bi{1-2,3-4}  
+\end{nd}$ &
+\begin{tabular}{c}
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {A \leftrightarrow B}
+    \have [n] {2} {A}
+    \have [\mbox{}] {3} {B} \be{1,2}
+\end{nd}$ \\[0.3cm]
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {A \leftrightarrow B}
+    \have [n] {2} {B}
+    \have [\mbox{}] {3} {A} \be{1,2}
+\end{nd}$
+\end{tabular}
+\end{tabular}
+\end{center}
+
+\begin{ejemplo}[Transitividad del bicondicional: $p \leftrightarrow q, q \leftrightarrow r \vdash p \leftrightarrow r$]
+Ilustramos la regla de introducción del bicondicional, que exige construir dos cajas independientes que prueben la implicación en ambos sentidos:
+
+\begin{center}
+$\begin{nd}[rules=myrules]
+    \hypo [1] {1} {p \leftrightarrow q} \by{Prem.}{}
+    \hypo [2] {2} {q \leftrightarrow r} \by{Prem.}{}
+    \open
+        \hypo [3] {3} {p} \by{Hip.}{}
+        \have [4] {4} {q} \be{1, 3}
+        \have [5] {5} {r} \be{2, 4}
+    \close
+    \open
+        \hypo [6] {6} {r} \by{Hip.}{}
+        \have [7] {7} {q} \be{2, 6}
+        \have [8] {8} {p} \be{1, 7}
+    \close
+    \have [9] {9} {p \leftrightarrow r} \bi{3-5, 6-8}
+\end{nd}$
+\end{center}
+\textbf{Comentario.} Observamos que:
+\begin{enumerate}
+    \item Para alcanzar el bicondicional $p \leftrightarrow r$, la regla $\leftrightarrow$I exige probar dos derivaciones o direcciones independientes: deducir $r$ asumiendo provisionalmente $p$ (caja 3--5) y, recíprocamente, deducir $p$ asumiendo provisionalmente $r$ (caja 6--8).
+    \item Dentro de cada caja, la regla de eliminación del bicondicional ($\leftrightarrow$E) se utiliza en ambos sentidos: en la línea 4 se extrae $q$ a partir de la hipótesis $p$ mediante la premisa 1 (dirección de izquierda a derecha), mientras que en la línea 8 se extrae $p$ a partir de $q$ mediante la misma premisa 1 (dirección de derecha a izquierda), pues el bicondicional autoriza el paso inferencial en cualquiera de las dos orientaciones.
+\end{enumerate}
+\end{ejemplo}
+
+\section{Reglas derivadas}
+
+Las reglas derivadas son esquemas de inferencia demostrables en el cálculo básico que sirven como herramientas abreviadas para simplificar derivaciones extensas:
+
+\vspace{0.3cm}
+\begin{center}
+\begin{tabular}{cc}
+\textbf{\emph{Modus tollens} (MT)} & \textbf{Silogismo disyuntivo (DS)} \\[0.2cm]
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {A \to B}
+    \have [n] {2} {\lnot B}
+    \have [\mbox{}] {3} {\lnot A} \mt{1,2}
+\end{nd}$ &
+\begin{tabular}[t]{@{}c@{}}
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {A \lor B}
+    \have [n] {2} {\lnot A}
+    \have [\mbox{}] {3} {B} \ds{1,2}
+\end{nd}$ \\[0.9cm]
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {A \lor B}
+    \have [n] {2} {\lnot B}
+    \have [\mbox{}] {3} {A} \ds{1,2}
+\end{nd}$
+\end{tabular} \\ \noalign{\vspace{0.5cm}}
+\textbf{Eliminación de la doble negación (DNE)} & \textbf{Tercero excluido (LEM)} \\[0.2cm]
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {\lnot\lnot A}
+    \have [\mbox{}] {2} {A} \dne{1}
+\end{nd}$ &
+$\begin{nd}[justsep=.3em,rules=myrules]
+    \open
+    \hypo [i] {1} {A}
+    \have [\mbox{}] {} {\vdots}
+    \have [j] {2} {B}
+    \close 
+    \open
+    \hypo [k] {3} {\lnot A}
+    \have [\mbox{}] {} {\vdots}
+    \have [l] {4} {B}
+    \close 
+    \have [\mbox{}] {5} {B} \lem{1-2,3-4}  
+\end{nd}$ \\ \noalign{\vspace{0.7cm}}
+\multicolumn{2}{c}{\textbf{Leyes de De Morgan (DeM)}} \\[0.2cm]
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {\lnot(A \lor B)}
+    \have [\mbox{}] {2} {\lnot A \land \lnot B} \dem{1}
+\end{nd}$ &
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {\lnot(A \land B)}
+    \have [\mbox{}] {2} {\lnot A \lor \lnot B} \dem{1}
+\end{nd}$ \\[0.6cm]
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {\lnot A \land \lnot B}
+    \have [\mbox{}] {2} {\lnot(A \lor B)} \dem{1}
+\end{nd}$ &
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {\lnot A \lor \lnot B}
+    \have [\mbox{}] {2} {\lnot(A \land B)} \dem{1}
+\end{nd}$
+\end{tabular}
+\end{center}
+
+La regla LEM formaliza el razonamiento por casos sobre una afirmación y su negación: si asumiendo $A$ se deduce $B$, y asumiendo $\neg A$ se deduce también $B$, la regla autoriza a concluir $B$ descargando ambas hipótesis.
+
+\begin{ejemplo}[Derivación del \emph{modus tollens} mediante reglas básicas]
+Toda regla derivada puede justificarse usando solo reglas básicas:
+\begin{center}
+$\begin{nd}[rules=myrules]
+    \hypo [1] {1} {A \to B} \by{Prem.}{}
+    \hypo [2] {2} {\lnot B} \by{Prem.}{}
+    \open
+        \hypo [3] {3} {A} \by{Hip.}{}
+        \have [4] {4} {B} \ce{1,3}
+        \have [5] {5} {\bot} \ne{2,4}
+    \close
+    \have [6] {6} {\lnot A} \ni{3-5}
+\end{nd}$
+\end{center}
+\end{ejemplo}
+
+\section{Estrategias para la construcción de pruebas}
+
+\begin{itemize}
+    \item \textbf{Pensar hacia atrás desde la conclusión.} Si la meta es $A \to B$, abre una caja con $A$ y busca $B$. Si la meta es $A \land B$, busca $A$ y $B$ por separado. Si la meta es $\neg A$, abre una caja con $A$ y busca $\bot$ ($\neg$I).
+    \item \textbf{Aprovechar las premisas compuestas.} Si tienes $A \lor B$, prepara dos cajas paralelas para razonar por casos. Si tienes $A \land B$, descomponlo inmediatamente con $\land$E.
+    \item \textbf{El recurso del absurdo.} Si no ves un camino directo hacia tu conclusión, asume su negación y busca una contradicción para aplicar IP (si la conclusión es una negación $\neg A$, basta suponer $A$ y aplicar $\neg$I).
+\end{itemize}
+
+Una derivación tiene una propiedad notable: para saber si es correcta no hace falta entender de qué trata; basta comprobar línea a línea que cada paso se ajusta a una regla. Por eso puede comprobarla un programa, como la aplicación \appdeduccion{} que usamos en los ejercicios. En la sección~\ref{sec:asistentes} (tema~\ref{cap:dn-lpo}) veremos cómo esta idea sostiene hoy los asistentes de demostración que verifican resultados matemáticos, también cuando los propone un modelo de lenguaje.
+
+\section*{Referencias bibliográficas}
+
+\begin{enumerate}
+    \item \textbf{Fitch, F. B.} (1952). \emph{Symbolic Logic: An Introduction}. Ronald Press, Nueva York. [Origen del formato de subdemostraciones con barras verticales que usamos en estos apuntes].
+    \item \textbf{Gentzen, G.} (1934/1935). «Untersuchungen über das logische Schließen». \emph{Mathematische Zeitschrift}, vol. 39, pp. 176--210 y 405--431. [Origen de la deducción natural: cada conectiva se caracteriza por sus reglas de introducción y eliminación].
+    \item \textbf{Jaśkowski, S.} (1934). «On the rules of suppositions in formal logic». \emph{Studia Logica}, n.º 1, pp. 5--32. [Propuesta independiente de un cálculo de suposiciones, con una notación gráfica de cajas que anticipa la de Fitch].
+    \item \textbf{Magnus, P. D., Button, T., et al.} (2020). \emph{forall x: Calgary. An Introduction to Formal Logic}. Open Logic Project. [Parte IV: el cálculo de deducción natural proposicional que seguimos].
+    \item \textbf{Pelletier, F. J.} (1999). «A brief history of natural deduction». \emph{History and Philosophy of Logic}, vol. 20, n.º 1, pp. 1--31. [Historia de los sistemas de Gentzen, Jaśkowski y Fitch y de su llegada a los manuales].
+\end{enumerate}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "ApuntesLogica"
+%%% End:

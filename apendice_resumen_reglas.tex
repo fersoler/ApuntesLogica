@@ -1,0 +1,383 @@
+% -*- coding: utf-8 -*-
+Este apéndice reúne en pocas páginas las reglas del curso, para consultarlas al resolver ejercicios. Las explicaciones y los ejemplos están en los temas~\ref{cap:dn-prop},~\ref{cap:dn-lpo} y~\ref{cap:tableaux}. En los esquemas, $m, n, i, j, \dots$ son números de línea; los puntos verticales indican pasos intermedios.
+
+% Una regla: título y esquema, alineados por arriba con la regla vecina.
+\newenvironment{regla}[1]{%
+  \begin{minipage}[t]{0.48\textwidth}\centering\textbf{#1}\par\medskip
+}{%
+  \end{minipage}%
+}
+\newcommand{\finfila}{\par\bigskip\bigskip}
+
+\section{Reglas básicas de la deducción natural proposicional}
+
+\noindent\hfill
+\begin{regla}{Reiteración (R)}
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {A}
+    \have [\mbox{}] {2} {A} \r{1}
+\end{nd}$
+\end{regla}\hfill\mbox{}
+\finfila
+
+\noindent
+\begin{regla}{Introducción de la conjunción ($\land$I)}
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {A}
+    \have [n] {2} {B}
+    \have [\mbox{}] {3} {A \land B} \ai{1, 2}
+\end{nd}$
+\end{regla}\hfill
+\begin{regla}{Eliminación de la conjunción ($\land$E)}
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {A \land B}
+    \have [\mbox{}] {2} {A} \ae{1}
+\end{nd}$
+\quad
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {A \land B}
+    \have [\mbox{}] {2} {B} \ae{1}
+\end{nd}$
+\end{regla}
+\finfila
+
+\noindent
+\begin{regla}{Introducción del condicional ($\to$I)}
+$\begin{nd}[rules=myrules]
+    \open
+    \hypo [i] {1} {A}
+    \have [\mbox{}] {} {\vdots}
+    \have [j] {2} {B}
+    \close
+    \have [\mbox{}] {3} {A \to B} \ci{1-2}
+\end{nd}$
+\end{regla}\hfill
+\begin{regla}{Eliminación del condicional ($\to$E)}
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {A \to B}
+    \have [n] {2} {A}
+    \have [\mbox{}] {3} {B} \ce{1, 2}
+\end{nd}$
+\end{regla}
+\finfila
+
+\noindent
+\begin{regla}{Introducción de la negación ($\neg$I)}
+$\begin{nd}[rules=myrules]
+    \open
+    \hypo [i] {1} {A}
+    \have [\mbox{}] {} {\vdots}
+    \have [j] {2} {\bot}
+    \close
+    \have [\mbox{}] {3} {\lnot A} \ni{1-2}
+\end{nd}$
+\end{regla}\hfill
+\begin{regla}{Eliminación de la negación ($\neg$E)}
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {\lnot A}
+    \have [n] {2} {A}
+    \have [\mbox{}] {3} {\bot} \ne{1, 2}
+\end{nd}$
+\end{regla}
+\finfila
+
+\noindent
+\begin{regla}{Explosión (X)}
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {\bot}
+    \have [\mbox{}] {2} {B} \x{1}
+\end{nd}$
+\end{regla}\hfill
+\begin{regla}{Prueba indirecta (IP)}
+$\begin{nd}[rules=myrules]
+    \open
+    \hypo [i] {1} {\lnot A}
+    \have [\mbox{}] {} {\vdots}
+    \have [j] {2} {\bot}
+    \close
+    \have [\mbox{}] {3} {A} \ip{1-2}
+\end{nd}$
+\end{regla}
+\finfila
+
+\noindent
+\begin{regla}{Introducción de la disyunción ($\lor$I)}
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {A}
+    \have [\mbox{}] {2} {A \lor B} \oi{1}
+\end{nd}$
+\quad
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {B}
+    \have [\mbox{}] {2} {A \lor B} \oi{1}
+\end{nd}$
+\end{regla}\hfill
+\begin{regla}{Eliminación de la disyunción ($\lor$E)}
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {A \lor B}
+    \open
+    \hypo [i] {2} {A}
+    \have [\mbox{}] {} {\vdots}
+    \have [j] {3} {C}
+    \close
+    \open
+    \hypo [k] {4} {B}
+    \have [\mbox{}] {} {\vdots}
+    \have [l] {5} {C}
+    \close
+    \have [\mbox{}] {6} {C} \oe{1, 2-3, 4-5}
+\end{nd}$
+\end{regla}
+\finfila
+
+\noindent
+\begin{regla}{Introducción del bicondicional ($\leftrightarrow$I)}
+$\begin{nd}[rules=myrules]
+    \open
+    \hypo [i] {1} {A}
+    \have [\mbox{}] {} {\vdots}
+    \have [j] {2} {B}
+    \close
+    \open
+    \hypo [k] {3} {B}
+    \have [\mbox{}] {} {\vdots}
+    \have [l] {4} {A}
+    \close
+    \have [\mbox{}] {5} {A \leftrightarrow B} \bi{1-2, 3-4}
+\end{nd}$
+\end{regla}\hfill
+\begin{regla}{Eliminación del bicondicional ($\leftrightarrow$E)}
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {A \leftrightarrow B}
+    \have [n] {2} {A}
+    \have [\mbox{}] {3} {B} \be{1, 2}
+\end{nd}$
+\quad
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {A \leftrightarrow B}
+    \have [n] {2} {B}
+    \have [\mbox{}] {3} {A} \be{1, 2}
+\end{nd}$
+\end{regla}
+\finfila
+
+\section{Reglas básicas de los cuantificadores y de la identidad}
+
+\noindent
+\begin{regla}{Eliminación del universal ($\forall$E)}
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {\forall x A(x)}
+    \have [\mbox{}] {2} {A(c)} \Ae{1}
+\end{nd}$
+
+\medskip\small\raggedright
+$c$ puede ser cualquier constante; se sustituyen todas las apariciones libres de $x$.
+\end{regla}\hfill
+\begin{regla}{Introducción del universal ($\forall$I)}
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {A(c)}
+    \have [\mbox{}] {2} {\forall x A(x)} \Ai{1}
+\end{nd}$
+
+\medskip\small\raggedright
+$c$ no aparece en ninguna premisa ni hipótesis activa, ni en $\forall x A(x)$ (se sustituyen \emph{todas} las apariciones de $c$). La variable $x$ no aparece en $A(c)$.
+\end{regla}
+\finfila
+
+\noindent
+\begin{regla}{Introducción del existencial ($\exists$I)}
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {A(c)}
+    \have [\mbox{}] {2} {\exists x A(x)} \Ei{1}
+\end{nd}$
+
+\medskip\small\raggedright
+Sin restricciones sobre $c$; pueden sustituirse solo algunas de sus apariciones. La variable $x$ no aparece en $A(c)$.
+\end{regla}\hfill
+\begin{regla}{Eliminación del existencial ($\exists$E)}
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {\exists x A(x)}
+    \open
+    \hypo [i] {2} {A(c)} \by{Hip. testigo $c$}{}
+    \have [\mbox{}] {} {\vdots}
+    \have [j] {3} {B}
+    \close
+    \have [\mbox{}] {4} {B} \Ee{1, 2-3}
+\end{nd}$
+
+\medskip\small\raggedright
+$c$ no aparece en ninguna premisa ni hipótesis activa anterior a la caja, ni en $\exists x A(x)$, ni en $B$.
+\end{regla}
+\finfila
+
+\noindent
+\begin{regla}{Introducción de la identidad ($=$I)}
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {c = c} \idi{}
+\end{nd}$
+
+\medskip\small\raggedright
+Para cualquier constante $c$; no se cita ninguna línea.
+\end{regla}\hfill
+\begin{regla}{Eliminación de la identidad ($=$E)}
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {a = b}
+    \have [n] {2} {A(\dots a \dots a \dots)}
+    \have [\mbox{}] {3} {A(\dots b \dots a \dots)} \ide{1, 2}
+\end{nd}$
+
+\medskip\small\raggedright
+Se sustituyen una, varias o todas las apariciones de $a$ por $b$. También en sentido inverso: de $a = b$ y una fórmula con $b$, sustituir $b$ por $a$.
+\end{regla}
+\finfila
+
+\section{Reglas derivadas}
+
+\noindent
+\begin{regla}{\emph{Modus tollens} (MT)}
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {A \to B}
+    \have [n] {2} {\lnot B}
+    \have [\mbox{}] {3} {\lnot A} \mt{1, 2}
+\end{nd}$
+\end{regla}\hfill
+\begin{regla}{Silogismo disyuntivo (DS)}
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {A \lor B}
+    \have [n] {2} {\lnot A}
+    \have [\mbox{}] {3} {B} \ds{1, 2}
+\end{nd}$ \qquad
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {A \lor B}
+    \have [n] {2} {\lnot B}
+    \have [\mbox{}] {3} {A} \ds{1, 2}
+\end{nd}$
+\end{regla}
+\finfila
+
+\noindent
+\begin{regla}{Eliminación de la doble negación (DNE)}
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {\lnot\lnot A}
+    \have [\mbox{}] {2} {A} \dne{1}
+\end{nd}$
+\end{regla}\hfill
+\begin{regla}{Tercero excluido (LEM)}
+$\begin{nd}[rules=myrules]
+    \open
+    \hypo [i] {1} {A}
+    \have [\mbox{}] {} {\vdots}
+    \have [j] {2} {B}
+    \close
+    \open
+    \hypo [k] {3} {\lnot A}
+    \have [\mbox{}] {} {\vdots}
+    \have [l] {4} {B}
+    \close
+    \have [\mbox{}] {5} {B} \lem{1-2, 3-4}
+\end{nd}$
+\end{regla}
+\finfila
+
+\noindent\hfill
+\begin{minipage}[t]{0.8\textwidth}\centering
+\textbf{Leyes de De Morgan (DeM)}\par\medskip
+\begin{tabular}{cc}
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {\lnot(A \lor B)}
+    \have [\mbox{}] {2} {\lnot A \land \lnot B} \dem{1}
+\end{nd}$ &
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {\lnot(A \land B)}
+    \have [\mbox{}] {2} {\lnot A \lor \lnot B} \dem{1}
+\end{nd}$ \\[0.6cm]
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {\lnot A \land \lnot B}
+    \have [\mbox{}] {2} {\lnot(A \lor B)} \dem{1}
+\end{nd}$ &
+$\begin{nd}[rules=myrules]
+    \have [m] {1} {\lnot A \lor \lnot B}
+    \have [\mbox{}] {2} {\lnot(A \land B)} \dem{1}
+\end{nd}$
+\end{tabular}
+\end{minipage}\hfill\mbox{}
+\finfila
+
+\noindent\hfill
+\begin{minipage}[t]{0.8\textwidth}\centering
+\textbf{Conversión de cuantificadores (CQ)}\par\medskip
+De una línea con la fórmula de la izquierda se obtiene la de la derecha, citando esa línea:\par\medskip
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{ccc|ccc}
+$\neg \forall x A(x)$ & $\Rightarrow$ & $\exists x \neg A(x)$ & $\exists x \neg A(x)$ & $\Rightarrow$ & $\neg \forall x A(x)$ \\
+$\neg \exists x A(x)$ & $\Rightarrow$ & $\forall x \neg A(x)$ & $\forall x \neg A(x)$ & $\Rightarrow$ & $\neg \exists x A(x)$
+\end{tabular}
+\end{minipage}\hfill\mbox{}
+\finfila
+
+\clearpage
+\section{Tableaux}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}[t]{|c|c|c|}
+\hline
+$\alpha$ & $\alpha_1$ & $\alpha_2$ \\
+\hline
+$A \land B$ & $A$ & $B$ \\
+$\neg (A \lor B)$ & $\neg A$ & $\neg B$ \\
+$\neg (A \to B)$ & $A$ & $\neg B$ \\
+\hline
+\end{tabular}
+\qquad
+\begin{tabular}[t]{|c|c|c|}
+\hline
+$\beta$ & $\beta_1$ & $\beta_2$ \\
+\hline
+$A \lor B$ & $A$ & $B$ \\
+$\neg (A \land B)$ & $\neg A$ & $\neg B$ \\
+$A \to B$ & $\neg A$ & $B$ \\
+$A \leftrightarrow B$ & $A \land B$ & $\neg A \land \neg B$ \\
+$\neg (A \leftrightarrow B)$ & $A \land \neg B$ & $\neg A \land B$ \\
+\hline
+\end{tabular}
+\\[0.4cm]
+\begin{tabular}{|c|c|}
+\hline
+$\gamma$ & $\gamma(c)$ \\
+\hline
+$\forall x A(x)$ & $A(c)$ \\
+$\neg \exists x A(x)$ & $\neg A(c)$ \\
+\hline
+\end{tabular}
+\qquad
+\begin{tabular}{|c|c|}
+\hline
+$\delta$ & $\delta(a)$, $a$ nueva \\
+\hline
+$\exists x A(x)$ & $A(a)$ \\
+$\neg \forall x A(x)$ & $\neg A(a)$ \\
+\hline
+\end{tabular}
+\qquad
+\begin{tabular}{|c|c|}
+\hline
+$\sigma$ & \\
+\hline
+$\neg\neg A$ & $A$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{itemize}
+    \item \textbf{$\alpha$, $\delta$, $\sigma$:} se añaden a todas las ramas abiertas que pasan por la fórmula. \textbf{$\beta$:} la rama se bifurca.
+    \item \textbf{$\gamma$:} se instancia con todas las constantes de la rama (con una nueva si no hay ninguna), y de nuevo cada vez que aparezca una constante nueva.
+    \item \textbf{Cierre:} una rama se cierra si contiene $A$ y $\neg A$.
+    \item \textbf{Prioridad orientativa:} $\alpha$ (y $\sigma$), después $\delta$, después $\gamma$ y, al final, $\beta$.
+    \item \textbf{Usos:} para $\Gamma \models A$, raíz $\Gamma \cup \{\neg A\}$; para $\models A$, raíz $\{\neg A\}$; para la satisfacibilidad de $\Gamma$, raíz $\Gamma$; para $A \equiv B$, raíz $\{\neg(A \leftrightarrow B)\}$. Tableau cerrado: consecuencia válida, fórmula válida, conjunto insatisfacible o fórmulas equivalentes. Rama abierta y completa: contramodelo o modelo.
+\end{itemize}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "ApuntesLogica"
+%%% End:

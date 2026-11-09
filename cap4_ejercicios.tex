@@ -1,0 +1,273 @@
+% -*- coding: utf-8 -*-
+\begin{quote}
+\small \textbf{Instrucciones.} Salvo indicación en contra, puedes usar las reglas derivadas del tema~\ref{cap:dn-prop} (MT, DS, DNE, LEM, DeM) y CQ. Puedes hacerlas y comprobarlas en la aplicación \appdeduccion{}, que contiene estos ejercicios; su ayuda indica qué letras son constantes y cuáles variables.
+\end{quote}
+
+\section*{Nivel 1: cuantificador universal y silogística clásica}
+\textit{En este nivel practicamos la eliminación del universal ($\forall\text{E}$, instanciando en las constantes relevantes) y la introducción del universal ($\forall\text{I}$ sobre parámetros arbitrarios que no aparecen en premisas).}
+
+\begin{pregunta}\label{e4-1}
+Demuestra el modo silogístico Celarent (ningún $M$ es $P$, y todo $S$ es $M$; por tanto, ningún $S$ es $P$):
+\[
+\forall x (M(x) \to \neg P(x)), \ \forall x (S(x) \to M(x)) \ \vdash \ \forall x (S(x) \to \neg P(x))
+\]
+\textit{Pista.} Abre una caja con hipótesis $S(c)$ para un parámetro arbitrario $c$. Instancia las dos premisas sobre $c$ mediante $\forall\text{E}$ y encadena los condicionales con $\to$E para derivar $\neg P(c)$. Cierra la subprueba con $\to$I y concluye con $\forall\text{I}$.
+\end{pregunta}
+
+\begin{pregunta}\label{e4-2}
+Demuestra el modo silogístico Cesare (ningún $P$ es $M$, y todo $S$ es $M$; por tanto, ningún $S$ es $P$):
+\[
+\forall x (P(x) \to \neg M(x)), \ \forall x (S(x) \to M(x)) \ \vdash \ \forall x (S(x) \to \neg P(x))
+\]
+\textit{Pista.} Abre una caja con $S(c)$ y una subcaja con $P(c)$ para buscar contradicción con $M(c)$ y $\neg M(c)$.
+\end{pregunta}
+
+\begin{pregunta}\label{e4-3}
+Demuestra la distributividad del cuantificador universal respecto a la conjunción:
+\[
+\forall x P(x) \land \forall x Q(x) \ \vdash \ \forall x (P(x) \land Q(x))
+\]
+\textit{Pista.} Extrae $\forall x P(x)$ y $\forall x Q(x)$ por $\land$E, instáncialos a la misma constante arbitraria $c$, junta por $\land$I y aplica $\forall\text{I}$.
+\end{pregunta}
+
+\begin{pregunta}\label{e4-4}
+Demuestra el siguiente argumento, en el que el consecuente del condicional no contiene la variable $x$:
+\[
+\forall x (P(x) \to Q(a)), \ P(b) \ \vdash \ Q(a)
+\]
+\textit{Pista.} Como el universal afirma la implicación para cualquier individuo, basta instanciarlo mediante $\forall\text{E}$ sobre la constante $b$ de la segunda premisa y aplicar $\to$E.
+\end{pregunta}
+
+\begin{pregunta}\label{e4-5}
+Demuestra la siguiente combinación de $\forall$E y $\leftrightarrow$E:
+\[
+\forall x (P(x) \leftrightarrow Q(x)), \ P(c) \ \vdash \ Q(c)
+\]
+\textit{Pista.} Aplica $\forall\text{E}$ sobre la constante $c$ y luego la eliminación del bicondicional ($\leftrightarrow$E) junto con la premisa $P(c)$.
+\end{pregunta}
+
+\section*{Nivel 2: cuantificador existencial y gestión de testigos}
+\textit{En este nivel introducimos la caja de hipótesis con testigo provisional ($\exists\text{E}$). Recuerda: conviene abrir pronto las cajas de los existenciales con una constante fresca y asegurarse de que el testigo no aparezca en la conclusión.}
+
+\begin{pregunta}\label{e4-6}
+Demuestra el modo silogístico Ferio (ningún $M$ es $P$, y algún $S$ es $M$; por tanto, algún $S$ no es $P$):
+\[
+\forall x (M(x) \to \neg P(x)), \ \exists x (S(x) \land M(x)) \ \vdash \ \exists x (S(x) \land \neg P(x))
+\]
+\textit{Pista.} Abre una caja de $\exists\text{E}$ con un testigo fresco $c$ asumiendo $S(c) \land M(c)$. Descompón la conjunción con $\land\text{E}$, instancia la premisa universal sobre $c$ para obtener $\neg P(c)$, forma $S(c) \land \neg P(c)$ por $\land\text{I}$, generaliza con $\exists\text{I}$ y cierra la caja de $\exists\text{E}$.
+\end{pregunta}
+
+\begin{pregunta}\label{e4-7}
+Demuestra el modo silogístico Datisi (todo $M$ es $P$, y algún $M$ es $S$; por tanto, algún $S$ es $P$):
+\[
+\forall x (M(x) \to P(x)), \ \exists x (M(x) \land S(x)) \ \vdash \ \exists x (S(x) \land P(x))
+\]
+\textit{Pista.} Abre una caja de $\exists\text{E}$ con testigo fresco $c$ ($M(c) \land S(c)$), extrae las partes, usa $\forall\text{E}$ sobre la primera premisa y $\to$E para obtener $P(c)$ y recombina como $S(c) \land P(c)$ para aplicar $\exists\text{I}$.
+\end{pregunta}
+
+\begin{pregunta}\label{e4-8}
+Demuestra la distributividad del existencial respecto a la disyunción:
+\[
+\exists x (P(x) \lor Q(x)) \ \vdash \ \exists x P(x) \lor \exists x Q(x)
+\]
+\textit{Pista.} Abre la caja de testigo para el existencial ($P(c) \lor Q(c)$). Dentro de la caja, haz una prueba por casos sobre la disyunción ($\lor$E) para deducir $\exists x P(x) \lor \exists x Q(x)$.
+\end{pregunta}
+
+\begin{pregunta}\label{e4-9}
+Demuestra que un universal y un existencial se combinan existencialmente:
+\[
+\forall x P(x), \ \exists x Q(x) \ \vdash \ \exists x (P(x) \land Q(x))
+\]
+\textit{Pista.} Abre la caja de $\exists\text{E}$ para la premisa existencial con testigo $c$ asumiendo $Q(c)$. Dentro de ella, aplica $\forall\text{E}$ sobre $c$ a la primera premisa, construye la conjunción por $\land\text{I}$, aplica $\exists\text{I}$ y cierra la caja.
+\end{pregunta}
+
+\begin{pregunta}\label{e4-10}
+Demuestra la independencia de dos existenciales con cajas anidadas:
+\[
+\exists x P(x), \ \exists y Q(y) \ \vdash \ \exists x \exists y (P(x) \land Q(y))
+\]
+\textit{Advertencia.} Cada caja de testigo debe usar una constante distinta (por ejemplo, $c$ para la primera y $d$ para la segunda).
+\end{pregunta}
+
+\section*{Nivel 3: relaciones binarias y cuantificadores múltiples}
+\textit{En este nivel trabajamos con predicados diádicos (relaciones entre individuos $R(x, y)$). Presta especial atención al orden de eliminación e introducción de los cuantificadores.}
+
+\begin{pregunta}\label{e4-11}
+Demuestra la transmisión existencial de una relación universalmente implicada:
+\[
+\forall x \forall y (R(x, y) \to S(x, y)), \ \exists x \forall y R(x, y) \ \vdash \ \forall y \exists x S(x, y)
+\]
+\textit{Pista.} Abre una subprueba de $\exists\text{E}$ para la segunda premisa con testigo fresco $c$ asumiendo $\forall y R(c, y)$. Dentro de la subprueba, toma un parámetro arbitrario $d$ para alcanzar la meta universal; instancia las premisas sobre $c$ y $d$ para derivar $S(c, d)$ por $\to$E, aplica $\exists\text{I}$ sobre $c$ para obtener $\exists x S(x, d)$ y luego $\forall\text{I}$ sobre $d$ para obtener $\forall y \exists x S(x, y)$. Por último, cierra la caja de $\exists\text{E}$.
+\end{pregunta}
+
+\begin{pregunta}\label{e4-12}
+Demuestra que si una relación $R$ es simétrica, transitiva y serial (todo individuo se relaciona con al menos uno), entonces $R$ es reflexiva:
+\[
+\forall x \forall y (R(x, y) \to R(y, x)), \ \forall x \forall y \forall z ((R(x, y) \land R(y, z)) \to R(x, z)), \ \forall x \exists y R(x, y) \ \vdash \ \forall x R(x, x)
+\]
+\textit{Pista.} Para probar la meta universal $\forall x R(x, x)$, fija un parámetro arbitrario $a$. Instancia la premisa de serialidad sobre $a$ para obtener $\exists y R(a, y)$ y abre una subprueba de $\exists\text{E}$ con un testigo fresco $b$ asumiendo $R(a, b)$. Aplica la simetría sobre $a$ y $b$ para obtener $R(b, a)$, forma la conjunción $R(a, b) \land R(b, a)$ y aplica la transitividad sobre $a, b, a$ para derivar $R(a, a)$. Cierra la subprueba de $\exists\text{E}$ (el testigo $b$ no escapa) y concluye con $\forall\text{I}$ sobre $a$.
+\end{pregunta}
+
+\begin{pregunta}\label{e4-13}
+Demuestra que si una relación es asimétrica, entonces es irreflexiva (nadie se relaciona consigo mismo):
+\[
+\forall x \forall y (R(x, y) \to \neg R(y, x)) \ \vdash \ \forall x \neg R(x, x)
+\]
+\textit{Pista.} Abre una caja con la hipótesis $R(c, c)$ y busca una contradicción.
+\end{pregunta}
+
+\begin{pregunta}\label{e4-14}
+Demuestra el paso de existencial condicional a antecedente universal:
+\[
+\exists x (P(x) \to Q(a)) \ \vdash \ \forall x P(x) \to Q(a)
+\]
+\textit{Pista.} Abre una caja para la introducción del condicional ($\to$I) asumiendo $\forall x P(x)$. Dentro de ella, abre la caja de $\exists\text{E}$ para la premisa con un testigo fresco $c$ asumiendo $P(c) \to Q(a)$. Instancia el supuesto $\forall x P(x)$ sobre $c$ para obtener $P(c)$, deduce $Q(a)$ por $\to$E, cierra la caja de $\exists\text{E}$ (ya que $Q(a)$ no contiene a $c$) y finalmente cierra la caja de $\to$I.
+\end{pregunta}
+
+\begin{pregunta}\label{e4-15}
+Demuestra la conmutatividad del doble cuantificador existencial mediante cajas anidadas:
+\[
+\exists x \exists y R(x, y) \ \vdash \ \exists y \exists x R(x, y)
+\]
+\textit{Pista.} Abre una caja de $\exists\text{E}$ con testigo $c$ para $\exists x$; dentro de ella, abre otra caja de $\exists\text{E}$ con testigo $d$ para $\exists y$. A partir de $R(c, d)$, aplica dos veces $\exists\text{I}$ para obtener $\exists y \exists x R(x, y)$ y cierra ambas cajas en orden inverso.
+\end{pregunta}
+
+\section*{Nivel 4: cuantificadores con negación, CQ y reducción al absurdo}
+\textit{En este nivel combinamos cuantificadores con negación utilizando la regla de conversión de cuantificadores (CQ) y demostraciones clásicas por reducción al absurdo (IP).}
+
+\begin{pregunta}\label{e4-16}
+Demuestra mediante reglas básicas (sin usar la regla derivada CQ) que:
+\[
+\neg \exists x P(x) \ \vdash \ \forall x \neg P(x)
+\]
+\textit{Pista.} Para una constante arbitraria $c$, abre una hipótesis $P(c)$ con el fin de derivar $\neg P(c)$ por $\neg\text{I}$. Dentro de ella, aplica $\exists\text{I}$ sobre $c$ para obtener $\exists x P(x)$, lo que genera contradicción inmediata ($\bot$) con la premisa $\neg \exists x P(x)$. Cierra la subprueba con $\neg\text{I}$ y concluye con $\forall\text{I}$ sobre $c$.
+\end{pregunta}
+
+\begin{pregunta}\label{e4-17}
+Demuestra el paso recíproco, también con reglas básicas:
+\[
+\forall x \neg P(x) \ \vdash \ \neg \exists x P(x)
+\]
+\textit{Pista.} Procede por introducción de la negación ($\neg\text{I}$) abriendo la hipótesis $\exists x P(x)$. Dentro de esa caja, abre una subprueba de $\exists\text{E}$ con testigo fresco $c$ asumiendo $P(c)$. Instancia la premisa universal sobre $c$ mediante $\forall\text{E}$ para obtener $\neg P(c)$ y obtén $\bot$; cierra la caja de $\exists$E (pues $\bot$ no contiene a $c$) y después la de $\neg$I.
+\end{pregunta}
+
+\begin{pregunta}\label{e4-18}
+Demuestra el siguiente argumento (basta usar \emph{modus tollens} dentro de una caja de $\exists$E; no hace falta CQ):
+\[
+\forall x (P(x) \to Q(x)), \ \exists x \neg Q(x) \ \vdash \ \exists x \neg P(x)
+\]
+\end{pregunta}
+
+\begin{pregunta}\label{e4-19}
+Demuestra, mediante introducción de la negación ($\neg$I):
+\[
+\neg \exists x (P(x) \land Q(x)), \ P(a) \ \vdash \ \neg Q(a)
+\]
+\end{pregunta}
+
+\begin{pregunta}\label{e4-20}
+Demuestra el principio clásico conocido como la paradoja del bebedor (en todo bar hay alguien tal que, si él bebe, todos beben):
+\[
+\vdash \ \exists x (B(x) \to \forall y B(y))
+\]
+\textit{Pista.} Aplica la regla LEM con las hipótesis $\forall y B(y)$ y $\neg \forall y B(y)$. En la primera caja, para cualquier constante $c$, supón $B(c)$, reitera $\forall y B(y)$, cierra con $\to$I y aplica $\exists$I. En la segunda, obtén $\exists y \neg B(y)$ por CQ y abre una caja de $\exists$E con testigo $d$ y $\neg B(d)$; supón $B(d)$, obtén $\bot$ y, por X, $\forall y B(y)$; cierra con $\to$I para obtener $B(d) \to \forall y B(y)$ y aplica $\exists$I antes de cerrar la caja de $\exists$E. (Obsérvese que la validez de este principio depende de que el dominio no sea vacío: en un bar vacío no hay nadie que cumpla la condición).
+\end{pregunta}
+
+\section*{Nivel 5: análisis de falacias formales}
+\textit{A continuación se presentan cuatro demostraciones aparentemente correctas, pero que contienen un error de razonamiento por violar alguna de las restricciones de $\forall$I o de $\exists$E. Para cada una de ellas:}
+\begin{enumerate}
+    \item Identifica la línea en la que se aplica una regla sin respetar sus restricciones.
+    \item Enuncia con precisión qué restricción ha sido violada.
+    \item Proporciona un contraejemplo informal en lenguaje natural que demuestre que el argumento es inválido.
+\end{enumerate}
+
+\begin{pregunta}[Falacia de generalización indebida]\label{e4-21}
+
+\begin{center}
+$\begin{nd}[rules=myrules]
+    \hypo [1] {1} {P(a)} \by{Prem.}{}
+    \hypo [2] {2} {\forall x (P(x) \to Q(x))} \by{Prem.}{}
+    \have [3] {3} {P(a) \to Q(a)} \Ae{2}
+    \have [4] {4} {Q(a)} \ce{3, 1}
+    \have [5] {5} {\forall x Q(x)} \Ai{4}
+\end{nd}$
+\end{center}
+\end{pregunta}
+
+\begin{pregunta}[Falacia de fuga de testigo]\label{e4-22}
+
+\begin{center}
+$\begin{nd}[rules=myrules]
+    \hypo [1] {1} {\exists x P(x)} \by{Prem.}{}
+    \hypo [2] {2} {\forall x (P(x) \to Q(x))} \by{Prem.}{}
+    \open
+        \hypo [3] {3} {P(c)} \by{Hip. testigo $c$}{}
+        \have [4] {4} {P(c) \to Q(c)} \Ae{2}
+        \have [5] {5} {Q(c)} \ce{4, 3}
+    \close
+    \have [6] {6} {Q(c)} \Ee{1, 3-5}
+\end{nd}$
+\end{center}
+\end{pregunta}
+
+\begin{pregunta}[Falacia de elección de testigo no fresco: confusión con un individuo conocido]\label{e4-23}
+
+\begin{center}
+$\begin{nd}[rules=myrules]
+    \hypo [1] {1} {P(a)} \by{Prem.}{}
+    \hypo [2] {2} {\exists x Q(x)} \by{Prem.}{}
+    \open
+        \hypo [3] {3} {Q(a)} \by{Hip. testigo $a$}{}
+        \have [4] {4} {P(a) \land Q(a)} \by{$\land$I}{1, 3}
+        \have [5] {5} {\exists x (P(x) \land Q(x))} \Ei{4}
+    \close
+    \have [6] {6} {\exists x (P(x) \land Q(x))} \Ee{2, 3-5}
+\end{nd}$
+\end{center}
+\end{pregunta}
+
+\begin{pregunta}[Falacia de la inversión ilícita de cuantificadores]\label{e4-24}
+
+\begin{center}
+$\begin{nd}[rules=myrules]
+    \hypo [1] {1} {\forall y \exists x R(x, y)} \by{Prem.}{}
+    \have [2] {2} {\exists x R(x, d)} \Ae{1}
+    \open
+        \hypo [3] {3} {R(c, d)} \by{Hip. testigo $c$}{}
+        \have [4] {4} {\forall y R(c, y)} \Ai{3}
+        \have [5] {5} {\exists x \forall y R(x, y)} \Ei{4}
+    \close
+    \have [6] {6} {\exists x \forall y R(x, y)} \Ee{2, 3-5}
+\end{nd}$
+\end{center}
+\end{pregunta}
+
+\section*{Nivel 6: identidad}
+\textit{En este nivel usamos las reglas $=$I y $=$E (sección~\ref{sec:identidad}). Recuerda que $=$E permite sustituir una, varias o todas las apariciones de un término por otro idéntico, en cualquiera de los dos sentidos.}
+
+\begin{pregunta}[Transitividad y simetría]\label{e4-25}
+$a = b, \ b = c \ \vdash \ c = a$
+
+\textit{Pista.} Obtén primero $a = c$ con $=$E y después aplica la simetría como en el ejemplo de la simetría de la identidad (sección~\ref{sec:identidad}).
+\end{pregunta}
+
+\begin{pregunta}\label{e4-26}
+$\forall x (x = a \to P(x)) \ \vdash \ P(a)$
+\end{pregunta}
+
+\begin{pregunta}[Unicidad]\label{e4-27}
+Si hay exactamente un individuo con la propiedad $P$, y tanto $a$ como $b$ la tienen, entonces $a$ y $b$ son el mismo individuo:
+\[
+\exists x (P(x) \land \forall y (P(y) \to y = x)), \ P(a), \ P(b) \ \vdash \ a = b
+\]
+\textit{Pista.} Abre una caja de $\exists$E con un testigo fresco $c$, obtén $a = c$ y $b = c$, y combínalas con $=$E.
+\end{pregunta}
+
+\begin{pregunta}[Simetría como teorema]\label{e4-28}
+$\vdash \forall x \forall y (x = y \to y = x)$
+\end{pregunta}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "ApuntesLogica"
+%%% End:

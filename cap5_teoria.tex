@@ -1,0 +1,681 @@
+% -*- coding: utf-8 -*-
+\section{De las tablas de verdad a las estructuras semánticas}
+
+En la lógica proposicional, la semántica (tema~\ref{cap:sem-prop}) resultaba
+muy simple: saber si una fórmula es válida requería únicamente
+inspeccionar las combinaciones de ceros y unos en una tabla finita de
+$2^n$ filas (si bien esto supone un gran coste en términos de complejidad computacional). En la lógica de primer orden, sin embargo, nos enfrentamos a cuantificadores universales («para todo $x$») y existenciales («existe un $x$») que afirman propiedades sobre dominios que pueden ser arbitrariamente grandes e incluso infinitos (como los números naturales $\mathbb{N}$ o los puntos del continuo $\mathbb{R}$). 
+
+Por consiguiente, ya no podemos apoyarnos en tablas de verdad. Necesitamos una teoría formal que defina qué significa que un enunciado de primer orden sea verdadero en una situación, contexto o universo determinado. Esa teoría es la \textbf{semántica de modelos}, cuyas bases estableció Alfred Tarski con su definición de verdad (1933) y que daría lugar a la teoría de modelos.
+
+\subsection{Componentes de una estructura de primer orden}
+
+Las nociones de conjuntos que usamos a partir de aquí (subconjunto, par ordenado, $n$-tupla, producto cartesiano $D^n$, función) se repasan en el apéndice~\ref{ap:conjuntos}. Para interpretar un lenguaje de primer orden necesitamos una \textbf{estructura} (también llamada \textbf{modelo}):
+
+\begin{definition}[Estructura de primer orden]
+Una \textbf{estructura} $\mathcal{M}$ para un lenguaje de primer orden $\mathcal{L}$ es un par ordenado $\mathcal{M} = \langle D, I \rangle$ compuesto por:
+\begin{enumerate}
+    \item \textbf{El dominio o universo de discurso ($D$).} Un conjunto \emph{no vacío} de objetos o individuos sobre los cuales versan las variables y cuantificadores.
+    \item \textbf{La función de interpretación ($I$).} Una función que asigna significado a los símbolos no lógicos del lenguaje:
+    \begin{itemize}
+        \item A cada constante individual $c$, $I$ le asigna un objeto particular del dominio: $I(c) \in D$.
+        \item A cada símbolo de predicado $n$-ario $R$, $I$
+          le asigna un conjunto de $n$-tuplas de elementos del
+          dominio: $I(R) \subseteq D^n$.
+       \begin{itemize}
+        \item En el caso particular de un predicado
+            unario $P$, $I$ le asigna el conjunto de individuos
+          que poseen dicha propiedad: $I(P) \subseteq D$.
+        \item Si se incluye el símbolo de identidad ($=$), su
+          interpretación en toda estructura es la relación de identidad: $I(=) = \{(d, d) \mid d \in D\}$. 
+       \end{itemize}
+    \end{itemize}
+\end{enumerate}
+\end{definition}
+
+\subsection{Asignaciones de variables y denotación de términos}
+
+Mientras que las constantes individuales poseen una referencia fija
+determinada por la función de interpretación $I$, las variables
+individuales ($x, y, z, \dots$) no tienen un significado fijo: actúan
+como pronombres o huecos abiertos. Para dotar de valor a las variables
+acudimos al concepto de \textbf{asignación}:
+
+\begin{definition}[Asignación de variables]
+Dada una estructura $\mathcal{M} = \langle D, I \rangle$, una \textbf{asignación de variables} en $\mathcal{M}$ es una función $g: \text{Var} \to D$, donde $\text{Var}$ es el conjunto de las variables individuales, que asocia a cada variable un elemento del dominio $D$.
+\end{definition}
+
+\noindent A partir de la interpretación $I$ y de la asignación $g$, podemos definir la \textbf{denotación} de cualquier término individual $t$ en $\mathcal{M}$ bajo $g$, que escribimos $[\![t]\!]^\mathcal{M}_g$:
+\[
+[\![t]\!]^\mathcal{M}_g = \begin{cases}
+I(c) & \text{si } t \text{ es una constante individual } c, \\
+g(x) & \text{si } t \text{ es una variable individual } x.
+\end{cases}
+\]
+
+\begin{definition}[Variante de una asignación]
+Si $g$ es una asignación, $x$ una variable y $d \in D$ un elemento del dominio, denotamos por $g[x \mapsto d]$ la asignación que coincide exactamente con $g$ en todas las variables excepto, a lo sumo, en $x$, a la cual asigna el objeto $d$:
+\[
+(g[x \mapsto d])(y) = \begin{cases}
+d & \text{si } y = x, \\
+g(y) & \text{si } y \neq x.
+\end{cases}
+\]
+\end{definition}
+
+\subsection{Definición inductiva de satisfacción (Tarski)}
+
+Con estas nociones, la relación básica de la semántica de primer orden no es directamente la verdad, sino la relación de \textbf{satisfacción}: una estructura $\mathcal{M}$ satisface una fórmula $A$ bajo una asignación $g$, lo cual se escribe $\mathcal{M}, g \models A$.
+
+\begin{definition}[Satisfacción de fórmulas al estilo Tarski]
+Dada una estructura $\mathcal{M} = \langle D, I \rangle$ y una asignación $g$, la relación $\mathcal{M}, g \models A$ se define por inducción sobre la estructura sintáctica de $A$:
+\begin{enumerate}
+    \item \textbf{Fórmulas atómicas:}
+    \begin{itemize}
+        \item $\mathcal{M}, g \models P(t_1, \dots, t_n) \iff ([\![t_1]\!]^\mathcal{M}_g, \dots, [\![t_n]\!]^\mathcal{M}_g) \in I(P)$.
+        \item $\mathcal{M}, g \models t_1 = t_2 \iff [\![t_1]\!]^\mathcal{M}_g = [\![t_2]\!]^\mathcal{M}_g$.
+    \end{itemize}
+    \item \textbf{Conectivas proposicionales:}
+    \begin{itemize}
+        \item $\mathcal{M}, g \not\models \bot$ ($\bot$ es falsa en toda estructura, como en el tema~\ref{cap:sem-prop}).
+        \item $\mathcal{M}, g \models \neg A \iff \mathcal{M}, g \not\models A$.
+        \item $\mathcal{M}, g \models A \land B \iff \mathcal{M}, g \models A \text{ y } \mathcal{M}, g \models B$.
+        \item $\mathcal{M}, g \models A \lor B \iff \mathcal{M}, g \models A \text{ o } \mathcal{M}, g \models B$.
+        \item $\mathcal{M}, g \models A \to B \iff (\text{si } \mathcal{M}, g \models A \text{ entonces } \mathcal{M}, g \models B)$.
+        \item $\mathcal{M}, g \models A \leftrightarrow B \iff (\mathcal{M}, g \models A \iff \mathcal{M}, g \models B)$.
+    \end{itemize}
+    \item \textbf{Cuantificador universal:}
+    \[
+    \mathcal{M}, g \models \forall x A \iff \text{para todo elemento } d \in D, \ \mathcal{M}, g[x \mapsto d] \models A.
+    \]
+    \item \textbf{Cuantificador existencial:}
+    \[
+    \mathcal{M}, g \models \exists x A \iff \text{existe al menos un elemento } d \in D \text{ tal que } \mathcal{M}, g[x \mapsto d] \models A.
+    \]
+\end{enumerate}
+\end{definition}
+
+\subsection{De la satisfacción a la verdad en una estructura, consecuencia lógica y validez}
+
+Fijadas la estructura $\mathcal{M}$ y la fórmula $A$, que se cumpla o no $\mathcal{M}, g \models A$ solo depende de los valores que la asignación $g$ da a las variables libres de $A$: si dos asignaciones $g$ y $g'$ coinciden en las variables libres de $A$, entonces $\mathcal{M}, g \models A$ si y solo si $\mathcal{M}, g' \models A$. Este resultado se conoce como \emph{lema de coincidencia}. En particular:
+\begin{quote}
+Si $A$ es una \textbf{sentencia} (fórmula cerrada, sin variables libres), entonces para cualesquiera dos asignaciones $g$ y $g'$ se cumple que $\mathcal{M}, g \models A \iff \mathcal{M}, g' \models A$.
+\end{quote}
+Esto nos permite definir la noción de
+\textbf{verdad en una estructura o modelo}:
+
+\begin{definition}[Verdad en un modelo]
+Sea $\mathcal{M} = \langle D, I \rangle$ una estructura y $A$ una fórmula de primer orden:
+\begin{enumerate}
+    \item Si $A$ es una \textbf{sentencia}, decimos que $A$ es \textbf{verdadera en $\mathcal{M}$} (y escribimos simplemente $\mathcal{M} \models A$) si $\mathcal{M}, g \models A$ para alguna (o equivalentemente, para toda) asignación $g$. En caso contrario, decimos que $A$ es \textbf{falsa en $\mathcal{M}$} ($\mathcal{M} \not\models A$).
+    \item Si $A$ es una \textbf{fórmula abierta} (con variables libres), decimos que $A$ es verdadera en $\mathcal{M}$ ($\mathcal{M} \models A$) si $\mathcal{M}, g \models A$ para \emph{toda} asignación $g$ (lo cual equivale a la verdad de su clausura universal $\forall x_1 \dots \forall x_n A$).
+\end{enumerate}
+\end{definition}
+
+\noindent A partir de aquí se definen de manera unificada las nociones semánticas principales. Salvo indicación en contra, en lo que sigue $\Gamma$ es un conjunto de sentencias y $A$ una sentencia (como en las derivaciones del tema~\ref{cap:dn-lpo}):
+\begin{itemize}
+    \item \textbf{Modelo de un conjunto de fórmulas.} $\mathcal{M} \models \Gamma$ significa que $\mathcal{M} \models B$ para toda fórmula $B \in \Gamma$.
+    \item \textbf{Consecuencia lógica semántica ($\Gamma \models A$).} En \emph{toda} estructura $\mathcal{M}$, si $\mathcal{M} \models \Gamma$, entonces $\mathcal{M} \models A$. Decimos que el argumento es semánticamente válido.
+    \item \textbf{Fórmula universalmente válida o verdad lógica ($\models A$).} La fórmula $A$ es verdadera en \emph{toda} estructura $\mathcal{M}$.
+    \item \textbf{Satisfacibilidad.} Un conjunto $\Gamma$ es \textbf{satisfacible} si existe al menos una estructura $\mathcal{M}$ tal que $\mathcal{M} \models \Gamma$.
+    \item \textbf{Equivalencia lógica ($A \equiv B$).} $A$ y $B$ son verdaderas en las mismas estructuras. Como en el tema~\ref{cap:sem-prop}, esto equivale a $\models A \leftrightarrow B$.
+\end{itemize}
+
+
+\subsection{La identidad}
+
+El símbolo $=$ es un símbolo \emph{lógico}: en toda estructura se interpreta como la relación de identidad (véanse la definición de estructura y la cláusula de satisfacción de $t_1 = t_2$). Escribimos $t_1 \neq t_2$ como abreviatura de $\neg(t_1 = t_2)$. La identidad permite expresar cantidades y unicidad:
+\begin{itemize}
+    \item «Hay al menos dos $P$»: $\exists x \exists y (P(x) \land P(y) \land x \neq y)$.
+    \item «Hay como mucho un $P$»: $\forall x \forall y ((P(x) \land P(y)) \to x = y)$.
+    \item «Hay exactamente un $P$»: $\exists x (P(x) \land \forall y (P(y) \to y = x))$.
+\end{itemize}
+La sección~\ref{sec:cuantificadores-numericos} generaliza estas construcciones a cualquier número. Las reglas de deducción natural para la identidad ($=$I y $=$E) se presentaron en el tema~\ref{cap:dn-lpo} (sección~\ref{sec:identidad}). Aquí nos interesa sobre todo su uso en la formalización y en la semántica (por ejemplo, en los ejercicios sobre el tamaño del dominio).
+
+\subsection{Ejemplos de evaluación semántica: flexibilidad notacional}
+
+Veamos cómo se aplican estas definiciones en la práctica a través de ejemplos:
+
+\begin{ejemplo}[Una estructura aritmética simple]
+Consideremos un lenguaje con constantes individuales $a, b$ y predicados $P$ (unario) y $R$ (binario). Definimos la estructura aritmética $\mathcal{M}_1 = \langle D, I \rangle$:
+\begin{itemize}
+    \item $D = \mathbb{N} = \{0, 1, 2, 3, \dots\}$ (el conjunto de los números naturales).
+    \item $I(a) = 0$, \quad $I(b) = 2$.
+    \item $I(P) = \{n \in \mathbb{N} \mid n \text{ es par}\} = \{n  \mid \exists m\in \mathbb{N} (n = 2\times m)\} = \{0, 2, 4, 6, \dots\}$.
+    \item $I(R) = \{(m, n) \in \mathbb{N} \times \mathbb{N} \mid m < n\}$ (orden menor estricto).
+\end{itemize}
+Evaluemos el valor de verdad de varias sentencias en $\mathcal{M}_1$:
+\begin{itemize}
+    \item La sentencia atómica $P(a)$ es verdadera ($\mathcal{M}_1 \models P(a)$) porque $I(a) = 0 \in I(P)$ (el cero es par).
+    \item La sentencia atómica $R(b, a)$ es falsa ($\mathcal{M}_1 \not\models R(b, a)$) porque $(I(b), I(a)) = (2, 0) \notin I(R)$ (es falso que $2 < 0$).
+    \item La sentencia $\exists x R(a, x)$ es verdadera porque existe al menos un natural $d \in \mathbb{N}$ (por ejemplo, $d = 1$) tal que $\mathcal{M}_1, g[x \mapsto 1] \models R(a, x)$, ya que $(0, 1) \in I(R)$.
+\end{itemize}
+\end{ejemplo}
+
+\begin{ejemplo}[Evaluación en una estructura finita y convenciones de notación]
+Consideremos una estructura $\mathcal{M}_2$ con un dominio finito $D = \{1, 2, 3\}$, propiedades $P, Q$ y relación binaria $R$:
+\begin{itemize}
+    \item $I(P) = \{2, 3\}$.
+    \item $I(Q) = \{1, 3\}$.
+    \item $I(R) = \{(1, 1), (1, 2), (1, 3), (2, 2), (2, 3), (3, 3)\}$.
+\end{itemize}
+Evaluemos el valor de verdad de tres enunciados cuantificados:
+\begin{enumerate}
+    \item \textbf{Fórmula existencial: $\exists x (P(x) \land Q(x))$ («Existe algún elemento que es a la vez $P$ y $Q$»).}  
+    Formalmente, debemos comprobar si existe algún $d \in D$ tal que $\mathcal{M}_2, g[x \mapsto d] \models P(x) \land Q(x)$:
+    \begin{itemize}
+        \item Para $d = 1$: $1 \notin I(P)$ (falso), luego la conjunción no se satisface.
+        \item Para $d = 2$: $2 \in I(P)$ (verdadero), pero $2 \notin I(Q)$ (falso).
+        \item Para $d = 3$: tanto $3 \in I(P)$ como $3 \in I(Q)$ son verdaderos.
+    \end{itemize}
+    Al existir un elemento en el dominio ($d = 3$) que satisface la conjunción, concluimos formalmente que $\mathcal{M}_2 \models \exists x (P(x) \land Q(x))$.
+    
+    \item \textbf{Fórmula universal: $\forall x (P(x) \to Q(x))$ («Todo elemento que es $P$ es también $Q$»).}  
+    Para que sea verdadera, la condición debe cumplirse para todos los elementos de $D$:
+    \begin{itemize}
+        \item Para $d = 2$: el antecedente $2 \in I(P)$ es verdadero, pero el consecuente $2 \in I(Q)$ es falso. Por la semántica del condicional, la implicación no se satisface para $d = 2$.
+    \end{itemize}
+    Al fallar para al menos un individuo ($d=2$), la propiedad no es universal. Por tanto, $\mathcal{M}_2 \not\models \forall x (P(x) \to Q(x))$.
+    
+    \item \textbf{Fórmula relacional: $\forall x \exists y R(x, y)$ («Todo elemento se relaciona con alguno, quizá consigo mismo»).}  
+    Para cada elemento $d_1 \in \{1, 2, 3\}$, comprobamos si existe algún $d_2 \in D$ tal que $(d_1, d_2) \in I(R)$. Vemos que para $d_1 = 1$ sirve $d_2 = 1$; para $d_1 = 2$ sirve $d_2 = 2$; y para $d_1 = 3$ sirve $d_2 = 3$ (por la reflexividad de $R$). Consecuentemente, $\mathcal{M}_2 \models \forall x \exists y R(x, y)$.
+\end{enumerate}
+
+\paragraph{Nota metodológica: rigor formal frente a flexibilidad notacional en la práctica.}
+Conviene detenerse en una distinción. Desde un punto de vista formal, los números $1, 2, 3$ son objetos semánticos del dominio $D$, no símbolos del lenguaje formal $\mathcal{L}$. Por ello:
+\begin{itemize}
+    \item Expresiones como «evaluar para $x = 1$» o «la fórmula $A(1)$» constituyen, en rigor, un \textbf{abuso de notación}: la forma exacta es decir que $\mathcal{M}, g[x \mapsto 1] \models A(x)$ (o, para un predicado atómico $P$, que $1 \in I(P)$).
+    \item Del mismo modo, escribiremos cosas como «$\text{V} \to \text{F} = \text{F}$» para indicar que un condicional con antecedente verdadero y consecuente falso es falso. En los temas de primer orden usaremos \textbf{V} y \textbf{F} para los valores de verdad (en lugar del $1$ y el $0$ del tema~\ref{cap:sem-prop}), para no confundirlos con los elementos de dominios como $\{1, 2, 3\}$.
+\end{itemize}
+Estos abusos de notación no introducen ningún error y simplifican mucho la resolución de ejercicios con dominios finitos. Por eso, una vez comprendida su base formal, los usaremos en los ejemplos y ejercicios.
+\end{ejemplo}
+
+\begin{ejemplo}[Cómo se demuestra semánticamente una consecuencia]
+Para mostrar que un argumento no es válido basta una estructura que haga verdaderas las premisas y falsa la conclusión. Para mostrar que es válido hay que razonar sobre una estructura \emph{cualquiera}. Veamos que $\forall x (P(x) \to Q(x)), \ \exists x P(x) \models \exists x Q(x)$. Sea $\mathcal{M} = \langle D, I \rangle$ una estructura cualquiera en la que las dos premisas son verdaderas. Por la segunda, hay algún $d \in D$ con $d \in I(P)$. Por la primera, el condicional se cumple para todo elemento del dominio, y en particular para $d$: como $d \in I(P)$, también $d \in I(Q)$. Luego $\mathcal{M} \models \exists x Q(x)$. Como de $\mathcal{M}$ solo hemos supuesto que hace verdaderas las premisas, la conclusión es verdadera en toda estructura que las hace verdaderas.
+\end{ejemplo}
+
+\practica{\appmundo{} es un tablero con piezas de distintas formas, tamaños y colores que funciona como una estructura: muestra su dominio y su interpretación, y evalúa cualquier fórmula con un árbol que sigue la definición de satisfacción, con las asignaciones de cada paso.}
+
+\section{Formalización en lógica de primer orden}\label{sec:formalizacion-lpo}
+
+En la sección~\ref{sec:formalizacion} formalizábamos enunciados
+completos con letras proposicionales. En primer orden hay que analizar
+también su estructura interna: de qué individuos se habla
+(constantes), qué se dice de ellos (predicados) y cuántos cumplen lo
+que se dice (cuantificadores). El diccionario es ahora más rico:
+indica el dominio, el significado de cada constante y de cada
+predicado y, en los predicados de varios argumentos, el orden de
+estos (no es lo mismo «$T(x, y)$: $x$ entrena a $y$» que «$T(x, y)$: $y$ entrena a $x$»).
+
+\subsection{Dos esquemas básicos}
+
+Casi todo lo que formalizaremos se construye a partir de dos esquemas, que corresponden a las formas A e I de la silogística (sección~\ref{sec:importacion}):
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|l|}
+\hline
+«Todo $S$ es $P$» & $\forall x (S(x) \to P(x))$ \\
+«Algún $S$ es $P$» & $\exists x (S(x) \land P(x))$ \\
+\hline
+\end{tabular}
+\end{center}
+El universal va con el condicional y el existencial con la conjunción. «Todo $S$ es $P$» no dice que todo sea $S$: dice de cada individuo que, \emph{si} es $S$, entonces es $P$. «Algún $S$ es $P$» dice que hay al menos un individuo que es $S$ \emph{y} es $P$. Intercambiar las conectivas lleva a dos errores frecuentes:
+\begin{itemize}
+    \item $\forall x (S(x) \land P(x))$ dice que todo individuo es $S$
+      y es $P$. Con $F(x)$: «$x$ es filósofo» y $B(x)$: «$x$ es
+      sabio», $\forall x (F(x) \land B(x))$ no dice que todos los
+      filósofos sean sabios, sino que todo el mundo es filósofo y
+      sabio. Afirma mucho más de lo que habitualmente queremos
+      expresar. 
+    \item $\exists x (S(x) \to P(x))$ dice demasiado poco: es verdadera en cuanto exista algo que no sea $S$. Con $U(x)$: «$x$ es un unicornio» y $W(x)$: «$x$ es blanco», $\exists x (U(x) \to W(x))$ es verdadera en el mundo real, simplemente porque hay cosas que no son unicornios. «Algún unicornio es blanco», en cambio, es falsa.
+\end{itemize}
+
+\subsection{Negaciones y otras variantes}
+
+Con estos dos esquemas y la negación se formalizan otras expresiones de cantidad:
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|p{7.2cm}|l|l|}
+\hline
+\textbf{Expresión} & \textbf{Formalización} & \textbf{Equivalente} \\
+\hline
+Todo $S$ es $P$; todos los $S$ son $P$; cualquier $S$ es $P$ & $\forall x (S(x) \to P(x))$ & \\
+Algún $S$ es $P$; hay $S$ que son $P$ & $\exists x (S(x) \land P(x))$ & \\
+Ningún $S$ es $P$; no hay $S$ que sean $P$ & $\forall x (S(x) \to \neg P(x))$ & $\neg \exists x (S(x) \land P(x))$ \\
+Algún $S$ no es $P$; no todo $S$ es $P$; no todos los $S$ son $P$ & $\exists x (S(x) \land \neg P(x))$ & $\neg \forall x (S(x) \to P(x))$ \\
+Solo los $S$ son $P$ & $\forall x (P(x) \to S(x))$ & \\
+Todos los $S$, y solo ellos, son $P$ & $\forall x (S(x) \leftrightarrow P(x))$ & \\
+Todo es $P$; todo el mundo es $P$ & $\forall x P(x)$ & \\
+Algo es $P$; alguien es $P$ & $\exists x P(x)$ & \\
+Nada es $P$; nadie es $P$ & $\neg \exists x P(x)$ & $\forall x \neg P(x)$ \\
+\hline
+\end{tabular}
+\end{center}
+
+Algunas observaciones:
+\begin{itemize}
+    \item \textbf{Equivalencias.} Las dos columnas de la derecha son equivalentes, por la conversión de cuantificadores (CQ, sección~\ref{sec:cq}) y por equivalencias proposicionales como $\neg(A \to B) \equiv A \land \neg B$ o $\neg(A \land B) \equiv A \to \neg B$. Por ejemplo:
+    \[
+    \neg \forall x (S(x) \to P(x)) \ \equiv\ \exists x \neg (S(x) \to P(x)) \ \equiv\ \exists x (S(x) \land \neg P(x)).
+    \]
+    Cualquiera de las dos formas es una formalización
+    correcta. 
+    \item \textbf{«Solo».} «Solo los socios pueden votar» es $\forall x (V(x) \to S(x))$: ser socio es condición \emph{necesaria} para votar, como en el «solo si» de la sección~\ref{sec:formalizacion}. No dice que todos los socios puedan votar.
+    \item \textbf{Adjetivos y oraciones de relativo.} $S$ y $P$ pueden ser condiciones complejas. «Todo filósofo griego es sabio» es $\forall x ((F(x) \land G(x)) \to B(x))$, y «algún filósofo griego es sabio», $\exists x (F(x) \land G(x) \land B(x))$. En «quien estudia aprueba», la oración de relativo hace de $S$: $\forall x (E(x) \to A(x))$.
+    \item \textbf{«Todos\ldots{} no».} «Todos los alumnos no aprobaron» es ambiguo: puede significar que ninguno aprobó, $\forall x (L(x) \to \neg A(x))$, o que no todos aprobaron, $\neg \forall x (L(x) \to A(x))$. El refrán «no es oro todo lo que reluce» tiene la segunda forma: $\neg \forall x (R(x) \to O(x))$, es decir, $\exists x (R(x) \land \neg O(x))$. Dice que algunas cosas que relucen no son oro, no que nada de lo que reluce lo sea.
+\end{itemize}
+
+\subsection{Anidamiento de esquemas}
+
+En los dos esquemas, el lugar de $P(x)$ puede ocuparlo una condición
+compleja que contenga, a su vez, otro cuantificador. Así se forman los
+enunciados con varios cuantificadores. Conviene formalizarlos por
+capas, de fuera adentro: primero se identifica el esquema principal,
+dejando en lenguaje natural la condición interior, y después se formaliza esa condición, en la que la variable del cuantificador exterior aparece libre.
+
+\begin{ejemplo}[Un existencial dentro de un universal]
+«Todos los deportistas tienen un entrenador.» Diccionario: $J(x)$: «$x$ es deportista»; $N(x)$: «$x$ es entrenador»; $T(x, y)$: «$x$ entrena a $y$».
+\begin{enumerate}
+    \item El esquema principal es universal: $\forall x (J(x) \to [x \text{ tiene un entrenador}])$.
+    \item «$x$ tiene un entrenador» significa «algún entrenador entrena a $x$»: $\exists y (N(y) \land T(y, x))$.
+\end{enumerate}
+Resultado: $\forall x (J(x) \to \exists y (N(y) \land T(y, x)))$.
+\end{ejemplo}
+
+\begin{ejemplo}[Un universal dentro de un existencial]
+«Hay un estudiante que aprueba todas las asignaturas.» Diccionario: $E(x)$: «$x$ es estudiante»; $M(x)$: «$x$ es una asignatura»; $A(x, y)$: «$x$ aprueba $y$».
+\begin{enumerate}
+    \item El esquema principal es existencial: $\exists x (E(x) \land [x \text{ aprueba todas las asignaturas}])$.
+    \item «$x$ aprueba todas las asignaturas» significa «toda asignatura es aprobada por $x$»: $\forall y (M(y) \to A(x, y))$.
+\end{enumerate}
+Resultado: $\exists x (E(x) \land \forall y (M(y) \to A(x, y)))$.
+\end{ejemplo}
+
+Los dos ejemplos anidan los esquemas en sentido inverso, y el orden importa. En el primero cada deportista puede tener un entrenador distinto. Si se invierte el orden, se obtiene un enunciado más fuerte:
+\begin{center}
+\begin{tabular}{ll}
+«Todos los deportistas tienen un entrenador» & $\forall x (J(x) \to \exists y (N(y) \land T(y, x)))$ \\
+«Hay un entrenador que entrena a todos los deportistas» & $\exists y (N(y) \land \forall x (J(x) \to T(y, x)))$
+\end{tabular}
+\end{center}
+El segundo implica el primero, pero no al revés. En una estructura con dominio $\{1, 2, 3, 4\}$, $I(J) = \{1, 2\}$, $I(N) = \{3, 4\}$ e $I(T) = \{(3, 1), (4, 2)\}$, cada deportista tiene su propio entrenador: el primer enunciado es verdadero y el segundo, falso. Es la misma asimetría entre $\exists\forall$ y $\forall\exists$ que vimos en la sección~\ref{sec:asimetria}. Del mismo modo, «toda asignatura la aprueba algún estudiante», $\forall y (M(y) \to \exists x (E(x) \land A(x, y)))$, es más débil que el enunciado del segundo ejemplo.
+
+Al anidar conviene:
+\begin{itemize}
+    \item usar una variable distinta para cada cuantificador;
+    \item colocar el cuantificador interior donde está la condición que traduce: en el consecuente del universal o dentro de la conjunción del existencial;
+    \item leer de nuevo la fórmula en castellano, capa a capa, para comprobar que dice lo mismo que el original.
+\end{itemize}
+
+\practica{La pestaña «Formalizar» de \appmundo{} propone frases sobre el tablero y compara tu fórmula con una formalización correcta en muchos mundos. Si en alguno toman valores distintos, permite verlo en el tablero.}
+
+\subsection{Identidad y cuantificadores numéricos\ampliacion}\label{sec:cuantificadores-numericos}
+
+Con la identidad pueden expresarse cantidades: «hay al menos dos», «hay como mucho uno», «hay exactamente uno». Estas construcciones forman una familia que se puede describir de forma general. Escribiremos $\exists_{\geq n} x\, P(x)$ para «hay al menos $n$ individuos que son $P$», $\exists_{\leq n} x\, P(x)$ para «hay como mucho $n$» y $\exists_{= n} x\, P(x)$ para «hay exactamente $n$». No son símbolos nuevos, sino abreviaturas de fórmulas que solo usan cuantificadores, conectivas y $=$.
+
+\paragraph{Al menos $n$.} Hay $n$ individuos que son $P$ y son distintos entre sí:
+\begin{align*}
+\exists_{\geq 1} x\, P(x) &:= \exists x P(x)\\
+\exists_{\geq 2} x\, P(x) &:= \exists x \exists y (P(x) \land P(y) \land x \neq y)\\
+\exists_{\geq 3} x\, P(x) &:= \exists x \exists y \exists z (P(x) \land P(y) \land P(z) \land x \neq y \land x \neq z \land y \neq z)
+\end{align*}
+
+\paragraph{Como mucho $n$.} Entre $n + 1$ individuos que sean $P$, al menos dos coinciden:
+\begin{align*}
+\exists_{\leq 1} x\, P(x) &:= \forall x \forall y ((P(x) \land P(y)) \to x = y)\\
+\exists_{\leq 2} x\, P(x) &:= \forall x \forall y \forall z ((P(x) \land P(y) \land P(z)) \to (x = y \lor x = z \lor y = z))
+\end{align*}
+Equivalentemente, $\exists_{\leq n} x\, P(x)$ es $\neg \exists_{\geq n+1} x\, P(x)$.
+
+\paragraph{Exactamente $n$.} Puede escribirse como $\exists_{\geq n} x\, P(x) \land \exists_{\leq n} x\, P(x)$, o de forma más compacta: hay $n$ individuos distintos que son $P$, y todo lo que es $P$ es uno de ellos.
+\begin{align*}
+\exists_{= 0} x\, P(x) &:= \neg \exists x P(x)\\
+\exists_{= 1} x\, P(x) &:= \exists x (P(x) \land \forall y (P(y) \to y = x))\\
+\exists_{= 2} x\, P(x) &:= \exists x \exists y (P(x) \land P(y) \land x \neq y \land \forall z (P(z) \to (z = x \lor z = y)))
+\end{align*}
+Con la identidad también se dice que un individuo es el único que cumple una condición: «solo $a$ es $P$» es $P(a) \land \forall x (P(x) \to x = a)$.
+
+En lugar de $P$ puede ir cualquier condición. Por ejemplo, «Antonio ama exactamente a dos personas» (ejercicio~\ref{e5-2}) es $\exists_{= 2} x\, A(a, x)$, que se desarrolla como en la última línea.
+
+\begin{observacion}[«Tres» en el lenguaje natural]
+Los numerales no siempre significan «exactamente». «Hay tres
+estudiantes en el aula» se entiende como «exactamente tres». En
+cambio, «para aprobar hay que resolver bien tres ejercicios» se
+entiende como «al menos tres»: quien resuelve bien cuatro también
+aprueba. Al formalizar hay que decidir, según el contexto, qué lectura
+se quiere.
+\end{observacion}
+
+\begin{observacion}[Límites]
+Para cada número $n$ fijo, «al menos $n$», «como mucho $n$» y «exactamente $n$» se expresan en primer orden, aunque las fórmulas crecen con $n$. En cambio, «hay infinitos $P$» o «la mayoría de los $S$ son $P$» no pueden expresarse con ninguna fórmula de primer orden. «Hay infinitos $P$» sí se expresa con un conjunto infinito de fórmulas, $\{\exists_{\geq n} x\, P(x) : n \geq 1\}$, y que no baste una sola se sigue del teorema de compacidad (apéndice~\ref{ap:henkin}). Para «la mayoría», véase Barwise y Cooper (1981).
+\end{observacion}
+
+\subsection{Términos complejos: functores y descripciones\ampliacion}
+
+Hasta ahora, los únicos términos son las constantes y las variables (sección~\ref{sec:sintaxis-lpo}). Pero el lenguaje natural tiene términos singulares complejos, como «el padre de Sócrates», «el autor de la \emph{República}» o «el actual rey de Francia», y también descripciones indefinidas, como «un ministro francés». Veamos tres maneras de ampliar el lenguaje para recogerlos. No las usaremos en el resto del curso: nos interesan por lo que muestran sobre la relación entre el lenguaje y la lógica.
+
+\paragraph{Functores.} Además de predicados, el lenguaje puede tener \textbf{símbolos de función} o \textbf{functores} ($f, h, k, \dots$), cada uno con un número fijo de argumentos.
+\begin{itemize}
+    \item \textbf{Sintaxis.} Si $f$ es un functor de $n$ argumentos y $t_1, \dots, t_n$ son términos, $f(t_1, \dots, t_n)$ es un término. Los términos pueden anidarse; por ejemplo, con $p(x)$: «el padre de $x$», $p(p(s))$ es «el abuelo paterno de Sócrates».
+    \item \textbf{Semántica.} La interpretación de un functor de $n$ argumentos es una función $I(f): D^n \to D$, que asigna a cada $n$-tupla de elementos del dominio un único elemento del dominio. La denotación de $f(t_1, \dots, t_n)$ es el valor de $I(f)$ para las denotaciones de $t_1, \dots, t_n$. Por ejemplo, en el dominio de los números naturales, con la constante $0$ interpretada como el cero y $f(x)$ como el sucesor de $x$, el término $f(f(0))$ denota el número $2$.
+\end{itemize}
+La función tiene que ser \emph{total}: toda $n$-tupla de elementos del dominio debe
+tener un valor, y ese valor debe estar en el dominio. Sin embargo,
+muchas expresiones funcionales del lenguaje natural son parciales: «la
+capital de $x$» solo tiene sentido si $x$ es un país. En esos casos es
+mejor usar una relación, como hace el ejercicio~\ref{e5-3} con «la
+asignatura favorita de $x$ es $y$». 
+
+Los functores no permiten decir nada que no pueda decirse sin
+ellos. Un functor $f$ de un argumento puede sustituirse por un predicado binario $F(x,
+y)$, «$y$ es $f(x)$», junto con la condición de que sea funcional,
+$\forall x\, \exists_{= 1} y\, F(x, y)$. Entonces $P(f(a))$ se
+reescribe como $\exists y (F(a, y) \land P(y))$.
+
+\paragraph{Descripciones definidas: el operador $\iota$.} Una descripción definida, como «el autor de la \emph{República}», designa un objeto mediante una condición que solo él cumple.
+\begin{itemize}
+    \item \textbf{Sintaxis.} Si $A(x)$ es una fórmula y $x$ una variable, $\iota x A(x)$ («el $x$ tal que $A(x)$») es un término. Como los cuantificadores, $\iota$ liga la variable $x$. Con $E(x, y)$: «$x$ escribió $y$», $r$: la \emph{República}, $U(x, y)$: «$x$ fue discípulo de $y$» y $s$: Sócrates, «el autor de la \emph{República} fue discípulo de Sócrates» es $U(\iota x E(x, r), s)$.
+    \item \textbf{Semántica.} Si exactamente un elemento $d$ del dominio satisface $A(x)$, el término $\iota x A(x)$ denota $d$.
+\end{itemize}
+La dificultad está en las descripciones \emph{impropias}: «el actual rey de Francia» no describe a nadie, y «el hijo de Sócrates» no describe a uno solo, porque Sócrates tuvo tres. Hay tres respuestas clásicas:
+\begin{itemize}
+    \item \textbf{Frege} (1892) sostuvo que un enunciado con un término que no se refiere a nada carece de valor de verdad, y propuso que, en un lenguaje lógico, se estipulara una referencia para esos términos.
+    \item \textbf{Russell} (1905) negó que las descripciones sean auténticos términos: desaparecen al analizar el enunciado. Con $R(x)$: «$x$ es actualmente rey de Francia» y $C(x)$: «$x$ es calvo», «el actual rey de Francia es calvo» dice que hay un rey de Francia, que solo hay uno y que es calvo:
+    \[
+    \exists x (R(x) \land \forall y (R(y) \to y = x) \land C(x)).
+    \]
+    Como no hay rey de Francia, el enunciado es falso. Respecto a la
+    negación, caben dos opciones: 
+    \[
+    \exists x (R(x) \land \forall y (R(y) \to y = x) \land \neg C(x)) \qquad \neg \exists x (R(x) \land \forall y (R(y) \to y = x) \land C(x))
+    \]
+    La primera lectura («hay un único rey de Francia y no es calvo»)
+    es falsa; la segunda («no es cierto que haya un único rey de
+    Francia y sea calvo»), verdadera. Así se cumple el tercero
+    excluido: de «el actual rey de Francia es calvo» y su negación en
+    la segunda lectura, una es verdadera. 
+    \item \textbf{Strawson} (1950) objetó que Russell confunde lo que dice un enunciado con lo que presupone quien lo usa. Quien dice «el actual rey de Francia es calvo» da por supuesto que hay un rey de Francia; si no lo hay, no dice nada verdadero ni falso. Es la misma idea que veremos en la sección~\ref{sec:importacion} a propósito de la importación existencial.
+\end{itemize}
+La lógica de primer orden clásica adopta el análisis de Russell: cualquier enunciado con una descripción definida puede formalizarse sin $\iota$, con $\exists$, $\forall$ y $=$. Por ejemplo, «Belén no aprueba la asignatura favorita de Antonio» (ejercicio~\ref{e5-3}, apartado 6), en su lectura más natural, es
+\[
+\exists x (F(a, x) \land \forall y (F(a, y) \to y = x) \land \neg A(b, x)).
+\]
+
+\paragraph{Descripciones indefinidas: el operador $\varepsilon$ de
+  Hilbert.} Russell analizó también las descripciones indefinidas («un
+tal y cual») con el cuantificador existencial (Russell, 1919, cap.~16). En los años veinte, Hilbert introdujo un término $\varepsilon x A(x)$ que puede leerse como una descripción indefinida, «un $x$ tal que $A(x)$». Lo hizo con otro fin: eliminar los cuantificadores en sus pruebas de consistencia, dentro de su programa de fundamentación de las matemáticas (véase Hilbert y Bernays, 1939).
+\begin{itemize}
+    \item \textbf{Sintaxis.} Como en $\iota$: si $A(x)$ es una fórmula, $\varepsilon x A(x)$ es un término que liga la variable $x$.
+    \item \textbf{Semántica.} Cada estructura incluye una \emph{función de elección}, que escoge un elemento de cada conjunto no vacío de objetos del dominio. El término $\varepsilon x A(x)$ denota el elemento escogido entre los que satisfacen $A(x)$. Si ninguno lo satisface, denota un elemento cualquiera del dominio, también fijado por la estructura.
+\end{itemize}
+La diferencia entre $\iota$ y $\varepsilon$ está en lo que exigen. «El rey de Francia», $\iota x R(x)$, solo designa algo si hay exactamente un rey. «Un ministro francés», $\varepsilon x M(x)$, solo necesita que haya alguno, y entonces designa a uno de ellos, sin decir cuál.
+
+El principio básico de $\varepsilon$ es que, si algo cumple $A(x)$, el objeto escogido lo cumple: $A(t) \to A(\varepsilon x A(x))$ para cualquier término $t$. De ahí resulta que los cuantificadores pueden definirse con $\varepsilon$:
+\[
+\exists x A(x) \leftrightarrow A(\varepsilon x A(x)) \qquad\qquad \forall x A(x) \leftrightarrow A(\varepsilon x \neg A(x))
+\]
+La segunda dice que $A(x)$ vale para todo si vale para el objeto escogido entre los que no la cumplen: si hubiera alguno que no la cumpliera, el escogido sería uno de ellos.
+
+Hay que tener cuidado al formalizar con $\varepsilon$. «Un ministro francés visitó Sevilla» (con $e$: Sevilla) se formaliza con el término $t$ formado con toda la condición, $\varepsilon x (M(x) \land V(x, e))$, como $M(t) \land V(t, e)$, que equivale a $\exists x (M(x) \land V(x, e))$. En cambio, $V(\varepsilon x M(x), e)$ dice que el ministro escogido visitó Sevilla. Si hay ministros franceses, esto implica lo anterior, pero no al revés; si no los hay, $\varepsilon x M(x)$ denota un objeto cualquiera y la fórmula ya no habla de un ministro. Por último, el testigo de la regla $\exists$E del tema~\ref{cap:dn-lpo} se parece a un término $\varepsilon x A(x)$: es una constante de la que solo sabemos que cumple $A(x)$, y por eso no podemos suponer de ella nada más. A diferencia de $\varepsilon x A(x)$, el testigo no puede salir de su caja, y cada uso de $\exists$E exige una constante fresca.
+
+\section{Contraejemplos semánticos: cómo refutar un argumento inválido}
+
+En el tema~\ref{cap:dn-lpo} aprendimos que para demostrar que un
+argumento es válido construimos una deducción formal en Fitch ($\Gamma
+\vdash A$). Ahora bien, para demostrar la invalidez
+($\Gamma\not\models A$) debemos exhibir un \textbf{contramodelo} (contraejemplo semántico): una estructura concreta $\mathcal{M} = \langle D, I \rangle$ que haga verdaderas todas las premisas de $\Gamma$ y falsa la conclusión $A$.
+
+\begin{ejemplo}[Refutación de la falacia de inversión de cuantificadores]
+En el tema~\ref{cap:dn-lpo} señalamos que pasar de $\forall y \exists x R(x, y)$ a $\exists x \forall y R(x, y)$ es una falacia formal. Demostremos ahora semánticamente su invalidez mediante un contramodelo minimal con solo dos elementos:
+\[
+\forall y \exists x R(x, y) \ \not\models \ \exists x \forall y R(x, y)
+\]
+\textbf{Construcción del contramodelo minimal $\mathcal{M}$:}
+\begin{itemize}
+    \item Elegimos un dominio finito de dos individuos: $D = \{1, 2\}$.
+    \item Interpretamos la relación binaria $R$ como la identidad en $D$:
+    \[
+    I(R) = \{(1, 1), \ (2, 2)\}.
+    \]
+\end{itemize}
+\textbf{Evaluación en $\mathcal{M}$:}
+\begin{enumerate}
+    \item La premisa $\forall y \exists x R(x, y)$, que afirma que «para todo elemento $y$ existe al menos un elemento $x$ que se relaciona con él», es verdadera:
+    \begin{itemize}
+        \item Para $y = 1$: eligiendo $x = 1$, tenemos $(1, 1) \in I(R)$.
+        \item Para $y = 2$: eligiendo $x = 2$, tenemos $(2, 2) \in I(R)$.
+    \end{itemize}
+    Como se satisface para todos los individuos de $D$, la premisa es verdadera en $\mathcal{M}$.
+    \item La conclusión $\exists x \forall y R(x, y)$, que afirma que «existe algún elemento $x$ que se relaciona con \emph{todos} los elementos $y$ del dominio», es falsa:
+    \begin{itemize}
+        \item Para $x = 1$: $(1, 1) \in I(R)$, pero $(1, 2) \notin I(R)$. Luego el $1$ no se relaciona con todos.
+        \item Para $x = 2$: $(2, 2) \in I(R)$, pero $(2, 1) \notin I(R)$. Luego el $2$ no se relaciona con todos.
+    \end{itemize}
+    Dado que ningún individuo de $D$ se relaciona simultáneamente con $1$ y con $2$, la conclusión es falsa en $\mathcal{M}$.
+\end{enumerate}
+Puesto que en la estructura $\mathcal{M}$ la premisa es verdadera y la conclusión es falsa, queda demostrado formalmente que el argumento es inválido.
+\end{ejemplo}
+
+\begin{ejemplo}[Construcción de un contramodelo finito: falacia del término medio no distribuido]
+Deseamos demostrar semánticamente que la siguiente inferencia no es válida:
+\[
+\forall x (P(x) \to M(x)), \ \forall x (S(x) \to M(x)) \ \not\models \ \forall x (S(x) \to P(x))
+\]
+\textbf{Estrategia de diseño del contramodelo.}
+Buscamos una estructura con el menor número posible de elementos donde las dos premisas sean verdaderas y la conclusión falle. Para que la conclusión $\forall x (S(x) \to P(x))$ sea falsa, necesitamos que exista al menos un individuo que sea $S$ pero no sea $P$.
+Definimos la estructura $\mathcal{M}$ con un dominio minimal de un único elemento $D = \{1\}$:
+\begin{itemize}
+    \item $I(S) = \{1\}$ (el individuo $1$ posee la propiedad $S$).
+    \item $I(P) = \varnothing$ (el individuo $1$ no posee la propiedad $P$).
+    \item $I(M) = \{1\}$ (el individuo $1$ posee la propiedad $M$).
+\end{itemize}
+\textbf{Comprobación paso a paso:}
+\begin{enumerate}
+    \item \textbf{Premisa 1 ($\forall x (P(x) \to M(x))$):} para $x=1$, el antecedente $1 \in I(P)$ es falso. Como un condicional con antecedente falso es verdadero ($\text{F} \to \text{V} = \text{V}$), la premisa es verdadera.
+    \item \textbf{Premisa 2 ($\forall x (S(x) \to M(x))$):} para $x=1$, tanto $1 \in I(S)$ como $1 \in I(M)$ son verdaderos ($\text{V} \to \text{V} = \text{V}$). La premisa es verdadera.
+    \item \textbf{Conclusión ($\forall x (S(x) \to P(x))$):} para $x=1$, el antecedente $1 \in I(S)$ es verdadero, pero el consecuente $1 \in I(P)$ es falso. El condicional toma valor $\text{V} \to \text{F} = \text{F}$. Por consiguiente, la conclusión es falsa.
+\end{enumerate}
+\textbf{Comentario.} Hemos demostrado la invalidez del argumento. Obsérvese que un contramodelo no necesita ser complicado: una estructura con un solo individuo basta para refutar la inferencia, porque su validez exigiría que la conclusión fuera verdadera en todas las estructuras que hacen verdaderas las premisas.
+\end{ejemplo}
+
+\practica{En la pestaña «Contramodelos» de \appmundo{} puedes construir en el tablero un contramodelo para un argumento y ver si lo es. Tiene también retos: argumentos para los que hay que buscar un contramodelo, si lo tienen.}
+
+\section{Silogística e importación existencial}\label{sec:importacion}
+
+En el tema~\ref{cap:dn-lpo} formalizamos varios modos silogísticos (Barbara, Celarent, Darii, Ferio\ldots). Las cuatro formas de enunciado de la silogística tradicional se formalizan así:
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{|c|l|l|}
+\hline
+\textbf{Forma} & \textbf{Enunciado} & \textbf{Formalización} \\
+\hline
+A & Todo $S$ es $P$ & $\forall x (S(x) \to P(x))$ \\
+E & Ningún $S$ es $P$ & $\forall x (S(x) \to \neg P(x))$ \\
+I & Algún $S$ es $P$ & $\exists x (S(x) \land P(x))$ \\
+O & Algún $S$ no es $P$ & $\exists x (S(x) \land \neg P(x))$ \\
+\hline
+\end{tabular}
+\end{center}
+
+En la lógica de primer orden, $\forall x (S(x) \to P(x))$ es verdadera cuando no hay ningún $S$: el condicional se cumple trivialmente para cada individuo. En cambio, la silogística tradicional suponía que los términos no son vacíos: daba por hecho que «todo $S$ es $P$» implica «algún $S$ es $P$» (\emph{subalternación}). Esta suposición se llama \textbf{importación existencial}, y la lógica de primer orden no la hace:
+\[
+\forall x (S(x) \to P(x)) \not\models \exists x (S(x) \land P(x))
+\]
+Basta un contramodelo con $D = \{1\}$ e $I(S) = I(P) = \varnothing$: la premisa es verdadera (no hay ningún $S$) y la conclusión falsa.
+
+\paragraph{Consecuencias.} Algunos modos considerados válidos por la tradición dejan de serlo. Por ejemplo, \emph{Darapti}:
+\[
+\forall x (M(x) \to P(x)), \ \forall x (M(x) \to S(x)) \ \not\models \ \exists x (S(x) \land P(x))
+\]
+En una estructura en la que no hay ningún $M$ las dos premisas son verdaderas, y la conclusión es falsa si no hay nada que sea a la vez $S$ y $P$. Lo mismo ocurre con otros modos como \emph{Felapton} o \emph{Bramantip}. Todos ellos vuelven a ser válidos si se añade como premisa que el término en cuestión no es vacío (en Darapti, $\exists x M(x)$). En el cuadro de oposición tradicional, las relaciones entre contradictorias (A y O, E e I) se mantienen, pero A y E pueden ser ambas verdaderas, I y O pueden ser ambas falsas, y la subalternación falla.
+
+\paragraph{¿Quién tiene razón?} No es una cuestión puramente técnica. La lógica moderna separa la afirmación general («todo $S$ es $P$») de la afirmación de existencia («hay $S$»), lo que permite enunciar leyes sobre casos que quizá no existan («todo cuerpo libre de fuerzas se mueve con velocidad constante»). Otros autores, como P. F. Strawson, han defendido que «todos los $S$ son $P$» \emph{presupone} que hay $S$: si no los hay, el enunciado no sería ni verdadero ni falso. Al formalizar conviene preguntarse si el argumento depende de esa suposición y, si es así, añadirla como premisa explícita.
+
+\section{Los teoremas metalógicos de primer orden}
+
+Al igual que en lógica proposicional, la metalógica de primer orden investiga la correspondencia exacta entre la derivabilidad sintáctica ($\vdash$) y la consecuencia semántica ($\models$):
+
+\begin{theorem}[Corrección de primer orden]
+Para cualquier conjunto de sentencias $\Gamma$ y cualquier sentencia $A$ de LPO:
+\[
+\text{Si } \Gamma \vdash A, \text{ entonces } \Gamma \models A.
+\]
+\end{theorem}
+El cálculo de deducción natural nunca lleva de premisas verdaderas a una conclusión falsa. La demostración sigue la del tema~\ref{cap:meta-prop}: cada línea es consecuencia lógica de las premisas e hipótesis activas en ella. Para las reglas $\forall$I y $\exists$E esto solo es cierto gracias a las restricciones sobre constantes propias y testigos; los ejemplos de falacias del tema~\ref{cap:dn-lpo} muestran lo que ocurriría sin ellas.
+
+\begin{proof}[Idea de la demostración para los cuantificadores\ampliacion]
+Como en el tema~\ref{cap:meta-prop}, se prueba por inducción que cada línea es consecuencia lógica del conjunto $\Delta$ de premisas e hipótesis activas en ella: toda estructura que hace verdaderas las fórmulas de $\Delta$ hace verdadera la línea. Las reglas proposicionales se tratan igual que allí; $\forall$E y $\exists$I son inmediatas, y también las de la identidad ($=$E es correcta porque si $\mathcal{M} \models a = b$, entonces $I(a) = I(b)$). Veamos los dos casos interesantes. En ambos usamos, dada una estructura $\mathcal{M}$ y un elemento $d$ de su dominio, la estructura $\mathcal{M}_d$, que coincide con $\mathcal{M}$ salvo en que interpreta la constante $c$ como $d$.
+\begin{itemize}
+    \item \textbf{$\forall$I.} La línea es $\forall x A(x)$, obtenida de $A(c)$, donde $c$ no aparece en $\Delta$ ni en $\forall x A(x)$. Sea $\mathcal{M} \models \Delta$ y sea $d$ cualquier elemento del dominio. Como $c$ no aparece en $\Delta$, también $\mathcal{M}_d \models \Delta$; por la hipótesis de inducción, $\mathcal{M}_d \models A(c)$, es decir, $d$ satisface $A(x)$ en $\mathcal{M}_d$. Como $c$ no aparece en $A(x)$, $d$ satisface $A(x)$ también en $\mathcal{M}$. Al ser $d$ arbitrario, $\mathcal{M} \models \forall x A(x)$. (Sin la restricción (1) de $\forall$I del tema~\ref{cap:dn-lpo}, $\mathcal{M}_d$ podría no satisfacer $\Delta$; sin la (2), cambiar la interpretación de $c$ cambiaría lo que dice $A(x)$).
+    \item \textbf{$\exists$E.} La línea es $B$, obtenida de $\exists x A(x)$ y de una caja que va de $A(c)$ a $B$, donde $c$ no aparece en $\Delta$, ni en $\exists x A(x)$, ni en $B$. Sea $\mathcal{M} \models \Delta$. Por la hipótesis de inducción, $\mathcal{M} \models \exists x A(x)$, luego algún $d$ satisface $A(x)$. Entonces $\mathcal{M}_d \models \Delta$ (porque $c$ no aparece en $\Delta$) y $\mathcal{M}_d \models A(c)$ (porque $c$ no aparece en $A(x)$). Por la hipótesis de inducción aplicada a la última línea de la caja, $\mathcal{M}_d \models B$, y como $c$ no aparece en $B$, también $\mathcal{M} \models B$. \qedhere
+\end{itemize}
+\end{proof}
+
+\begin{theorem}[Completud de primer orden: Gödel, 1930; Henkin, 1949]
+Para cualquier conjunto de sentencias $\Gamma$ y cualquier sentencia $A$ de LPO:
+\[
+\text{Si } \Gamma \models A, \text{ entonces } \Gamma \vdash A.
+\]
+\end{theorem}
+Toda inferencia semánticamente válida puede ser demostrada formalmente mediante las reglas de deducción natural.
+
+\subsection{Consistencia, satisfacibilidad y completud}\label{sec:consistencia-satisfacibilidad}
+
+La completud de primer orden no puede demostrarse siguiendo el camino de Kalmár (sección~\ref{sec:no-kalmar}). Las demostraciones habituales, como la de Henkin, parten de una reformulación del teorema que relaciona una noción sintáctica con una semántica. La semántica es la satisfacibilidad, que ya hemos definido: $\Gamma$ es satisfacible si existe una estructura $\mathcal{M}$ tal que $\mathcal{M} \models \Gamma$. La sintáctica es la consistencia:
+
+\begin{definition}[Consistencia]
+Un conjunto de sentencias $\Gamma$ es \textbf{consistente} si $\Gamma \nvdash \bot$, es decir, si no hay ninguna derivación de $\bot$ cuyas premisas pertenezcan a $\Gamma$. En caso contrario, $\Gamma$ es \textbf{inconsistente}.
+\end{definition}
+
+El teorema de corrección garantiza que todo conjunto satisfacible es consistente: si fuera $\Gamma \vdash \bot$, tendríamos $\Gamma \models \bot$, y ninguna estructura podría hacer verdaderas todas las fórmulas de $\Gamma$, porque ninguna hace verdadera $\bot$. La completud equivale a la afirmación recíproca:
+
+\begin{lemma}[Lema de reducción]\label{lema_reduccion}
+Las dos afirmaciones siguientes son equivalentes:
+\begin{enumerate}
+    \item \textbf{Completud fuerte:} para todo conjunto de sentencias $\Gamma$ y toda sentencia $A$, si $\Gamma \models A$, entonces $\Gamma \vdash A$.
+    \item \textbf{Teorema del modelo:} todo conjunto consistente de sentencias es satisfacible.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+$(2) \Rightarrow (1)$. Supongamos (2) y que $\Gamma \models A$. Si
+fuera $\Gamma \nvdash A$, el conjunto $\Gamma \cup \{\neg A\}$ sería
+consistente: si se tuviera $\Gamma \cup \{\neg A\} \vdash \bot$,
+bastaría tomar $\neg A$ como hipótesis de una caja que llegue a $\bot$
+y aplicar IP para obtener $\Gamma \vdash A$. Por (2), existiría una
+estructura $\mathcal{M}$ con $\mathcal{M} \models \Gamma$ y
+$\mathcal{M} \models \neg A$, es decir, un contramodelo de $\Gamma
+\models A$. Como esto no puede ocurrir (por $\Gamma\models A$),
+$\Gamma \vdash A$. 
+
+$(1) \Rightarrow (2)$. Supongamos (1) y que $\Gamma$ no es satisfacible. Entonces toda estructura que hace verdaderas todas las fórmulas de $\Gamma$ (no hay ninguna) hace verdadera $\bot$, es decir, $\Gamma \models \bot$. Por (1), $\Gamma \vdash \bot$: $\Gamma$ es inconsistente. Por contraposición, todo conjunto consistente es satisfacible.
+\end{proof}
+
+Junto con los teoremas de corrección y completud, el lema muestra que la consistencia y la satisfacibilidad, aunque se definen de modo distinto (una en el cálculo, otra en la semántica), coinciden: un conjunto de sentencias es consistente si y solo si es satisfacible. Lo mismo vale en lógica proposicional, con interpretaciones (asignaciones de verdad) en lugar de estructuras. Demostrar la completud equivale, por tanto, a demostrar que todo conjunto consistente tiene un modelo. Es lo que hizo Henkin: dado un conjunto consistente, construyó una estructura que lo satisface (sección~\ref{sec:estrategia-henkin} y apéndice~\ref{ap:henkin}).
+
+\section{¿Por qué no se puede usar la prueba de Kalmár en primer orden?\ampliacion}\label{sec:no-kalmar}
+
+Tras estudiar la completud proposicional (tema~\ref{cap:meta-prop}) podemos preguntarnos
+por qué no aplicar la demostración constructiva de Kalmár a la lógica
+de primer orden. Veamos: 
+
+\begin{enumerate}
+    \item \textbf{Imposibilidad de tablas de verdad finitas.}  
+    El método de Kalmár se basa en que una fórmula con $n$ variables proposicionales tiene exactamente $2^n$ combinaciones posibles de verdad. Cada fila de la tabla genera una prueba finita, y luego el principio del tercero excluido (LEM) colapsa sucesivamente las $2^n$ pruebas de dos en dos hasta llegar a cero premisas.  
+    En primer orden, una fórmula cuantificada como $\forall x P(x)$ habla sobre un dominio $D$ que puede ser infinito. No existe ninguna tabla de verdad de tamaño finito que contemple todas las interpretaciones posibles de una relación, ni un número finito de filas que podamos colapsar sucesivamente mediante LEM.
+    
+    \item \textbf{La barrera de la indecidibilidad (Church y Turing, 1936).}  
+    El método de Kalmár parte de la tabla de verdad, que es a la vez un \emph{procedimiento de decisión}: revisando las $2^n$ filas sabemos, en un número finito de pasos, si la fórmula es válida o no (y, si lo es, construimos su deducción). Un análogo en primer orden nos daría un algoritmo para decidir la validez de cualquier fórmula.  
+    Sin embargo, Alonzo Church y Alan Turing demostraron en 1936 que la lógica de primer orden es \textbf{indecidible}: no existe ningún algoritmo que determine, para cualquier fórmula de primer orden, si es válida o no. Sí existen procedimientos que, dada una fórmula \emph{válida}, acaban encontrando una deducción de ella; pero ante una fórmula no válida pueden no terminar nunca. Volveremos sobre ello en el tema~\ref{cap:tableaux}.
+    
+    \item \textbf{La necesidad de una prueba conjuntista no constructiva.}  
+    Puesto que ningún algoritmo finitista puede inspeccionar todos los modelos posibles de primer orden, la demostración de completud debe cambiar de estrategia: en lugar de ir de las tablas de verdad a la prueba (Kalmár), debemos probar que si un conjunto de sentencias es consistente, existe un modelo que lo satisface (Henkin).
+\end{enumerate}
+
+\section{La estrategia de Leon Henkin (1949)\ampliacion}\label{sec:estrategia-henkin}
+
+En 1949, el lógico estadounidense Leon Henkin publicó una
+nueva demostración de completud. En lugar de intentar demostrar $\Gamma \models A \implies \Gamma \vdash A$ de forma directa, demostró el teorema del modelo, que equivale a la completud fuerte (lema~\ref{lema_reduccion}):
+\[
+\Gamma \nvdash \bot \implies \exists \mathcal{M} \ (\mathcal{M} \models \Gamma)
+\]
+
+Para fabricar ese modelo, Henkin introduce dos conceptos:
+
+\begin{definition}[Conjunto de Henkin]
+Un conjunto de sentencias $\Delta$ en un lenguaje de primer orden es un \textbf{conjunto de Henkin} si satisface tres propiedades:
+\begin{enumerate}
+    \item \textbf{Consistencia sintáctica.} $\Delta \nvdash \bot$ (a partir de $\Delta$ no se deriva $\bot$).
+    \item \textbf{Maximalidad (Lindenbaum).} Para cualquier sentencia $A$ del lenguaje, o bien $A \in \Delta$ o bien $\neg A \in \Delta$. 
+    \item \textbf{Propiedad de los testigos (Henkin).} Para cada fórmula existencial $\exists x B(x) \in \Delta$, existe una constante individual concreta $c$ en el lenguaje tal que $B(c) \in \Delta$.
+\end{enumerate}
+\end{definition}
+
+El lema de Lindenbaum-Henkin (apéndice~\ref{ap:henkin}) garantiza que todo conjunto consistente $\Gamma$ puede ampliarse a un conjunto de Henkin $\Gamma^* \supseteq \Gamma$ en un lenguaje enriquecido con nuevas constantes (los testigos).
+
+\subsection{La estructura del modelo canónico de términos}
+¿Dónde encuentra Henkin un modelo para satisfacer ese conjunto maximal de fórmulas? La clave del método radica en construir el dominio a partir del propio material sintáctico: las constantes del lenguaje formal.
+\begin{itemize}
+    \item Toma como dominio $D$ el conjunto de las constantes del lenguaje (ampliado con nuevas constantes que sirven de testigos): $D = \{c_1, c_2, c_3, \dots\}$, y cada constante se interpreta a sí misma. Si el lenguaje contiene la identidad, el dominio no puede estar formado por las constantes mismas, sino por clases de constantes que $\Gamma^*$ declara idénticas. 
+    \item Interpreta cada predicado según las fórmulas atómicas que pertenecen a $\Gamma^*$:
+    \[
+    (c_1, \dots, c_n) \in I(P) \iff P(c_1, \dots, c_n) \in \Gamma^*.
+    \]
+\end{itemize}
+En el modelo canónico de Henkin para $\Gamma^*$, denotado por $\mathcal{M}_{\Gamma^*}$, la verdad de cada sentencia coincide exactamente con su pertenencia a $\Gamma^*$:
+\[
+\mathcal{M}_{\Gamma^*} \models A \iff A \in \Gamma^* \qquad (\text{para toda sentencia } A).
+\]
+En particular, como $\Gamma \subseteq \Gamma^*$, el modelo $\mathcal{M}_{\Gamma^*}$ satisface $\Gamma$. La demostración completa se desarrolla en el apéndice~\ref{ap:henkin}.
+
+\section{Cuadro comparativo: el método de Kalmár frente al método de Henkin\ampliacion}
+
+La siguiente tabla resume las diferencias entre los dos métodos de demostración de la completud:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{3.2cm}|>{\raggedright\arraybackslash}p{6cm}|>{\raggedright\arraybackslash}p{6.4cm}|}
+\hline
+\textbf{Dimensión} & \textbf{Método de László Kalmár (1935)} & \textbf{Método de Leon Henkin (1949)} \\
+\hline
+\textbf{Ámbito de aplicación} & Lógica proposicional clásica. & Lógica proposicional y de primer orden (y extensiones de orden superior o modal). \\
+\hline
+\textbf{Naturaleza metodológica} & \textbf{Constructiva y algorítmica:} proporciona un procedimiento explícito para traducir tablas de verdad en deducciones. & \textbf{No constructiva y conjuntista:} prueba la existencia de un modelo mediante el lema de Lindenbaum. \\
+\hline
+\textbf{Estructura de la prueba} & Inducción finita sobre la complejidad sintáctica y colapso de premisas con la regla LEM. & Extensión a un conjunto maximalmente consistente con testigos y construcción del modelo canónico. \\
+\hline
+\textbf{Tratamiento del infinito} & Limitado a
+                                    \textbf{conjuntos finitos de
+                                    premisas}. & Trabaja con
+                                                 \textbf{conjuntos
+                                                 infinitos maximalmente
+                                                 consistentes}. \\
+\hline
+\textbf{Punto de partida semántico} & Tablas de verdad finitas ($2^n$ filas). & Estructuras y modelos con dominios arbitrarios (finitos o infinitos). \\
+\hline
+\textbf{Relación con la computación} & Estrechamente ligada a la decidibilidad proposicional. & Compatible con la indecidibilidad de primer orden (Church-Turing). \\
+\hline
+\end{tabular}
+\end{center}
+
+
+\section*{Referencias bibliográficas}
+
+\begin{enumerate}
+    \item \textbf{Barwise, J., \& Cooper, R.} (1981). «Generalized quantifiers and natural language». \emph{Linguistics and Philosophy}, vol. 4, n.º 2, pp. 159--219.
+    \item \textbf{Boolos, G., Burgess, J. P., \& Jeffrey, R.} (2007). \emph{Computability and Logic} (5.ª ed.). Cambridge University Press. [Capítulos dedicados a modelos, satisfacción y completud].
+    \item \textbf{Frege, G.} (1892). «Über Sinn und Bedeutung». \emph{Zeitschrift für Philosophie und philosophische Kritik}, vol. 100, pp. 25--50.
+    \item \textbf{Garrido, M.} (1974). \emph{Lógica simbólica}. Tecnos, Madrid. [Capítulos sobre la semántica del cálculo de predicados].
+    \item \textbf{Gödel, K.} (1930). «Die Vollständigkeit der Axiome des logischen Funktionenkalküls». \emph{Monatshefte für Mathematik und Physik}, vol. 37, pp. 349--360. [Primera prueba de la completud de primer orden].
+    \item \textbf{Henkin, L.} (1949). «The completeness of the first-order functional calculus». \emph{Journal of Symbolic Logic}, vol. 14, n.º 3, pp. 159--166. [El artículo fundacional del método de modelos canónicos].
+    \item \textbf{Hilbert, D., \& Bernays, P.} (1939). \emph{Grundlagen der Mathematik}, vol. II. Springer, Berlín.
+    \item \textbf{Russell, B.} (1905). «On denoting». \emph{Mind}, vol. 14, n.º 56, pp. 479--493.
+    \item \textbf{Russell, B.} (1919). \emph{Introduction to Mathematical Philosophy}. George Allen \& Unwin, Londres. [Cap. 16: «Descriptions»].
+    \item \textbf{Strawson, P. F.} (1950). «On referring». \emph{Mind}, vol. 59, n.º 235, pp. 320--344.
+    \item \textbf{Tarski, A.} (1936). «Der Wahrheitsbegriff in den formalisierten Sprachen». \emph{Studia Philosophica}, vol. 1, pp. 261--405. [Versión alemana del original polaco de 1933, \emph{Pojęcie prawdy w językach nauk dedukcyjnych}; definición fundacional de verdad semántica y satisfacción].
+\end{enumerate}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "ApuntesLogica"
+%%% End:

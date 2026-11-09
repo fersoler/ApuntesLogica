@@ -1,0 +1,130 @@
+% -*- coding: utf-8 -*-
+\begin{quote}
+\small \textbf{Instrucciones.} Para comprobar tus árboles puedes usar la aplicación \apptableaux{}, que sigue las reglas de estos apuntes y da el modelo de cada rama abierta. Construye antes el árbol a mano, o en la aplicación con la opción «Construirlo yo».
+\end{quote}
+
+\section*{Bloque 1: tableaux en lógica proposicional}
+
+\begin{pregunta}[Satisfacibilidad de conjuntos de fórmulas]\label{e6-1}
+Construye el tableau para cada uno de los siguientes conjuntos de fórmulas. Determina si son satisfacibles o insatisfacibles. En caso de ser satisfacibles, indica una interpretación $v$ que los haga verdaderos a partir de una rama abierta:
+\begin{enumerate}
+    \item $\Gamma_1 = \{p \to \neg p, \ q \to p, \ p \lor q\}$
+    \item $\Gamma_2 = \{p \land \neg q, \ \neg (p \to r), \ q \lor \neg r\}$
+    \item $\Gamma_3 = \{(p \lor q) \to r, \ \neg r, \ p\}$
+    \item $\Gamma_4 = \{p \leftrightarrow q, \ q \leftrightarrow r, \ p \land \neg r\}$
+\end{enumerate}
+\end{pregunta}
+
+\begin{pregunta}[Comprobación de validez]\label{e6-2}
+Utiliza el método de tableaux para determinar si las siguientes fórmulas proposicionales son lógicamente válidas (tautologías). Recuerda que para comprobar si una fórmula $A$ es válida, se construye el tableau para su negación $\neg A$:
+\begin{enumerate}
+    \item $((p \lor q) \land (p \lor \neg q)) \to p$
+    \item $(p \to (q \to r)) \to ((p \to q) \to (p \to r))$ \quad (Autodistribución del condicional; axioma S, el segundo axioma de Frege)
+    \item $(p \to q) \lor (q \to p)$ \quad (Principio de linealidad / Dummett)
+    \item $((p \to q) \to p) \to p$ \quad (Ley de Peirce)
+    \item $((p \to q) \land \neg p) \to \neg q$ \quad (Falacia de negación del antecedente)
+\end{enumerate}
+\end{pregunta}
+
+\begin{pregunta}[Consecuencia lógica y detección de falacias proposicionales]\label{e6-3}
+Determina mediante tableaux si se verifican las siguientes relaciones de consecuencia lógica. Si la relación no se cumple, extrae de una rama abierta una interpretación que sirva de contraejemplo:
+\begin{enumerate}
+    \item $\{p \lor q, \ p \to r, \ q \to s\} \models \neg r \to s$ \quad (Dilema constructivo)
+    \item $\{p \to (q \lor r), \ \neg r\} \models \neg p$
+    \item $\{p \to q, \ \neg p \to r, \ \neg q\} \models r$
+    \item $\{p \to q, \ q \to r\} \models p \land r$ \quad (Los condicionales no aseguran sus antecedentes)
+\end{enumerate}
+\end{pregunta}
+
+\section*{Bloque 2: tableaux en lógica de primer orden (propiedades monádicas)}
+
+\begin{pregunta}[Silogística categórica y cuantificación monádica]\label{e6-4}
+Comprueba la validez de los siguientes argumentos clásicos en lógica de predicados monádica mediante el cierre sistemático de su tableau:
+\begin{enumerate}
+    \item \textbf{Celarent:} $\{\forall x (M(x) \to \neg P(x)), \ \forall x (S(x) \to M(x))\} \models \forall x (S(x) \to \neg P(x))$
+    \item \textbf{Ferio:} $\{\forall x (M(x) \to \neg P(x)), \ \exists x (S(x) \land M(x))\} \models \exists x (S(x) \land \neg P(x))$
+    \item \textbf{Camestres:} $\{\forall x (P(x) \to M(x)), \ \forall x (S(x) \to \neg M(x))\} \models \forall x (S(x) \to \neg P(x))$
+    \item $\{\forall x ((P(x) \land Q(x)) \to \neg R(x)), \ \exists x (P(x) \land Q(x) \land S(x))\} \models \exists x (P(x) \land S(x) \land \neg R(x))$
+\end{enumerate}
+\end{pregunta}
+
+\begin{pregunta}[Equivalencias entre cuantificadores]\label{e6-5}
+Demuestra las siguientes equivalencias mediante tableaux:
+\begin{enumerate}
+    \item $\forall x (P(x) \land Q(x)) \equiv \forall x P(x) \land \forall x Q(x)$
+    \item $\exists x (P(x) \lor Q(x)) \equiv \exists x P(x) \lor \exists x Q(x)$
+    \item $\neg \forall x P(x) \equiv \exists x \neg P(x)$
+    \item $\forall x (P(x) \to Q(a)) \equiv \exists x P(x) \to Q(a)$ \quad (el consecuente no contiene la variable $x$)
+    \item $\forall x (\exists y Q(y) \land P(x)) \equiv \exists y Q(y) \land \forall x P(x)$ 
+\end{enumerate}
+\end{pregunta}
+
+\section*{Bloque 3: detección de falacias y extracción formal de contramodelos}
+
+\begin{pregunta}[Inversión de cuantificadores y falacias distributivas]\label{e6-6}
+Los siguientes argumentos parecen válidos a primera vista en el lenguaje natural, pero son falacias formales. Para cada uno de ellos:
+\begin{itemize}
+    \item Construye el tableau a partir de las premisas y la negación de la conclusión.
+    \item Verifica que al menos una rama permanece abierta y sin contradicciones.
+    \item Especifica el contramodelo $\mathcal{M} = \langle D, I \rangle$ extraído de dicha rama abierta (indicando el dominio $D$ y las extensiones $I(P)$ e $I(Q)$).
+    \item Explica intuitivamente por qué dicho contramodelo hace verdaderas las premisas y falsa la conclusión.
+\end{itemize}
+
+\begin{enumerate}
+    \item $\forall x (P(x) \lor Q(x)) \stackrel{?}{\models} \forall x P(x) \lor \forall x Q(x)$  
+    \emph{(«Todos los números son pares o impares; por tanto, o todos los números son pares o todos los números son impares»).}
+    
+    \item $\forall x (P(x) \to Q(x)), \ \exists x \neg P(x) \stackrel{?}{\models} \exists x \neg Q(x)$  
+    \emph{(«Todos los filósofos son mortales; hay personas que no son filósofos; por tanto, hay personas que no son mortales»; falacia de negación del antecedente en versión cuantificada).}
+    
+    \item $\forall x (P(x) \to Q(x)), \ \exists x Q(x) \stackrel{?}{\models} \exists x P(x)$  
+    \emph{(Falacia de afirmación del consecuente en versión cuantificada).}
+    
+    \item $\exists x (P(x) \lor Q(x)) \stackrel{?}{\models} \exists x P(x) \land \exists x Q(x)$
+\end{enumerate}
+\end{pregunta}
+
+\section*{Bloque 4: relaciones binarias, dependencia y ramas infinitas}
+
+\begin{pregunta}[Permutación de cuantificadores en relaciones binarias]\label{e6-7}
+Examina mediante tableaux las dos relaciones de consecuencia siguientes:
+\begin{enumerate}
+    \item $\exists x \forall y R(x, y) \stackrel{?}{\models} \forall y
+      \exists x R(x, y)$ \quad (¿Se cierra el tableau? Si existe,
+      extrae el contramodelo).
+    \item $\forall x \exists y R(x, y) \stackrel{?}{\models} \exists y
+      \forall x R(x, y)$ \quad (¿Se cierra el tableau? \emph{Atención:} con las reglas estándar este tableau no termina, como ocurre en el ejemplo de la sección~\ref{sec:ramas-infinitas}. Describe el patrón que se repite y propón directamente un contramodelo finito, comprobándolo con la semántica del tema~\ref{cap:sem-lpo}).
+\end{enumerate}
+\end{pregunta}
+
+\begin{pregunta}[Argumento relacional complejo]\label{e6-8}
+Construye el tableau para determinar si el siguiente conjunto de premisas entraña la conclusión indicada:
+\[
+\text{Premisas: } \begin{cases}
+1. \ \forall x (\exists y R(x, y) \to \forall z R(z, x)) \\
+2. \ \exists x \exists y R(x, y)
+\end{cases}
+\qquad \text{Conclusión: } \forall x R(x, x)
+\]
+\emph{Indicación.} Aplica las reglas $\delta$ sobre las premisas iniciales antes de descomponer los condicionales universales.
+\end{pregunta}
+
+\section*{Bloque 5: preguntas conceptuales y metodológicas}
+
+\begin{pregunta}[Tableaux frente a deducción natural]\label{e6-9}
+Responde razonadamente:
+\begin{enumerate}
+    \item \textbf{Carácter analítico frente a sintético.} En deducción natural, para demostrar $A \lor B \vdash B \lor A$ aplicamos la regla de eliminación de la disyunción ($\lor\text{E}$), suponiendo $A$ en una subderivación y $B$ en otra, para concluir en ambas $B \lor A$. ¿Cómo demuestra esa misma inferencia un tableau semántico? Explica la diferencia en la dirección del flujo deductivo.
+    \item \textbf{Cálculo generativo frente a cálculo refutativo.} Cuando se intenta demostrar una inferencia inválida en deducción natural (por ejemplo, $p \lor q \vdash p \land q$), ¿qué información proporciona el cálculo al no alcanzarse la derivación? ¿Qué información proporciona en cambio el tableau semántico?
+    \item \textbf{Conservación de la satisfacibilidad en la corrección\ampliacion.} En el teorema de corrección de los tableaux, ¿por qué es necesario que la regla existencial ($\delta$) utilice una constante fresca, que no haya aparecido previamente en la rama? Muestra un ejemplo de falso razonamiento (una regla $\delta$ defectuosa) que permitiría probar una fórmula que no es válida si reutilizáramos una constante vieja.
+    \item \textbf{Conjuntos de Hintikka y completud\ampliacion.} Explica con tus
+      propias palabras por qué una rama abierta y completa de un
+      tableau no es simplemente una lista de fórmulas, sino la
+      descripción de un modelo (un conjunto de Hintikka). 
+\end{enumerate}
+\end{pregunta}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "ApuntesLogica"
+%%% End:

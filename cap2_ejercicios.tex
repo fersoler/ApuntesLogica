@@ -1,0 +1,159 @@
+% -*- coding: utf-8 -*-
+\begin{quote}
+\small \textbf{Instrucciones.} Puedes comprobar las tablas de verdad, las equivalencias, las consecuencias y las formalizaciones con la aplicación \apptablas{}. Rellena antes la tabla a mano: la aplicación te dirá si es correcta.
+\end{quote}
+
+\section*{Bloque 1: tablas de verdad y clasificación de fórmulas}
+
+\begin{pregunta}\label{e2-tablas}
+Construye la tabla de verdad de las siguientes fórmulas y clasifícalas en tautología ($\models A$), contradicción o fórmula contingente:
+\begin{enumerate}[(a)]
+    \item $(p \to q) \leftrightarrow (\neg q \to \neg p)$ \hfill (Principio de contraposición)
+    \item $(p \to q) \land (p \land \neg q)$
+    \item $((p \to q) \to p) \to p$ \hfill (Ley de Peirce)
+    \item $(p \to q) \to (q \to p)$ \hfill (Recíproca del condicional)
+    \item $(p \to q) \lor (q \to p)$
+\end{enumerate}
+\end{pregunta}
+
+\begin{pregunta}Demuestra mediante tablas de verdad que las siguientes fórmulas son contingentes proponiendo, para cada una de ellas, una interpretación que la haga verdadera y otra que la haga falsa:
+\begin{enumerate}[(a)]
+    \item $(p \land q) \to r$
+    \item $p \to (q \lor r)$
+\end{enumerate}
+\end{pregunta}
+
+\section*{Bloque 2: equivalencia lógica (\texorpdfstring{$\equiv$}{equivalencia})}
+
+\begin{pregunta}Demuestra mediante tablas de verdad las siguientes
+  leyes de De Morgan: 
+\begin{enumerate}[(a)]
+    \item $\neg(p \lor q) \equiv \neg p \land \neg q$
+    \item $\neg(p \land q) \equiv \neg p \lor \neg q$
+\end{enumerate}
+\end{pregunta}
+
+\begin{pregunta}\label{e2-negcond}
+Encuentra una fórmula lógicamente equivalente a $p \land q$ en la que únicamente se utilicen la negación ($\neg$), el condicional ($\to$) y paréntesis. Justifica semánticamente la respuesta demostrando que ambas fórmulas tienen la misma tabla de verdad.
+\end{pregunta}
+
+\begin{pregunta}\label{e2-negdisy}
+Encuentra una fórmula equivalente a $p \leftrightarrow q$ en la que únicamente aparezcan las conectivas $\{\neg, \lor\}$.
+\end{pregunta}
+
+\section*{Bloque 3: consecuencia lógica semántica (\texorpdfstring{$\models$}{consecuencia}) y contraejemplos}
+
+\begin{pregunta}\label{e2-consec}
+Determina si se cumplen o no las siguientes relaciones de consecuencia lógica ($\models$). Si la relación es válida, justifícalo semánticamente y construye su derivación en deducción natural ($\vdash$); si es inválida, proporciona un contraejemplo explícito (una asignación $v$ que satisfaga las premisas y haga falsa la conclusión):
+\begin{enumerate}[(a)]
+    \item $p \to q, \neg p \models \neg q$ \hfill (Falacia de negación del antecedente)
+    \item $p \to q, r \to q \models p \to r$ \hfill (Análogo proposicional del término medio no distribuido)
+    \item $p \lor q, \neg p \models q$ \hfill (Silogismo disyuntivo)
+    \item $p \to (q \to r), p \land \neg r \models \neg q$
+    \item $p \to q, r \to q \models (p \lor r) \to q$
+\end{enumerate}
+\end{pregunta}
+
+\section*{Bloque 4: formalización, tablas de verdad y puente hacia la deducción}
+
+\begin{pregunta}[Conectivas del castellano]\label{e2-formal}
+Formaliza los siguientes enunciados (consulta la sección~\ref{sec:formalizacion}), indicando el diccionario de letras que utilizas:
+\begin{enumerate}[(a)]
+    \item Iré a la fiesta solo si me invitan.
+    \item Aprobar el examen es condición necesaria para aprobar la asignatura (pero no es condición suficiente).
+    \item Saldremos de excursión a menos que llueva.
+    \item Ni Kant ni Hume aceptan el argumento ontológico.
+    \item El conocimiento no puede ser a la vez innato y adquirido por la experiencia.
+    \item Hume es empirista si y solo si rechaza las ideas innatas.
+\end{enumerate}
+\end{pregunta}
+
+\begin{pregunta}[Argumentos del lenguaje ordinario]\label{e2-arg}
+Formaliza las premisas y la conclusión de los siguientes argumentos. A continuación:
+\begin{enumerate}[1.]
+    \item Comprueba mediante una tabla de verdad si el argumento es semánticamente válido ($\Gamma \models A$) o no. Si no lo es, indica qué fila de la tabla actúa como contraejemplo.
+    \item Para aquellos argumentos que resulten ser válidos,
+      construye su demostración formal en el cálculo de
+        deducción natural ($\Gamma \vdash A$) utilizando las reglas
+      aprendidas en el tema~\ref{cap:dn-prop}.
+\end{enumerate}
+
+\begin{enumerate}[(a)]
+    \item Voy al cine solo si acabo pronto de limpiar la casa. Si me acompañas, voy al cine. Por tanto, si me acompañas, acabo pronto de limpiar la casa.
+    \item Si hace buen tiempo, iremos a la playa. Iremos a la playa. Por tanto, hace buen tiempo.
+    \item Si el mundo es redondo y tengo un barco, entonces navego alrededor del mundo. Tengo un barco, pero no navego alrededor del mundo. Por tanto, el mundo no es redondo.
+    \item Cuando las condiciones climáticas son las adecuadas, salen setas. Si salen setas, los bosques se llenan de buscadores de setas. Los bosques están llenos de buscadores de setas. En consecuencia, las condiciones climáticas son las adecuadas.
+    \item Si el presentador fuese competente, habría mantenido la audiencia, y si lo hubiese hecho, la empresa lo habría promocionado. Sin embargo, la empresa no lo ha promocionado. Así pues, el presentador no es competente.
+    \item Si el espacio es euclídeo, se cumple el quinto postulado. Pero si el espacio es elíptico, no se cumple el quinto postulado. Por tanto, el espacio no es a la vez euclídeo y elíptico.
+\end{enumerate}
+\end{pregunta}
+
+\begin{pregunta}[Argumentos filosóficos clásicos]\label{e2-filo}
+Formaliza los siguientes argumentos filosóficos y determina su validez semántica mediante tablas de verdad o búsqueda de contraejemplos. Si son válidos, demuestra la conclusión mediante deducción natural:
+\begin{enumerate}[(a)]
+    \item Si el determinismo es verdadero, entonces las acciones humanas son previsibles. Si las acciones humanas son previsibles, no hay libre albedrío. Por tanto, si el determinismo es verdadero, no hay libre albedrío.
+    \item Si el conocimiento requiere certeza absoluta, entonces no tenemos conocimiento del mundo empírico. Pero tenemos conocimiento del mundo empírico. En consecuencia, el conocimiento no requiere certeza absoluta.
+\end{enumerate}
+\end{pregunta}
+
+\section*{Bloque 5: razonamiento metateórico sobre verdad y validez}
+
+\begin{pregunta}\label{e2-vf1}
+Indica si la siguiente afirmación es verdadera o falsa y justifica detalladamente tu respuesta:
+\begin{quote}
+«Sea $A$ una fórmula y $\Gamma$ un conjunto de fórmulas. Si $A$ no es consecuencia lógica de $\Gamma$ ($\Gamma \not\models A$), entonces la negación de $A$ es consecuencia lógica de $\Gamma$ ($\Gamma \models \neg A$)».
+\end{quote}
+\end{pregunta}
+
+\begin{pregunta}\label{e2-vf2}
+Indica si la siguiente afirmación es verdadera o falsa y justifica detalladamente tu respuesta:
+\begin{quote}
+«Sea $A$ una fórmula y $\Gamma$ un conjunto de premisas. Si $\Gamma \models A$, entonces necesariamente $\Gamma \not\models \neg A$».
+\end{quote}
+\end{pregunta}
+
+\begin{pregunta}\label{e2-insat}
+Sean $A$ y $B$ dos fórmulas tales que el conjunto $\{\neg A, B\}$ no es satisfacible. ¿Qué podemos afirmar necesariamente acerca de la fórmula $B \to A$?
+\begin{enumerate}[(a)]
+    \item Es una contradicción (insatisfacible).
+    \item Es contingente.
+    \item Es una tautología ($\models B \to A$).
+    \item No se puede determinar sin conocer las variables de $A$ y $B$.
+\end{enumerate}
+Justifica tu elección demostrando la relación a partir de la definición de satisfacibilidad.
+\end{pregunta}
+
+\begin{pregunta}
+Sea $A \to B$ una fórmula contradictoria (no satisfacible). ¿Qué podemos afirmar de la fórmula $B \to A$? Justifica la respuesta evaluando qué valores de verdad deben tener necesariamente $A$ y $B$ para que $A \to B$ sea falsa en toda interpretación.
+\end{pregunta}
+
+\begin{pregunta}[Cuestiones sobre consecuencia y satisfacibilidad]\label{e2-cuest}
+Responde razonadamente a las siguientes cuestiones conceptuales:
+\begin{enumerate}[(a)]
+    \item Supongamos que la fórmula $A$ es una contradicción y la fórmula $B$ es una tautología. Determina justificadamente si las siguientes relaciones de consecuencia lógica son verdaderas o falsas:
+    \begin{itemize}
+        \item $\{A\} \models B$
+        \item $\{B\} \models A$
+    \end{itemize}
+    \item Sea $\{A, B, \neg C\}$ un conjunto insatisfacible de fórmulas. Determina justificadamente cuáles de las siguientes relaciones de consecuencia se cumplen necesariamente:
+    \begin{itemize}
+        \item $\{A, B\} \models C$
+        \item $\{A, \neg C\} \models \neg B$
+        \item $\{A, B\} \models \neg C$
+    \end{itemize}
+\end{enumerate}
+\end{pregunta}
+
+\begin{pregunta}[El condicional material]\label{e2-cond}
+Responde razonadamente (consulta la sección~\ref{sec:condicional-material}):
+\begin{enumerate}[(a)]
+    \item Comprueba mediante tablas de verdad que $q \models p \to q$ y que $\neg p \models p \to q$.
+    \item Según el condicional material, ¿es verdadero el enunciado «si $2 + 2 = 5$, entonces Madrid es la capital de Francia»? ¿Y «si Madrid es la capital de España, entonces $2 + 2 = 4$»? ¿Te parece que estos resultados muestran que el condicional material es inadecuado, o que con «si\ldots{} entonces» comunicamos algo más que sus condiciones de verdad?
+    \item En el argumento (e) del ejercicio~\ref{e2-arg} los condicionales están en subjuntivo. ¿Qué se pierde al formalizarlos con $\to$? ¿Crees que eso afecta a la validez de ese argumento concreto?
+\end{enumerate}
+\end{pregunta}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "ApuntesLogica"
+%%% End:

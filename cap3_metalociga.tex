@@ -1,0 +1,713 @@
+% -*- coding: utf-8 -*-
+\section{El problema de la adecuación de un sistema formal}
+
+A lo largo de los dos temas precedentes hemos desarrollado dos herramientas distintas para analizar los argumentos:
+\begin{enumerate}
+    \item \textbf{La perspectiva sintáctica:}
+      $\Gamma \vdash A$  (tema~\ref{cap:dn-prop}). Existe una derivación formal en el cálculo de
+      deducción natural que desde las premisas $\Gamma$ alcanza la
+      conclusión $A$ mediante la aplicación de reglas sintácticas de
+      introducción y eliminación de conectivas. 
+    \item \textbf{La perspectiva semántica:} $\Gamma \models A$ (tema~\ref{cap:sem-prop}). En toda asignación de verdad $v$, si todas las premisas de $\Gamma$ son verdaderas, la conclusión $A$ es verdadera (no existen contraejemplos).
+\end{enumerate}
+
+La pregunta central de la metalógica es: \emph{¿qué relación
+  guardan entre sí $\vdash$ y $\models$?} Para que un sistema formal (en nuestro caso, el cálculo de deducción natural, cuya relación de derivabilidad es $\vdash$)
+sea adecuado, debe tener dos propiedades: la
+\textbf{corrección} (no demostrar nada que no se siga lógicamente de las premisas) y la \textbf{completud} (poder demostrar todo lo que se sigue lógicamente de ellas).
+
+En ambos casos conviene distinguir entre una versión \textbf{débil} (referida a fórmulas sin premisas, es decir, a teoremas y tautologías) y una versión \textbf{fuerte} (referida a inferencias a partir de un conjunto arbitrario de premisas $\Gamma$).
+
+\subsection{Corrección débil frente a corrección fuerte}
+\begin{itemize}
+    \item \textbf{Corrección débil.} Si una fórmula se demuestra formalmente sin premisas en el cálculo, entonces es una verdad lógica (tautología):
+    \[
+    \vdash A \quad\implies\quad \models A
+    \]
+    Garantiza que nuestro cálculo no permite demostrar sin premisas ninguna fórmula que no sea una tautología.
+    
+    \item \textbf{Corrección fuerte.} Para cualquier conjunto de premisas $\Gamma$ (finito o infinito) y cualquier fórmula $A$:
+    \[
+    \Gamma \vdash A\quad \implies\quad \Gamma \models A
+    \]
+    Garantiza que el cálculo preserva la verdad paso a paso en presencia de cualquier conjunto de premisas o hipótesis: si partimos de supuestos verdaderos, cualquier conclusión derivada en deducción natural será verdadera.
+\end{itemize}
+La corrección fuerte implica trivialmente la corrección débil tomando
+el conjunto vacío de premisas ($\Gamma = \varnothing$).
+
+\subsection{Completud débil frente a completud fuerte}
+\begin{itemize}
+    \item \textbf{Completud débil.} Si una fórmula es una tautología
+      (verdadera bajo toda asignación de verdad), entonces es
+      demostrable sin premisas como un teorema del cálculo:
+    \[
+    \models A \quad\implies\quad \vdash A
+    \]
+    Garantiza que el cálculo alcanza todas las verdades lógicas: cualquier tautología puede derivarse con nuestras reglas de inferencia.
+    
+    \item \textbf{Completud fuerte.} Para cualquier conjunto de premisas $\Gamma$ y cualquier fórmula $A$:
+    \[
+    \Gamma \models A \quad\implies\quad \Gamma \vdash A
+    \]
+    Garantiza que siempre que un argumento sea semánticamente válido
+    (la conclusión es consecuencia lógica de las premisas, es decir,
+    la conclusión es verdadera en toda interpretación donde las
+    premisas sean verdaderas), existe una prueba
+    formal que lo justifica paso a paso en deducción natural.
+\end{itemize}
+
+Las versiones débiles, por sí solas, se quedan cortas: en la práctica
+rara vez nos limitamos a
+constatar tautologías (aunque veremos que, para conjuntos finitos de
+premisas, la versión fuerte se obtiene fácilmente de la débil). Casi siempre razonamos a partir de
+conjuntos de premisas $\Gamma$ (hipótesis empíricas, principios
+éticos, axiomas). La completud fuerte asegura que la
+deducción natural permite derivar cualquier fórmula que sea
+consecuencia lógica de cualquier conjunto de premisas. 
+
+Cuando un sistema formal satisface corrección y completud (en sus versiones fuertes), decimos que es \textbf{adecuado}, pues entonces coinciden exactamente la noción sintáctica de derivabilidad y la noción semántica de consecuencia lógica:
+\[
+\Gamma \vdash A \quad\iff\quad \Gamma \models A
+\]
+
+\subsection{La inducción como método de demostración}\label{sec:induccion}
+
+Los teoremas de este tema hablan de \emph{todas} las derivaciones o de \emph{todas} las fórmulas, y hay infinitas: no se pueden comprobar una a una. Que una propiedad se cumpla en todos los casos que hemos probado no garantiza que se cumpla siempre. Para demostrarlo se usa la \textbf{inducción}.
+
+El modelo es la inducción sobre los números naturales. Para probar que una propiedad $\varphi(n)$ vale para todo $n \in \mathbb{N}$ basta probar dos cosas:
+\begin{itemize}
+    \item \textbf{Caso base.} Se cumple $\varphi(0)$.
+    \item \textbf{Paso inductivo.} Para cualquier $n$, si se cumple $\varphi(n)$, también se cumple $\varphi(n+1)$. Lo que se supone, $\varphi(n)$, es la \textbf{hipótesis de inducción} (HI).
+\end{itemize}
+El caso base da $\varphi(0)$, y el paso inductivo lleva de $\varphi(0)$ a $\varphi(1)$, de $\varphi(1)$ a $\varphi(2)$, y así hasta cualquier $n$. El caso base no tiene por qué ser el $0$: si la propiedad se quiere probar a partir de otro número, por ejemplo el $1$, el caso base es $\varphi(1)$ y la conclusión vale para todo $n \geq 1$. Es lo que ocurre en el ejemplo siguiente.
+
+\begin{ejemplo}[Una fórmula que detecta la paridad]
+Definimos $\Phi_1 = p_1$ y $\Phi_{n+1} = \neg\Phi_n \leftrightarrow p_{n+1}$; por ejemplo, $\Phi_2 = \neg p_1 \leftrightarrow p_2$. Queremos probar que, para todo $n$, $\Phi_n$ es verdadera exactamente cuando es verdadero un número impar de las variables $p_1, \dots, p_n$. Con tablas de verdad haría falta una tabla de $2^n$ filas para cada $n$; por inducción se prueba para todos a la vez. Sea $\varphi(n)$ la propiedad: «para toda interpretación $v$, $v(\Phi_n) = 1$ si y solo si $v$ hace verdadero un número impar de variables entre $p_1, \dots, p_n$».
+\begin{itemize}
+    \item \textbf{Caso base.} $v(\Phi_1) = 1$ si y solo si $v(p_1) = 1$, es decir, si es verdadera una de las variables de $\{p_1\}$, y uno es impar.
+    \item \textbf{Paso inductivo.} Supongamos $\varphi(n)$ (HI) y sea $v$ una interpretación cualquiera. Hay dos casos.
+    \begin{itemize}
+        \item Si $v(\Phi_n) = 1$, por la HI es impar el número de variables verdaderas entre $p_1, \dots, p_n$. Como $v(\neg\Phi_n) = 0$, $v(\Phi_{n+1}) = 1$ si y solo si $v(p_{n+1}) = 0$, es decir, si al añadir $p_{n+1}$ el número sigue siendo impar.
+        \item Si $v(\Phi_n) = 0$, por la HI ese número es par, y $v(\Phi_{n+1}) = 1$ si y solo si $v(p_{n+1}) = 1$, es decir, si al añadir $p_{n+1}$ pasa a ser impar.
+    \end{itemize}
+    En los dos casos se cumple $\varphi(n+1)$.
+\end{itemize}
+\end{ejemplo}
+
+El mismo esquema sirve para objetos que se construyen paso a paso a partir de otros más simples. En este tema se usa de dos formas, y en las dos la hipótesis de inducción supone la propiedad para \emph{todos} los casos más simples, no solo para el anterior:
+\begin{itemize}
+    \item \textbf{Inducción sobre la longitud de las derivaciones} (teorema de corrección, sección~\ref{sec:correccion}). Se prueba que la propiedad vale para cada línea suponiendo que vale para todas las anteriores. El caso base son las premisas y las hipótesis, que no se obtienen de otras líneas; el paso inductivo se comprueba regla por regla.
+    \item \textbf{Inducción sobre la complejidad de las fórmulas} (lema de Kalmár, \ref{lema_kalmar}). La complejidad de una fórmula es su número de conectivas. El caso base son las fórmulas atómicas; en el paso inductivo se supone la propiedad para las subfórmulas inmediatas (sección~\ref{sec:precedencia}) y se comprueba, conectiva por conectiva, para la fórmula compuesta.
+\end{itemize}
+Como cada derivación tiene un número finito de líneas y cada fórmula se construye en un número finito de pasos, así quedan cubiertas todas las derivaciones y todas las fórmulas.
+
+\section{El teorema de corrección}\label{sec:correccion}
+
+Demostraremos en primer lugar que el cálculo de deducción natural proposicional es fuertemente correcto:
+
+\begin{theorem}[Corrección fuerte]
+Para cualquier conjunto de premisas $\Gamma$ (finito o infinito) y cualquier fórmula proposicional $A$:
+\[
+\text{Si } \Gamma \vdash A, \text{ entonces } \Gamma \models A.
+\]
+\end{theorem}
+Como consecuencia inmediata, tomando $\Gamma = \varnothing$, obtenemos la corrección débil: todo teorema del cálculo es una tautología ($\vdash A \implies \models A$). El teorema sirve además para demostrar que una fórmula \emph{no} es derivable, algo que no prueba el mero hecho de no encontrar una derivación: si hay un contraejemplo, es decir, si $\Gamma \not\models A$, entonces $\Gamma \nvdash A$ («$A$ no es derivable de $\Gamma$»). Así se razona en el ejercicio~\ref{e3-4}.
+
+\begin{proof}
+La demostración procede por inducción sobre el número de pasos (longitud) de la deducción. 
+
+Demostraremos que en cada paso de una prueba formal se cumple la siguiente \textbf{propiedad invariante}:
+\begin{quote}
+\textit{Cualquier interpretación $v$ que satisfaga todas las hipótesis no descargadas activas en la línea $k$ (lo que incluye las premisas) hace también verdadera a la fórmula de la línea $k$.}
+\end{quote}
+
+\textbf{Caso base.} Si la línea $k$ es una premisa o una hipótesis provisional recién abierta, la propiedad se cumple trivialmente, pues $v$ hace verdadera la fórmula por propia definición de satisfacer dicha hipótesis.
+
+\textbf{Paso inductivo.} Asumimos como hipótesis de inducción (HI) que
+todas las líneas anteriores satisfacen la propiedad
+invariante. Obsérvese que, si una línea $j$ es accesible desde la
+línea $k$, las hipótesis activas en $j$ también lo están en $k$; por
+eso, toda interpretación que satisface las hipótesis activas en $k$
+hace verdaderas las líneas citadas. (Este es el motivo de que no se
+puedan citar líneas de cajas ya cerradas). Si lo que se cita es una
+caja $i$--$j$, las hipótesis activas en su última línea $j$ son, como
+mucho, las activas en $k$ más la hipótesis de la propia caja (la de la
+línea $i$); así se razona en los casos de $\to$I, $\neg$I e IP, y del
+mismo modo en $\lor$E y $\leftrightarrow$I. Analizamos qué ocurre según
+la regla que se aplica en la línea $k$:
+
+\begin{itemize}
+    \item \textbf{Regla $\land$I.} La línea $k$ es $A \land B$, justificada a partir de líneas previas $A$ y $B$. Por HI, cualquier interpretación $v$ que satisfaga las hipótesis activas hace verdaderas a $A$ y a $B$. Por la semántica de la conjunción, $v(A) = 1$ y $v(B) = 1$ implica $v(A \land B) = 1$.
+    
+    \item \textbf{Regla $\to$E (\emph{modus ponens}).} La línea $k$ es
+      $B$, obtenida a partir de $A \to B$ y $A$. Por HI, bajo
+      cualquier interpretación $v$ que satisfaga las hipótesis activas, $v(A \to B) = 1$ y $v(A) = 1$. Por la tabla del condicional, la única forma de que $A \to B$ sea verdadero siendo $A$ verdadero es que $B$ sea verdadero. Luego $v(B) = 1$.
+
+    \item \textbf{Regla $\to$I (descarga de hipótesis).} Supongamos
+      que en la línea $k$ cerramos una caja que se abrió con la
+      hipótesis $A$ y alcanzó la conclusión $B$, deduciendo $A \to B$
+      en el nivel exterior. Sea $\Delta$ el conjunto de hipótesis
+      activas fuera de la caja. Por HI aplicada a la última línea
+      dentro de la caja, toda interpretación $v$ que satisfaga $\Delta \cup \{A\}$ satisface $B$. Esto significa que
+    \[
+    \text{Si } v \text{ satisface } \Delta \text{ y } v(A) = 1, \text{ entonces } v(B) = 1.
+    \]
+    Por consiguiente, si $v$ satisface $\Delta$, no puede ocurrir simultáneamente que $v(A) = 1$ y $v(B) = 0$. Por definición semántica del condicional, esto garantiza que $v(A \to B) = 1$. La regla $\to$I preserva la corrección al descargar la hipótesis.
+
+    \item \textbf{Regla $\neg$I (introducción de la negación).}
+      Asumimos la hipótesis $A$ y alcanzamos $\bot$. Por HI, toda
+      interpretación $v$ que satisfaga las hipótesis exteriores
+      $\Delta$ y además satisfaga $A$ satisface $\bot$. Pero
+      ninguna interpretación posible satisface $\bot$ ($v(\bot) = 0$
+      siempre). Por tanto, ninguna interpretación que satisfaga
+      $\Delta$ puede hacer verdadera a $A$, de donde toda
+      interpretación que satisfaga $\Delta$ debe hacer falsa a $A$, es
+      decir, $v(\neg A) = 1$. 
+
+    \item \textbf{Reglas $\neg$E y X.} Si la línea $k$ es $\bot$, obtenida de $A$ y $\neg A$, ninguna interpretación puede satisfacer las hipótesis activas (haría verdaderas a la vez $A$ y $\neg A$), de modo que la propiedad invariante se cumple trivialmente. Por la misma razón, la regla X (que parte de una línea $\bot$) también la conserva.
+
+    \item \textbf{Regla IP.} Se razona como en $\neg$I: si toda interpretación que satisface $\Delta \cup \{\neg A\}$ satisface $\bot$, ninguna interpretación que satisfaga $\Delta$ hace falsa a $A$; luego todas ellas hacen verdadera a $A$.
+
+    \item El resto de reglas básicas (R, $\land$E, $\lor$I, $\lor$E, $\leftrightarrow$I, $\leftrightarrow$E) se justifican análogamente comprobando que respetan las condiciones semánticas de las conectivas definidas en el tema~\ref{cap:sem-prop}.
+\end{itemize}
+
+Las reglas derivadas (MT, DS, DNE, LEM, DeM) no necesitan un tratamiento aparte, porque cada aplicación de una de ellas puede sustituirse por una derivación que solo usa reglas básicas. Puesto que cada regla conserva la propiedad invariante y al finalizar la prueba todas las hipótesis provisionales han sido descargadas (quedando únicamente las premisas originales $\Gamma$), se concluye que si $\Gamma \vdash A$, entonces $\Gamma \models A$.
+\end{proof}
+
+\section{El teorema de completud: la prueba de Kalmár (1935)}
+
+En su versión débil, el teorema de completud proposicional establece que toda tautología es demostrable en el cálculo:
+\[
+\text{Si } \models A, \text{ entonces } \vdash A.
+\]
+
+La primera demostración publicada de la completud de la lógica proposicional es la de Emil Post (1921), a partir de su tesis doctoral de 1920
+(Paul Bernays había obtenido el resultado en 1918, en su tesis de
+habilitación, que no se publicó entonces; véase Zach, 1999). En 1935, el matemático húngaro László Kalmár
+publicó otra demostración, especialmente transparente, que es
+constructiva y algorítmica.
+
+Kalmár la formuló para un sistema axiomático; aquí la adaptamos a la
+deducción natural. Frente a otras demostraciones más abstractas, como
+la de Henkin (tema~\ref{cap:sem-lpo} y apéndice~\ref{ap:henkin}), el método de Kalmár proporciona un procedimiento explícito para traducir la tabla de verdad de una tautología en una derivación.
+
+\subsection{Notación y conceptos previos}
+
+Sea $A$ una fórmula cuyas variables proposicionales distintas son $p_1, p_2, \dots, p_n$.
+Dada una asignación de verdad $v$, definimos para cualquier fórmula $B$ la fórmula $B^v$ (la «fórmula evaluada» según $v$) como:
+\[
+B^v = \begin{cases}
+B & \text{si } v(B) = 1 \\
+\neg B & \text{si } v(B) = 0
+\end{cases}
+\]
+En particular, para cada letra proposicional $p_i$, el literal $p_i^v$ (la propia letra o su negación) recoge el valor que toma $p_i$ en la fila de la tabla que corresponde a $v$:
+\[
+p_i^v = \begin{cases}
+p_i & \text{si } v(p_i) = 1 \\
+\neg p_i & \text{si } v(p_i) = 0
+\end{cases}
+\]
+
+\begin{example}[Fórmulas evaluadas en una fila concreta]
+Si consideramos la asignación $v$ donde $v(p) = 1$ y $v(q) = 0$:
+\begin{itemize}
+    \item $p^v = p$
+    \item $q^v = \neg q$
+    \item Para la fórmula $A = p \to q$, como $v(p \to q) = 0$, tenemos $A^v = \neg(p \to q)$.
+\end{itemize}
+\end{example}
+
+\subsection{El lema fundamental de Kalmár}
+
+El núcleo de la demostración es el siguiente lema, que afirma que cada fila de una tabla de verdad puede reproducirse como una deducción formal:
+
+\begin{lemma}[Lema de Kalmár, 1935]\label{lema_kalmar}
+Sea $A$ una fórmula cuyas variables proposicionales están entre $p_1, \dots, p_n$. Para cualquier asignación de verdad $v$:
+\[
+p_1^v, p_2^v, \dots, p_n^v \vdash A^v
+\]
+\end{lemma}
+\noindent{}(Enunciamos el lema para fórmulas cuyas variables están \emph{entre} $p_1, \dots, p_n$, y no exactamente para las que tienen esas variables, porque en el paso inductivo lo aplicaremos a subfórmulas de $A$, que pueden contener menos variables).
+
+
+\begin{proof}
+La demostración procede por inducción sobre la complejidad sintáctica de la fórmula $A$ (número de conectivas):
+
+\textbf{Caso base ($A$ es una variable atómica $p_i$).}  
+La fórmula $A^v$ es idéntica a $p_i^v$. La deducción $p_1^v, \dots, p_n^v \vdash p_i^v$ es inmediata, pues $p_i^v$ forma parte del propio conjunto de premisas. (Como nuestro lenguaje incluye $\bot$, también es un caso base: $v(\bot) = 0$, así que $\bot^v = \neg\bot$, que se deriva sin premisas suponiendo $\bot$ y cerrando la caja con $\neg$I).
+
+
+\textbf{Paso inductivo.} Asumimos como hipótesis de inducción (HI) que el lema se cumple para las subfórmulas inmediatas de $A$. Examinamos los casos según la conectiva principal:
+
+\begin{enumerate}
+    \item \textbf{Caso de la negación ($A = \neg B$):}
+    \begin{itemize}
+        \item Si $v(B) = 1$, entonces $v(A) = 0$. Por tanto, $B^v = B$ y $A^v = \neg A = \neg\neg B$. Por HI, tenemos $p_1^v, \dots, p_n^v \vdash B$. De $B$ se deduce $\neg\neg B$: suponemos $\neg B$, obtenemos $\bot$ por $\neg$E con $B$ y cerramos la caja con $\neg$I. Luego $p_1^v, \dots, p_n^v \vdash A^v$.
+        \item Si $v(B) = 0$, entonces $v(A) = 1$. Por tanto, $B^v = \neg B$ y $A^v = A = \neg B$. Por HI, $p_1^v, \dots, p_n^v \vdash \neg B$, que es exactamente $A^v$.
+    \end{itemize}
+
+    \item \textbf{Caso del condicional ($A = B \to C$):}
+    \begin{itemize}
+        \item \textbf{Subcaso 1 ($v(B) = 0$).} Entonces $v(B \to C) = 1$, con lo que $B^v = \neg B$ y $A^v = B \to C$. Por HI, tenemos una prueba de $\neg B$. A partir de $\neg B$, derivamos $B \to C$ mediante deducción natural: abrimos una caja con hipótesis $B$, alcanzamos $\bot$ por $\neg$E con $\neg B$, aplicamos explosión $\text{X}$ para obtener $C$, y cerramos por $\to$I.
+        \item \textbf{Subcaso 2 ($v(C) = 1$).} Entonces $v(B \to C) = 1$, con lo que $C^v = C$ y $A^v = B \to C$. Por HI, tenemos una prueba de $C$. A partir de $C$, abrimos una caja con $B$, reiteramos $C$, y cerramos por $\to$I para obtener $B \to C$.
+        \item \textbf{Subcaso 3 ($v(B) = 1$ y $v(C) = 0$).} Entonces $v(B \to C) = 0$, con lo que $B^v = B$, $C^v = \neg C$ y $A^v = \neg(B \to C)$. Por HI tenemos pruebas de $B$ y de $\neg C$. Derivamos $\neg(B \to C)$ abriendo una caja con $B \to C$, aplicando $\to$E con $B$ para obtener $C$, generando $\bot$ con $\neg C$, y cerrando por $\neg$I.
+    \end{itemize}
+
+    \item \textbf{Caso de la disyunción ($A = B \lor C$):}
+    \begin{itemize}
+        \item \textbf{Subcaso 1 ($v(B) = 1$).} Entonces $A^v = B \lor C$. Por HI tenemos una prueba de $B$, y por $\lor$I obtenemos $B \lor C$.
+        \item \textbf{Subcaso 2 ($v(B) = 0$ y $v(C) = 1$).} Entonces $A^v = B \lor C$. Por HI tenemos una prueba de $C$, y por $\lor$I obtenemos $B \lor C$.
+        \item \textbf{Subcaso 3 ($v(B) = 0$ y $v(C) = 0$).} Entonces $A^v = \neg(B \lor C)$. Por HI tenemos pruebas de $\neg B$ y de $\neg C$. Abrimos una caja con $B \lor C$ y aplicamos $\lor$E: suponiendo $B$ obtenemos $\bot$ con $\neg B$, y suponiendo $C$ obtenemos $\bot$ con $\neg C$. Así llegamos a $\bot$ y cerramos la caja con $\neg$I.
+    \end{itemize}
+
+    \item \textbf{Casos de la conjunción ($A = B \land C$) y del bicondicional ($A = B \leftrightarrow C$).}  
+    Se demuestran de modo análogo, aplicando las reglas I/E correspondientes a cada combinación de valores de verdad de las partes (ejercicio~\ref{e3-6}).
+\end{enumerate}
+En todos los casos, $p_1^v, \dots, p_n^v \vdash A^v$.
+\end{proof}
+
+\subsection{El colapso de premisas: cómo eliminar las hipótesis}
+
+El lema de Kalmár nos proporciona $2^n$ deducciones (una por cada fila de la tabla de verdad). Si la fórmula $A$ es una tautología ($\models A$), entonces en \emph{todas} las interpretaciones $v$ se cumple $v(A) = 1$, lo que significa que
+\[
+A^v = A \quad \text{para toda asignación } v.
+\]
+
+Por tanto, para cada combinación de valores de $p_1, \dots, p_{n-1}$, tendremos dos deducciones que solo difieren en el signo de la última variable, $p_n$:
+\begin{enumerate}
+    \item $p_1^v, \dots, p_{n-1}^v, p_n \vdash A$
+    \item $p_1^v, \dots, p_{n-1}^v, \neg p_n \vdash A$
+\end{enumerate}
+
+El paso siguiente consiste en eliminar la variable $p_n$ aplicando el principio de prueba por casos:
+
+\begin{lemma}[Lema de eliminación de premisas]\label{lema_eliminacion}
+Si $\Gamma, p \vdash A$ y $\Gamma, \neg p \vdash A$, entonces $\Gamma \vdash A$.
+\end{lemma}
+
+\begin{proof}
+Disponemos de una derivación de $A$ bajo la hipótesis $p$ (Derivación~1), y de otra derivación de $A$ bajo la hipótesis $\neg p$ (Derivación~2). La regla derivada del tercero excluido (LEM) permite descargar simultáneamente ambas hipótesis y concluir directamente $A$:
+\begin{center}
+$\begin{nd}[rules=myrules]
+    \hypo [\mbox{}] {} {\text{Premisas } \Gamma} \by{Prem.}{}
+    \open
+        \hypo [i] {i} {p} \by{Hip.}{}
+        \have [\mbox{}] {} {\vdots}
+        \have [j] {j} {A} \by{Deriv.~1}{}
+    \close
+    \open
+        \hypo [k] {k} {\lnot p} \by{Hip.}{}
+        \have [\mbox{}] {} {\vdots}
+        \have [l] {l} {A} \by{Deriv.~2}{}
+    \close
+    \have [\mbox{}] {} {A} \lem{i-j, k-l}
+\end{nd}$
+\end{center}
+La variable $p$ queda eliminada en un único paso inferencial, conservando únicamente las premisas $\Gamma$.
+\end{proof}
+
+\subsection{Demostración final del teorema de completud}
+
+\begin{theorem}[Completud proposicional]
+Si $\models A$, entonces $\vdash A$.
+\end{theorem}
+
+\begin{proof}
+Sea $A$ una tautología con variables $p_1, \dots, p_n$. (Si $A$ no tiene variables, como $\neg\bot$, el lema de Kalmár da directamente $\vdash A$).
+\begin{enumerate}
+    \item Por el lema de Kalmár (\ref{lema_kalmar}), puesto que $A$ es verdadera en las $2^n$ filas de su tabla, tenemos:
+    \[
+    p_1^{\pm}, p_2^{\pm}, \dots, p_{n-1}^{\pm}, p_n \vdash A \qquad\text{y}\qquad p_1^{\pm}, p_2^{\pm}, \dots, p_{n-1}^{\pm}, \neg p_n \vdash A
+    \]
+    donde cada $p_i^{\pm}$ representa indistintamente $p_i$ o $\neg p_i$, para cada una de las $2^{n-1}$ combinaciones posibles de signos de las primeras $n-1$ variables.
+    \item Aplicando el lema de eliminación (\ref{lema_eliminacion}) a cada pareja de pruebas, eliminamos la variable $p_n$, obteniendo $2^{n-1}$ pruebas de la forma:
+    \[
+    p_1^{\pm}, p_2^{\pm}, \dots, p_{n-1}^{\pm} \vdash A.
+    \]
+    \item Repetimos el mismo procedimiento eliminando sucesivamente $p_{n-1}, p_{n-2}, \dots$ hasta eliminar $p_1$.
+    \item Tras $n$ etapas de reducción se han descargado todas las premisas y se obtiene:
+    \[
+    \vdash A.
+    \qedhere
+    \]
+\end{enumerate}
+\end{proof}
+
+\subsection{De la completud débil a la completud fuerte: premisas finitas y compacidad}
+
+La demostración constructiva de Kalmár resuelve el problema de la completud débil: establece que toda tautología es deducible ($\models A \implies \vdash A$). ¿Cómo se traslada este resultado a la completud fuerte ($\Gamma \models A \implies \Gamma \vdash A$)? La respuesta requiere distinguir si el conjunto de premisas $\Gamma$ es finito o infinito.
+
+\subsubsection{Caso 1: conjuntos finitos de premisas (reducción a la completud débil)}
+
+Si el conjunto de premisas es finito, $\Gamma = \{B_1, B_2, \dots, B_k\}$, la completud fuerte se obtiene de modo elemental a partir de la completud débil:
+
+\begin{corollary}[Completud para conjuntos finitos de premisas]\label{corolario_completud_fuerte_finita}
+Sean $B_1, \dots, B_k$ y $A$ fórmulas proposicionales. Si $\{B_1, \dots, B_k\} \models A$, entonces $\{B_1, \dots, B_k\} \vdash A$.
+\end{corollary}
+\begin{proof}
+La deducción se construye en tres pasos:
+\begin{enumerate}
+    \item Por la versión semántica del teorema de la deducción (tema~\ref{cap:sem-prop}), $\{B_1, \dots, B_k\} \models A$ equivale a afirmar que la fórmula condicional que reúne las premisas es una tautología:
+    \[
+    \models (B_1 \land \dots \land B_k) \to A.
+    \]
+    \item Por el teorema de completud de Kalmár, al ser dicha fórmula una tautología, existe una prueba formal sin premisas en deducción natural:
+    \[
+    \vdash (B_1 \land \dots \land B_k) \to A.
+    \]
+    \item Supongamos ahora disponibles las premisas originales $\{B_1, \dots, B_k\}$. Aplicando de forma sucesiva la regla de introducción de la conjunción ($\land$I), formamos la conjunción $B_1 \land \dots \land B_k$. Aplicando entonces el \emph{modus ponens} ($\to$E) entre esta conjunción y el teorema demostrado en el paso 2, obtenemos la conclusión deseada:
+    \[
+    \{B_1, \dots, B_k\} \vdash A.
+    \qedhere
+    \]
+\end{enumerate}
+\end{proof}
+
+\subsubsection{Caso 2: conjuntos infinitos de premisas\ampliacion}
+
+Si $\Gamma$ es infinito, la completud fuerte también se cumple. Basta saber que, si $\Gamma \models A$, entonces $\Gamma_0 \models A$ para algún subconjunto finito $\Gamma_0 \subseteq \Gamma$ (\textbf{teorema de compacidad}; en el apéndice~\ref{ap:henkin} se enuncia, para primer orden, en la forma equivalente «un conjunto es satisfacible si lo son todos sus subconjuntos finitos»): el corolario~\ref{corolario_completud_fuerte_finita} da entonces $\Gamma_0 \vdash A$ y, como $\Gamma_0 \subseteq \Gamma$, también $\Gamma \vdash A$.
+
+Queda por demostrar la compacidad, que puede hacerse directamente, sin
+pasar por el cálculo. Por ejemplo, si el lenguaje tiene una cantidad
+numerable de variables, mediante el lema de König. Otra posibilidad es
+el método de Henkin del apéndice~\ref{ap:henkin}, que funciona igual
+en lógica proposicional y da directamente la completud fuerte. Con ese
+método el orden se invierte: primero se obtiene la completud fuerte y
+de ella se deduce la compacidad. En efecto, si $\Gamma \models A$,
+entonces $\Gamma \vdash A$; la derivación solo usa un subconjunto
+finito $\Gamma_0$ de premisas, luego $\Gamma_0 \vdash A$ y, por el
+teorema de corrección, $\Gamma_0 \models A$. 
+
+\section{Ejemplos completos del método de Kalmár}
+
+\practica{La aplicación \appkalmar{} sigue estos pasos para cualquier fórmula de hasta tres variables: la tabla de verdad, la derivación de cada fila según el lema y el colapso de las premisas con LEM, paso a paso y con un color para cada fila. Si la fórmula no es tautología ni contradicción, muestra dónde se bloquea el colapso.}
+
+\begin{example}[Una variable: el principio del tercero excluido]
+Demostremos mediante el método de Kalmár que $\models p \lor \neg p$ implica $\vdash p \lor \neg p$.
+La tabla de verdad tiene $2^1 = 2$ filas:
+\begin{center}
+\begin{tabular}{c|c}
+$p$ & $p \lor \neg p$ \\
+\hline
+1 & 1 \\
+0 & 1
+\end{tabular}
+\end{center}
+
+\textbf{Paso 1: aplicación del lema de Kalmár a cada fila.}
+\begin{itemize}
+    \item En la fila 1 ($v(p) = 1$) demostramos $p \vdash p \lor \neg p$:
+    \begin{center}
+    $\begin{nd}[rules=myrules]
+        \hypo [1] {1} {p} \by{Prem.}{}
+        \have [2] {2} {p \lor \lnot p} \oi{1}
+    \end{nd}$
+    \end{center}
+    \item En la fila 2 ($v(p) = 0$) demostramos $\neg p \vdash p \lor \neg p$:
+    \begin{center}
+    $\begin{nd}[rules=myrules]
+        \hypo [1] {1} {\lnot p} \by{Prem.}{}
+        \have [2] {2} {p \lor \lnot p} \oi{1}
+    \end{nd}$
+    \end{center}
+\end{itemize}
+
+\textbf{Paso 2: colapso de la variable $p$ mediante LEM.}  
+Combinamos ambas subpruebas aplicando directamente la regla del tercero excluido (LEM):
+\begin{center}
+$\begin{nd}[rules=myrules]
+    \open
+        \hypo [1] {1} {p} \by{Hip.}{}
+        \have [2] {2} {p \lor \lnot p} \oi{1}
+    \close
+    \open
+        \hypo [3] {3} {\lnot p} \by{Hip.}{}
+        \have [4] {4} {p \lor \lnot p} \oi{3}
+    \close
+    \have [5] {5} {p \lor \lnot p} \lem{1-2, 3-4}
+\end{nd}$
+\end{center}
+Se obtiene directamente $\vdash p \lor \neg p$ sin ninguna premisa.
+\end{example}
+
+\begin{example}[Dos variables: la ley de linealidad]\label{ej:kalmar-linealidad}
+Consideremos la fórmula $A = (p \to q) \lor (q \to p)$, que ya apareció en el ejercicio~\ref{e1-29} del tema~\ref{cap:dn-prop}. Su tabla de verdad es:
+\begin{center}
+\begin{tabular}{cc|c|c|c}
+$p$ & $q$ & $p \to q$ & $q \to p$ & $(p \to q) \lor (q \to p)$ \\
+\hline
+1 & 1 & 1 & 1 & \textbf{1} \\
+1 & 0 & 0 & 1 & \textbf{1} \\
+0 & 1 & 1 & 0 & \textbf{1} \\
+0 & 0 & 1 & 1 & \textbf{1}
+\end{tabular}
+\end{center}
+
+\textbf{Paso 1: las cuatro deducciones del lema de Kalmár.} Seguimos el caso de la disyunción del lema: si $v(p \to q) = 1$, derivamos $p \to q$ y aplicamos $\lor$I; si no, derivamos $q \to p$. Cada condicional se obtiene con el subcaso correspondiente del caso del condicional:
+\begin{enumerate}
+    \item Fila 1 ($p, q$): $p \to q$ por el subcaso 2 (suponemos $p$ y reiteramos $q$).
+    \item Fila 2 ($p, \neg q$): $p \to q$ es falso, así que derivamos $q \to p$ por el subcaso 1 (suponemos $q$, obtenemos $\bot$ con $\neg q$ y, por X, $p$).
+    \item Filas 3 ($\neg p, q$) y 4 ($\neg p, \neg q$): $p \to q$ por el subcaso 1 (suponemos $p$, obtenemos $\bot$ con $\neg p$ y, por X, $q$).
+\end{enumerate}
+
+\textbf{Paso 2: colapso de $q$ y de $p$ mediante LEM.} Colocamos cada derivación de fila dentro de las cajas de hipótesis correspondientes y aplicamos LEM dos veces sobre $q$ (dentro de las cajas de $p$ y de $\neg p$) y una vez sobre $p$:
+\begin{center}
+$\begin{nd}[rules=myrules]
+    \open
+        \hypo [1] {1} {p} \by{Hip.}{}
+        \open
+            \hypo [2] {2} {q} \by{Hip.}{}
+            \open
+                \hypo [3] {3} {p} \by{Hip.}{}
+                \have [4] {4} {q} \r{2}
+            \close
+            \have [5] {5} {p \to q} \ci{3-4}
+            \have [6] {6} {(p \to q) \lor (q \to p)} \oi{5}
+        \close
+        \open
+            \hypo [7] {7} {\lnot q} \by{Hip.}{}
+            \open
+                \hypo [8] {8} {q} \by{Hip.}{}
+                \have [9] {9} {\bot} \ne{7, 8}
+                \have [10] {10} {p} \x{9}
+            \close
+            \have [11] {11} {q \to p} \ci{8-10}
+            \have [12] {12} {(p \to q) \lor (q \to p)} \oi{11}
+        \close
+        \have [13] {13} {(p \to q) \lor (q \to p)} \lem{2-6, 7-12}
+    \close
+    \open
+        \hypo [14] {14} {\lnot p} \by{Hip.}{}
+        \open
+            \hypo [15] {15} {q} \by{Hip.}{}
+            \open
+                \hypo [16] {16} {p} \by{Hip.}{}
+                \have [17] {17} {\bot} \ne{14, 16}
+                \have [18] {18} {q} \x{17}
+            \close
+            \have [19] {19} {p \to q} \ci{16-18}
+            \have [20] {20} {(p \to q) \lor (q \to p)} \oi{19}
+        \close
+        \open
+            \hypo [21] {21} {\lnot q} \by{Hip.}{}
+            \open
+                \hypo [22] {22} {p} \by{Hip.}{}
+                \have [23] {23} {\bot} \ne{14, 22}
+                \have [24] {24} {q} \x{23}
+            \close
+            \have [25] {25} {p \to q} \ci{22-24}
+            \have [26] {26} {(p \to q) \lor (q \to p)} \oi{25}
+        \close
+        \have [27] {27} {(p \to q) \lor (q \to p)} \lem{15-20, 21-26}
+    \close
+    \have [28] {28} {(p \to q) \lor (q \to p)} \lem{1-13, 14-27}
+\end{nd}$
+\end{center}
+\textbf{Comentario.} La estructura de la derivación reproduce la de la tabla: el nivel exterior distingue $p$ y $\neg p$, el siguiente $q$ y $\neg q$, y cada una de las cuatro cajas de $q$ o de $\neg q$ es una fila. Las líneas 3--6, 8--12, 16--20 y 22--26 son las derivaciones del paso 1. El método no busca la prueba más corta (compárala con la que hayas encontrado en el ejercicio~\ref{e1-29}), sino una que existe siempre y se construye mecánicamente.
+\end{example}
+
+% \section{Significado conceptual del método de Kalmár}
+
+% El procedimiento constructivo de László Kalmár constituye uno de los resultados más lúcidos de la metalógica clásica. Frente a métodos no constructivos, proporciona un algoritmo transparente que conecta de manera directa la semántica de la verdad con el cálculo de la prueba:
+% \begin{enumerate}
+%     \item Cada fila de la tabla de verdad codifica un lema del cálculo: una garantía de que, bajo esas premisas atómicas, la fórmula (o su negación) se deduce formalmente en Fitch (lema de Kalmár).
+%     \item Si una fórmula es una tautología, el cálculo de deducción
+%       natural permite fusionar sistemáticamente las filas de dos en
+%       dos mediante la regla del tercero excluido (LEM), descargando
+%       sucesivamente las hipótesis hasta alcanzar una prueba sin
+%       premisas ($\vdash A$).
+% \end{enumerate}
+% La tabla de verdad de una tautología no es, por tanto, una matriz estática; contiene en su propia estructura finita toda la información necesaria para construir paso a paso su demostración formal.
+
+\section{Ejercicios para afianzar las ideas de la prueba de completud}
+
+Los siguientes ejercicios están diseñados para asimilar los mecanismos clave de la demostración de Kalmár y comprender la interacción entre sintaxis y semántica. Después de resolverlos, puedes compararlos con lo que construye la aplicación \appkalmar{} para las mismas fórmulas.
+
+\begin{pregunta}[Notación de Kalmár y fórmulas evaluadas: $p_i^v$ y $A^v$]\label{e3-1}
+Considera la fórmula $A = (p \lor q) \to \neg p$.
+\begin{enumerate}
+    \item Para la asignación $v_1$ dada por $v_1(p) = 1$ y $v_1(q) = 0$:
+    \begin{itemize}
+        \item Determina los literales $p^{v_1}$ y $q^{v_1}$.
+        \item Evalúa el valor de verdad $v_1(A)$ según las tablas de verdad.
+        \item Escribe la fórmula evaluada $A^{v_1}$.
+        \item Escribe la relación de derivabilidad que afirma el lema de Kalmár para esta fila.
+    \end{itemize}
+    \item Repite el análisis para la asignación $v_2$ dada por $v_2(p) = 0$ y $v_2(q) = 1$.
+\end{enumerate}
+
+\paragraph{Solución guiada:}
+\begin{enumerate}
+    \item Para $v_1$:
+    \begin{itemize}
+        \item Como $v_1(p) = 1$, $p^{v_1} = p$. Como $v_1(q) = 0$, $q^{v_1} = \neg q$.
+        \item Evaluamos la fórmula: $v_1(p \lor q) = 1$ y $v_1(\neg p) = 0$. Por tanto, $v_1((p \lor q) \to \neg p) = 0$.
+        \item Como $v_1(A) = 0$, la fórmula evaluada es su negación: $A^{v_1} = \neg((p \lor q) \to \neg p)$.
+        \item El lema de Kalmár garantiza que $p, \neg q \vdash \neg((p \lor q) \to \neg p)$.
+    \end{itemize}
+    \item Para $v_2$:
+    \begin{itemize}
+        \item Como $v_2(p) = 0$, $p^{v_2} = \neg p$. Como $v_2(q) = 1$, $q^{v_2} = q$.
+        \item Evaluamos la fórmula: $v_2(p \lor q) = 1$ y $v_2(\neg p) = 1$. Por tanto, $v_2((p \lor q) \to \neg p) = 1$.
+        \item Como $v_2(A) = 1$, la fórmula evaluada es ella misma: $A^{v_2} = (p \lor q) \to \neg p$.
+        \item El lema de Kalmár garantiza que $\neg p, q \vdash (p \lor q) \to \neg p$.
+    \end{itemize}
+\end{enumerate}
+
+\end{pregunta}
+
+\begin{pregunta}[Reproducción en deducción natural de una fila de la tabla]\label{e3-2}
+Considera la fórmula condicional $A = p \to q$ y la fila $v$ donde $v(p) = 1$ y $v(q) = 0$. 
+Puesto que en esta fila el condicional es falso ($v(A) = 0$), el lema de Kalmár afirma que existe una prueba formal en deducción natural de:
+\[
+p, \neg q \vdash \neg(p \to q)
+\]
+Construye la derivación formal completa en el cálculo de Fitch utilizando únicamente reglas de introducción y eliminación.
+
+\paragraph{Solución guiada.}
+La estrategia consiste en abrir una hipótesis provisional con $p \to
+q$, obtener $q$ mediante el \emph{modus ponens} con la premisa $p$,
+usar $\neg q$ para alcanzar una contradicción, y cerrar mediante $\neg$I:
+\begin{center}
+$\begin{nd}[rules=myrules]
+    \hypo [1] {1} {p} \by{Prem.}{}
+    \hypo [2] {2} {\lnot q} \by{Prem.}{}
+    \open
+        \hypo [3] {3} {p \to q} \by{Hip.}{}
+        \have [4] {4} {q} \ce{3, 1}
+        \have [5] {5} {\bot} \by{$\neg$E}{2, 4}
+    \close
+    \have [6] {6} {\lnot(p \to q)} \by{$\neg$I}{3-5}
+\end{nd}$
+\end{center}
+Esta derivación reproduce el motivo por el que la combinación $p = 1$ y $q = 0$ hace falso el condicional.
+
+\end{pregunta}
+
+\begin{pregunta}[El colapso inductivo con la regla LEM]\label{e3-3}
+Supongamos que para una fórmula tautológica con dos variables $A(p, q)$ ya disponemos de las cuatro derivaciones formales proporcionadas por el lema de Kalmár (una por cada fila de la tabla):
+\begin{align*}
+\text{(1) } & p, q \vdash A & \text{(2) } & p, \neg q \vdash A \\
+\text{(3) } & \neg p, q \vdash A & \text{(4) } & \neg p, \neg q \vdash A
+\end{align*}
+Describe con precisión cómo la regla derivada del tercero excluido (LEM) permite reducir estas cuatro derivaciones hasta obtener una prueba sin premisas ($\vdash A$).
+
+\paragraph{Solución guiada.}
+El procedimiento de colapso se desarrolla en dos niveles:
+\begin{enumerate}
+    \item \textbf{Nivel 1 (eliminación de la variable $q$):}
+    \begin{itemize}
+        \item Tomamos las derivaciones (1) y (2). En ambas, la premisa $p$ es común. Abrimos dos subpruebas: una que supone $q$ y concluye $A$, y otra que supone $\neg q$ y concluye $A$. Aplicando la regla LEM sobre las dos subpruebas, descargamos $q$ y obtenemos una nueva derivación: $p \vdash A$.
+        \item Tomamos las derivaciones (3) y (4). La premisa $\neg p$ es común. Procediendo de modo idéntico con dos subpruebas bajo $q$ y $\neg q$, la regla LEM descarga $q$ y produce: $\neg p \vdash A$.
+    \end{itemize}
+    \item \textbf{Nivel 2 (eliminación de la variable $p$).}
+    Disponemos ahora de dos deducciones: una que alcanza $A$ bajo la hipótesis $p$, y otra que alcanza $A$ bajo la hipótesis $\neg p$. Abriendo una subprueba bajo $p$ y otra bajo $\neg p$ y aplicando LEM sobre ambas, descargamos la última variable $p$, obteniendo la derivación final sin premisas:
+    \[
+    \vdash A.
+    \]
+\end{enumerate}
+
+\end{pregunta}
+
+\begin{pregunta}[¿Por qué falla el colapso si la fórmula no es tautológica?]\label{e3-4}
+Considera la fórmula $B = p \lor q$, que no es una tautología (es una contingencia que resulta falsa cuando $p$ y $q$ son ambas falsas).
+\begin{enumerate}
+    \item Escribe las derivaciones que garantiza el lema de Kalmár para:
+    \begin{itemize}
+        \item La fila $v_1$: $v_1(p) = 0$ y $v_1(q) = 1$.
+        \item La fila $v_2$: $v_2(p) = 0$ y $v_2(q) = 0$.
+    \end{itemize}
+    \item Explica por qué es imposible aplicar la regla LEM para eliminar la variable $q$ entre estas dos derivaciones y concluir $\neg p \vdash p \lor q$.
+    \item ¿Qué lección metalógica nos enseña este bloqueo?
+\end{enumerate}
+
+\paragraph{Solución guiada:}
+\begin{enumerate}
+    \item Evaluando la fórmula en ambas filas:
+    \begin{itemize}
+        \item En $v_1$, $v_1(p \lor q) = 1$. Por el lema de Kalmár, tenemos: $\neg p, q \vdash p \lor q$.
+        \item En $v_2$, $v_2(p \lor q) = 0$. Por el lema de Kalmár, tenemos: $\neg p, \neg q \vdash \neg(p \lor q)$.
+    \end{itemize}
+    \item La regla LEM exige que las dos subpruebas bajo $q$ y bajo $\neg q$ lleguen \emph{a la misma fórmula}:
+    \[
+    \text{Si } \Delta, q \vdash C \quad\text{y}\quad \Delta, \neg q \vdash C, \quad\text{entonces } \Delta \vdash C.
+    \]
+    En nuestro caso, la primera derivación concluye $p \lor q$, mientras que la segunda concluye su negación, $\neg(p \lor q)$. Al ser conclusiones distintas (de hecho, contradictorias entre sí), la regla LEM no es aplicable y el colapso queda bloqueado. Y ninguna otra derivación podría darnos $\neg p \vdash p \lor q$: la fila $v_2$ es un contraejemplo ($v_2(\neg p) = 1$ y $v_2(p \lor q) = 0$), así que $\neg p \not\models p \lor q$ y, por el teorema de corrección, $\neg p \nvdash p \lor q$.
+  \item \textbf{Lección metalógica.} El método de Kalmár solo produce pruebas de tautologías. Solo cuando una fórmula $A$ es verdadera en \emph{todas} las filas de la tabla de verdad, las derivaciones que da el lema, una por fila, concluyen todas en $A$. Basta una fila en la que la fórmula sea falsa para que su derivación concluya $\neg A$, y entonces la regla LEM no puede descargar todas las premisas.
+\end{enumerate}
+
+\end{pregunta}
+
+\begin{pregunta}[Paso constructivo de la completud débil a la fuerte]\label{e3-5}
+Supongamos demostrado que toda tautología es derivable sin premisas ($\models C \implies \vdash C$).
+Demuestra formalmente que si $\{B_1, B_2\} \models A$, entonces $\{B_1, B_2\} \vdash A$.
+Escribe el esquema general de la demostración formal en deducción natural.
+
+\paragraph{Solución guiada:}
+\begin{enumerate}
+    \item \textbf{Paso semántico.} Por definición de consecuencia lógica, en toda asignación donde $B_1$ y $B_2$ sean verdaderos, $A$ es verdadero. Por consiguiente, es imposible que $(B_1 \land B_2)$ sea verdadero y $A$ sea falso. Esto significa que la fórmula condicional es una tautología:
+    \[
+    \models (B_1 \land B_2) \to A.
+    \]
+    \item \textbf{Paso de completud débil.} Como dicha fórmula es una tautología, el teorema de Kalmár nos asegura la existencia de una demostración $\mathcal{D}$:
+    \[
+    \vdash (B_1 \land B_2) \to A.
+    \]
+    \item \textbf{Esquema formal en Fitch.} Tomando ahora $B_1$ y $B_2$ como premisas explícitas, podemos completar la derivación formal en muy pocas líneas:
+    \begin{center}
+    $\begin{nd}[rules=myrules]
+        \hypo [1] {1} {B_1} \by{Prem.}{}
+        \hypo [2] {2} {B_2} \by{Prem.}{}
+        \have [3] {3} {(B_1 \land B_2) \to A} \by{Teorema $\mathcal{D}$}{}
+        \have [4] {4} {B_1 \land B_2} \by{$\land$I}{1, 2}
+        \have [5] {5} {A} \ce{3, 4}
+    \end{nd}$
+    \end{center}
+    La línea 3 abrevia la demostración $\mathcal{D}$: como no usa premisas, sus líneas pueden copiarse en esta derivación. Esto demuestra de forma constructiva que la completud débil es suficiente para recuperar la completud fuerte en cualquier argumento con un número finito de premisas.
+\end{enumerate}
+
+\end{pregunta}
+
+\begin{pregunta}[Los casos de la conjunción y el bicondicional]\label{e3-6}
+Completa la demostración del lema de Kalmár para los casos que se dejaron indicados:
+\begin{enumerate}
+    \item $A = B \land C$. Distingue los casos según los valores $v(B)$ y $v(C)$ y describe cómo se obtiene $A^v$ a partir de las derivaciones de $B^v$ y $C^v$ que proporciona la hipótesis de inducción.
+    \item $A = B \leftrightarrow C$, del mismo modo.
+\end{enumerate}
+
+\paragraph{Solución guiada:}
+\begin{enumerate}
+    \item \textbf{Conjunción.}
+    \begin{itemize}
+        \item Si $v(B) = v(C) = 1$, entonces $A^v = B \land C$: de $B$ y $C$ se obtiene $B \land C$ por $\land$I.
+        \item Si $v(B) = 0$, entonces $A^v = \neg(B \land C)$: con la prueba de $\neg B$, suponemos $B \land C$, obtenemos $B$ por $\land$E, $\bot$ por $\neg$E y cerramos con $\neg$I.
+        \item Si $v(B) = 1$ y $v(C) = 0$, se procede igual con $\neg C$ (extrayendo $C$ por $\land$E).
+    \end{itemize}
+    \item \textbf{Bicondicional.}
+    \begin{itemize}
+        \item Si $v(B) = v(C) = 1$, entonces $A^v = B \leftrightarrow C$: aplicamos $\leftrightarrow$I con dos cajas; en la primera suponemos $B$ y reiteramos $C$, en la segunda suponemos $C$ y reiteramos $B$.
+        \item Si $v(B) = v(C) = 0$, también $A^v = B \leftrightarrow C$: en la caja de $B$ obtenemos $\bot$ con $\neg B$ y, por X, $C$; en la caja de $C$ obtenemos $\bot$ con $\neg C$ y, por X, $B$.
+        \item Si $v(B) = 1$ y $v(C) = 0$, entonces $A^v = \neg(B \leftrightarrow C)$: suponemos $B \leftrightarrow C$, obtenemos $C$ por $\leftrightarrow$E con $B$, $\bot$ con $\neg C$, y cerramos con $\neg$I.
+        \item Si $v(B) = 0$ y $v(C) = 1$, es simétrico: de $B \leftrightarrow C$ y $C$ obtenemos $B$, y $\bot$ con $\neg B$.
+    \end{itemize}
+\end{enumerate}
+\end{pregunta}
+
+\section*{Referencias bibliográficas}
+
+\begin{enumerate}
+    \item \textbf{Church, A.} (1956). \emph{Introduction to Mathematical Logic}, vol. I. Princeton University Press. [Capítulo I, §15, pp. 94--106: lema *151 (p. 98) y teorema *152, «si $B$ es una tautología, $\vdash B$» (p. 99), con el método de Kalmár adaptado al sistema P$_1$. La atribución a Kalmár está en la nota histórica del §29, pp. 163--164].
+    \item \textbf{Garrido, M.} (1974). \emph{Lógica simbólica}. Tecnos, Madrid. [Manual de referencia en español para la metalógica elemental].
+    \item \textbf{Gentzen, G.} (1934/1935). «Untersuchungen über das logische Schließen». \emph{Mathematische Zeitschrift}, vol. 39, pp. 176--210 y 405--431. [Nacimiento de la deducción natural].
+    \item \textbf{Kalmár, L.} (1935). «Über die Axiomatisierbarkeit des Aussagenkalküls». \emph{Acta Scientiarum Mathematicarum (Szeged)}, vol. 7, n.º 4, pp. 222--243. [Artículo fundacional de la prueba constructiva de completud].
+    \item \textbf{Kleene, S. C.} (1967). \emph{Mathematical Logic}. John Wiley \& Sons. [Capítulo I: análisis de la completud del cálculo proposicional].
+    \item \textbf{Mendelson, E.} (1997). \emph{Introduction to Mathematical Logic} (4.ª ed.). Chapman \& Hall. [§1.4: lema 1.13 (lema de Kalmár, p. 41) y proposición 1.14, teorema de completud (p. 42), cuya demostración Mendelson atribuye a Kalmár (1935)].
+    \item \textbf{Post, E. L.} (1921). «Introduction to a general theory of elementary propositions». \emph{American Journal of Mathematics}, vol. 43, n.º 3, pp. 163--185. [Primera demostración publicada de la completud proposicional].
+    \item \textbf{Zach, R.} (1999). «Completeness before Post: Bernays, Hilbert, and the development of propositional logic». \emph{The Bulletin of Symbolic Logic}, vol. 5, n.º 3, pp. 331--366. [Sobre la demostración de completud de Bernays de 1918].
+\end{enumerate}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "ApuntesLogica"
+%%% End:

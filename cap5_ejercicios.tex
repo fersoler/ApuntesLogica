@@ -1,0 +1,197 @@
+% -*- coding: utf-8 -*-
+\begin{quote}
+\small \textbf{Instrucciones.} Estos ejercicios usan sus propios predicados, así que se hacen a lápiz. Para practicar más la formalización, la evaluación de fórmulas y los contramodelos, usa la aplicación \appmundo{}, con su diccionario de formas, tamaños, colores y posiciones.
+\end{quote}
+
+\section*{Bloque 1: formalización de enunciados del lenguaje natural en LPO}
+\textit{En este bloque practicamos la formalización de enunciados al
+  lenguaje de la lógica de predicados.}
+
+\begin{pregunta}[Enunciados categóricos y propiedades individuales]\label{e5-1}
+Formaliza los siguientes enunciados utilizando los símbolos de predicado indicados entre paréntesis:
+\begin{enumerate}
+    \item Las manzanas y las naranjas son gustosas y nutritivas.  
+    ($M(x)$: «$x$ es una manzana»; $N(x)$: «$x$ es una naranja»; $G(x)$: «$x$ es gustosa»; $U(x)$: «$x$ es nutritiva»).
+    \item Hay alimentos que solo se pueden comer si han sido cocinados.  
+    ($A(x)$: «$x$ es un alimento»; $C(x)$: «$x$ se puede comer»; $K(x)$: «$x$ ha sido cocinado»).
+    \item Sin frenos, no hay ningún coche seguro.  
+    ($F(x)$: «$x$ tiene frenos»; $C(x)$: «$x$ es un coche»; $S(x)$: «$x$ es seguro»).
+    \item No todo el mundo es rico, culto y educado, ni todos los ricos son educados y cultos.  
+    ($R(x)$: «$x$ es rico»; $C(x)$: «$x$ es culto»; $E(x)$: «$x$ es educado». Dominio: todas las personas).
+    \item No todas las cosas compradas a bajo precio son delicadas y quebradizas.  
+    ($C(x)$: «$x$ es una cosa»; $B(x)$: «$x$ ha sido comprada a bajo precio»; $L(x)$: «$x$ es delicada»; $Q(x)$: «$x$ es quebradiza»).
+\end{enumerate}
+\end{pregunta}
+
+\begin{pregunta}[Relaciones, cuantificación e identidad]\label{e5-2}
+Dado el predicado binario $A(x, y)$ («$x$ ama a $y$») y las constantes individuales $a$ (Antonio) y $b$ (Belén), formaliza los siguientes enunciados:
+\begin{enumerate}
+    \item Antonio ama a Belén pero Belén no ama a Antonio.
+    \item Todo el mundo ama a Belén.
+    \item Belén ama a alguien que también la ama a ella.
+    \item Belén ama a alguien que no es Antonio (lo cual no implica que no ame a Antonio).
+    \item Antonio siempre es correspondido en su amor.
+    \item Belén ama a una sola persona que no es ella misma.
+    \item Antonio ama exactamente a dos personas (véase la sección~\ref{sec:cuantificadores-numericos}).
+    \item Todo el mundo se ama a sí mismo.
+    \item Todo el que ama es correspondido.
+    \item Todo el que ama es amado.
+    \item Hay quien no es correspondido en su amor.
+    \item Todo el mundo ama a alguien distinto de sí mismo.
+\end{enumerate}
+\end{pregunta}
+
+\begin{pregunta}\label{e5-3}
+Utilizando los predicados:
+\begin{itemize}
+    \item $A(x, y)$: «$x$ aprueba la asignatura $y$»
+    \item $E(x)$: «$x$ estudia filosofía»
+    \item $F(x, y)$: «la asignatura favorita de $x$ es $y$»
+    \item $S(x)$: «$x$ es una asignatura»
+\end{itemize}
+y las constantes individuales $a$ (Antonio), $b$ (Belén) y $l$ (Lógica), formaliza los siguientes enunciados:
+\begin{enumerate}
+    \item La lógica no es la asignatura favorita de ningún estudiante de filosofía.
+    \item Hay al menos dos estudiantes de filosofía distintos que tienen la misma asignatura favorita.
+    \item La asignatura favorita de Antonio no es la misma que la de Belén.
+    \item Antonio y Belén aprueban exactamente las mismas asignaturas.
+    \item Todos los estudiantes de filosofía cuya asignatura favorita es la lógica, la aprueban.
+    \item Belén no aprueba la asignatura favorita de Antonio.
+    \item Belén aprueba todas las asignaturas que Antonio suspende (entiende que suspender es no aprobar).
+    \item La lógica no es la asignatura favorita de ningún estudiante de filosofía que la suspenda.
+\end{enumerate}
+\end{pregunta}
+
+\begin{pregunta}[Anidamiento de cuantificadores]\label{e5-anid}
+Formaliza los siguientes enunciados, indicando el diccionario:
+\begin{enumerate}
+    \item Todo filósofo ha leído a algún clásico.
+    \item Hay un clásico que todos los filósofos han leído.
+    \item Ningún estudiante aprueba todas las asignaturas.
+    \item Toda asignatura tiene algún estudiante que no la aprueba.
+    \item Hay un profesor al que no entiende ninguno de sus alumnos.
+\end{enumerate}
+¿Cuál de los enunciados 1 y 2 implica al otro? Da una estructura que muestre que el otro no lo implica.
+\end{pregunta}
+
+\begin{pregunta}[Cantidad y descripciones\ampliacion]\label{e5-cant}
+Formaliza sin usar functores ni los operadores $\iota$ y $\varepsilon$:
+\begin{enumerate}
+    \item Hay al menos tres filósofos presocráticos.
+    \item Belén suspende como mucho una asignatura.
+    \item Hay exactamente dos asignaturas que Belén no aprueba.
+    \item El autor de la \emph{Ética a Nicómaco} fue discípulo de Platón.
+    \item La montaña de oro no existe (según el análisis de Russell).
+\end{enumerate}
+\end{pregunta}
+
+\section*{Bloque 2: evaluación de fórmulas y verdad en estructuras}
+
+\begin{pregunta}[Diseño de modelos]\label{e5-4}
+Considera las oraciones formalizadas en el ejercicio~\ref{e5-2} sobre el predicado $A(x, y)$ («amar»). Diseña una estructura concreta $\mathcal{M} = \langle D, I \rangle$ con un dominio finito de cuatro personas $D = \{1, 2, 3, 4\}$ con $I(a) = 1$ e $I(b) = 2$ donde se verifiquen simultáneamente:
+\begin{enumerate}
+    \item Belén ama a alguien que también la ama a ella ($\exists x (A(b, x) \land A(x, b))$).
+    \item Antonio siempre es correspondido en su amor ($\forall x (A(a, x) \to A(x, a))$).
+    \item Hay quien no es correspondido en su amor ($\exists x \exists y (A(x, y) \land \neg A(y, x))$).
+\end{enumerate}
+Define explícitamente el conjunto de pares $I(A) \subseteq D \times D$ y justifica por qué satisface las tres fórmulas.
+\end{pregunta}
+
+\begin{pregunta}[Justificación semántica del silogismo clásico]\label{e5-5}
+Demuestra formalmente, utilizando únicamente las definiciones semánticas de verdad y modelo, que el siguiente argumento es válido:
+\begin{quote}
+\textit{Los caracoles son gasterópodos.}\\
+\textit{Los gasterópodos son moluscos.}\\
+\textit{Por tanto, los caracoles son moluscos.}
+\end{quote}
+\textit{Pista.} Formaliza las premisas como $\forall x (C(x) \to
+G(x))$ y $\forall x (G(x) \to M(x))$, y la conclusión como $\forall x
+(C(x) \to M(x))$. Supón una estructura arbitraria $\mathcal{M} =
+\langle D, I \rangle$ que hace verdaderas las premisas y razona para
+cualquier elemento $d \in D$ observando que $I(C) \subseteq I(G)
+\subseteq I(M)$. 
+\end{pregunta}
+
+\begin{pregunta}[Evaluación en una estructura aritmética infinita]\label{e5-6}
+Sea la estructura $\mathcal{M} = \langle D, I \rangle$, donde $D = \mathbb{N} = \{0, 1, 2, 3, \dots\}$, $I(P)$ son los números pares, $I(Q)$ los números primos, e $I(R) = \le$. Determina si son verdaderas o falsas en $\mathcal{M}$:
+\begin{enumerate}
+    \item $\forall x \exists y R(x, y)$
+    \item $\exists y \forall x R(y, x)$
+    \item $\forall x \forall y (R(x, y) \lor R(y, x))$
+    \item $\forall x (P(x) \to \exists y (Q(y) \land R(x, y)))$
+    \item $\forall x \forall y ((R(x, y) \land x \neq y) \to \exists z (R(x, z) \land R(z, y) \land z \neq x \land z \neq y))$
+\end{enumerate}
+\end{pregunta}
+
+\section*{Bloque 3: construcción de contramodelos y comparación semántica}
+
+\begin{pregunta}[Diferenciación semántica de prefijos de cuantificadores]\label{e5-7}
+Considera las siguientes cinco sentencias sobre una relación binaria $R$:
+\begin{enumerate}
+    \item $\exists x \exists y R(x, y)$
+    \item $\forall x \forall y R(x, y)$
+    \item $\exists x \forall y R(x, y)$
+    \item $\forall x \exists y R(x, y)$
+    \item $\exists y \forall x R(x, y)$
+\end{enumerate}
+Proporciona estructuras con dominio $D =
+\{1, 2\}$ que muestren que ninguna de ellas es equivalente a otra (por ejemplo,
+una estructura donde la fórmula 4 sea verdadera pero la 3 sea
+falsa). ¿Hay alguna(s) que sea consecuencia lógica de otra(s)?\\
+\textit{Pista.} Presta atención a la diferencia entre $\forall x \exists y R(x, y)$ (donde para cada $x$ puede elegirse un $y$ potencialmente distinto) y $\exists y \forall x R(x, y)$ (donde un mismo $y$ debe servir para todos los $x$).
+\end{pregunta}
+
+\begin{pregunta}[Refutación de falacias formales mediante contramodelos]\label{e5-8}
+Construye explícitamente estructuras $\mathcal{M} = \langle D, I \rangle$ que hagan verdaderas todas las premisas y falsa la conclusión para refutar:
+\begin{enumerate}
+    \item $\forall x (P(x) \lor Q(x)) \ \not\models \ \forall x P(x) \lor \forall x Q(x)$
+    \item $\forall x (P(x) \to Q(x)), \ \exists x \neg P(x) \ \not\models \ \exists x \neg Q(x)$
+    \item $\forall x (P(x) \to Q(x)), \ \exists x Q(x) \ \not\models \ \exists x P(x)$
+    \item $\forall x (P(x) \to Q(x)), \ \neg P(a) \ \not\models \ \neg Q(a)$
+\end{enumerate}
+\end{pregunta}
+
+\section*{Bloque 4: requisitos de cardinalidad del dominio}
+
+\begin{pregunta}[Condiciones de tamaño sobre el universo de discurso]\label{e5-9}
+Justifica qué requisitos impone cada una de las siguientes fórmulas a la cardinalidad del dominio $D$ para que una estructura $\mathcal{M} = \langle D, I \rangle$ pueda satisfacerlas:
+\begin{enumerate}
+    \item $\exists x \exists y (x \neq y)$
+    \item $\exists x \exists y (x \neq y \land \forall z (z = x \lor z = y))$
+    \item $\forall x \exists y R(x, y) \ \land \ \forall x \forall y (R(x, y) \to \neg R(y, x)) \ \land \ \forall x \forall y \forall z ((R(x, y) \land R(y, z)) \to R(x, z))$
+\end{enumerate}
+\end{pregunta}
+
+\begin{pregunta}[Estructuras de cardinalidad mínima para conjuntos de fórmulas]\label{e5-10}
+Para cada uno de los siguientes tres conjuntos de sentencias de primer orden, propón una estructura $\mathcal{M} = \langle D, I \rangle$ que lo satisfaga procurando que el dominio tenga la menor cardinalidad posible. Justifica en cada caso por qué no es posible hacerlo con un número menor de elementos:
+\begin{enumerate}
+    \item $\Gamma_1 = \{P(a), \ P(b), \ P(c), \ P(d)\}$.  
+    \textit{Pista.} Observa si el lenguaje exige explícitamente que las constantes se refieran a individuos distintos o si pueden coincidir.
+    \item $\Gamma_2 = \{\forall x (\neg P(x) \to R(x, x)), \ \forall x (P(x) \leftrightarrow \neg Q(x)), \ P(a), \ \exists x Q(x)\}$.
+    \item $\Gamma_3 = \{\exists x \exists y \exists z (x \neq y \land y \neq z \land x \neq z), \ \forall x R(x, x), \ \forall x \forall y (R(x, y) \to R(y, x)), \ \forall x \forall y \forall z ((R(x, y) \land R(y, z)) \to R(x, z))\}$.
+\end{enumerate}
+\end{pregunta}
+
+\section*{Bloque 5: importación existencial}
+
+\begin{pregunta}[Darapti]\label{e5-11}
+Considera el modo silogístico Darapti: «todo $M$ es $P$; todo $M$ es $S$; por tanto, algún $S$ es $P$».
+\begin{enumerate}
+    \item Construye una estructura que muestre que $\forall x (M(x) \to P(x)), \ \forall x (M(x) \to S(x)) \not\models \exists x (S(x) \land P(x))$.
+    \item Demuestra en deducción natural que el argumento es válido si se añade la premisa $\exists x M(x)$.
+\end{enumerate}
+\end{pregunta}
+
+\begin{pregunta}[El cuadro de oposición]\label{e5-12}
+Sean A: $\forall x (S(x) \to P(x))$, E: $\forall x (S(x) \to \neg P(x))$, I: $\exists x (S(x) \land P(x))$ y O: $\exists x (S(x) \land \neg P(x))$.
+\begin{enumerate}
+    \item Muestra que A y O no pueden ser ambas verdaderas ni ambas falsas en ninguna estructura (son contradictorias). ¿Ocurre lo mismo con E e I?
+    \item Construye una estructura en la que A y E sean ambas verdaderas, y otra en la que I y O sean ambas falsas.
+    \item ¿Qué premisa habría que añadir para recuperar la subalternación (de A a I)?
+\end{enumerate}
+\end{pregunta}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "ApuntesLogica"
+%%% End:
