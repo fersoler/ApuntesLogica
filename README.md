@@ -1,6 +1,6 @@
 # Apuntes de Lógica
 
-Apuntes de la asignatura Lógica, 2.º del Grado en Filosofía de la Universidad de Sevilla (curso 2026/27). Autor: Fernando Soler Toscano.
+Apuntes de la asignatura Lógica, 2.º del Grado en Filosofía de la Universidad de Sevilla.
 
 - **El libro:** [`ApuntesLogica.pdf`](ApuntesLogica.pdf).
 - **Las aplicaciones web para practicar:** https://fersoler.github.io/AplicacionesLogica/ (código en [fersoler/AplicacionesLogica](https://github.com/fersoler/AplicacionesLogica), licencia GPLv3). La guía para los alumnos es [`guia_aplicaciones.pdf`](guia_aplicaciones.pdf).
