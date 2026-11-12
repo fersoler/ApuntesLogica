@@ -3,7 +3,7 @@
 Apuntes de la asignatura Lógica, 2.º del Grado en Filosofía de la Universidad de Sevilla.
 
 - **El libro:** [`ApuntesLogica.pdf`](ApuntesLogica.pdf).
-- **Las aplicaciones web para practicar:** https://fersoler.github.io/AplicacionesLogica/ (código en [fersoler/AplicacionesLogica](https://github.com/fersoler/AplicacionesLogica), licencia GPLv3). La guía para los alumnos es [`guia_aplicaciones.pdf`](guia_aplicaciones.pdf).
+- **Las aplicaciones web para practicar:** https://fersoler.github.io/AplicacionesLogica/ (código en [fersoler/AplicacionesLogica](https://github.com/fersoler/AplicacionesLogica), licencia GPLv3).
 
 ## Contenido
 
@@ -21,8 +21,6 @@ Apuntes de la asignatura Lógica, 2.º del Grado en Filosofía de la Universidad
 | 5. Semántica de la lógica de primer orden | `cap5_teoria.tex`, `cap5_ejercicios.tex` |
 | 6. El cálculo de tableaux | `cap6_teoria.tex`, `cap6_ejercicios.tex` |
 | Apéndices A–D: conjuntos, Henkin, resumen de reglas, soluciones | `cap_apendice_conjuntos.tex`, `apendice_henkin.tex`, `apendice_resumen_reglas.tex`, `apendice_soluciones.tex` |
-
-`guia_aplicaciones.tex` es un documento aparte, con su PDF.
 
 ## Compilar
 
