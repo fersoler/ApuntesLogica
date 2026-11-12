@@ -9,7 +9,7 @@ Apuntes de la asignatura Lógica, 2.º del Grado en Filosofía de la Universidad
 
 `ApuntesLogica.tex`, en la raíz, es el documento principal. El resto de los ficheros están en dos directorios:
 
-- **`comun/`:** el preámbulo (`preambulo_comun.tex`) y las marcas de revisión (`marcas_revision.tex`).
+- **`comun/`:** el preámbulo (`preambulo_comun.tex`).
 - **`capitulos/`:** los temas y los apéndices.
 
 | Tema | Ficheros de `capitulos/` |
