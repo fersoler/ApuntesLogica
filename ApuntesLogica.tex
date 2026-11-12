@@ -1,11 +1,11 @@
 % -*- coding: utf-8 -*-
 \documentclass[spanish,11pt,a4paper,openany]{book}
 
-\input{preambulo_comun.tex}
+\input{comun/preambulo_comun.tex}
 % Los capítulos se llaman «temas» en todo el texto: el encabezado dice «Tema 1»
 % en lugar de «Capítulo 1» (los apéndices siguen siendo «Apéndice A»...).
 \addto\captionsspanish{\renewcommand{\chaptername}{Tema}}
-\input{marcas_revision.tex} % marcas de revisión manual (ver COMO_REVISAR.md)
+\input{comun/marcas_revision.tex} % marcas de revisión manual (ver COMO_REVISAR.md)
 
 % Las páginas terminan donde termina su contenido, sin estirar los espacios
 % verticales cuando una derivación o un árbol no cabe y pasa a la página siguiente.
@@ -87,10 +87,10 @@ de introducción y eliminación, y aprendemos a
 construir derivaciones. 
 \end{resumentema}
 
-\input{cap1_teoria.tex}
+\input{capitulos/cap1_teoria.tex}
 
 \section{Ejercicios de deducción natural}
-\input{cap1_ejercicios.tex}
+\input{capitulos/cap1_ejercicios.tex}
 
 \chapter{Semántica de la lógica proposicional}\label{cap:sem-prop}
 \begin{resumentema}
@@ -98,10 +98,10 @@ En el tema~\ref{cap:dn-prop} aprendimos a construir derivaciones a partir de pre
 y reglas formales en el cálculo deductivo ($\vdash$). En este tema abordamos la perspectiva complementaria: la semántica ($\models$). Introducimos las nociones de interpretación, función de verdad y tabla de verdad, analizando cuándo una fórmula es una verdad lógica (tautología), cuándo dos fórmulas son lógicamente equivalentes, cuándo un argumento es semánticamente válido (consecuencia lógica) y cómo construir contraejemplos para refutar argumentos inválidos. También estudiamos cómo formalizar enunciados del lenguaje natural y discutimos los límites del condicional material.
 \end{resumentema}
 
-\input{cap2_teoria.tex}
+\input{capitulos/cap2_teoria.tex}
 
 \section{Ejercicios de semántica de la lógica proposicional}
-\input{cap2_ejercicios.tex}
+\input{capitulos/cap2_ejercicios.tex}
 
 \chapter{Metalógica proposicional: corrección y completud}\label{cap:meta-prop}
 \begin{resumentema}
@@ -117,7 +117,7 @@ presentamos la demostración constructiva de László Kalmár
 cómo transformar una tabla de verdad en una deducción formal. 
 \end{resumentema}
 
-\input{cap3_metalociga.tex}
+\input{capitulos/cap3_metalociga.tex}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \part{Lógica de primer orden}
@@ -139,10 +139,10 @@ de los asistentes de demostración y de su uso para verificar pruebas
 propuestas por modelos de lenguaje. 
 \end{resumentema}
 
-\input{cap4_teoria.tex}
+\input{capitulos/cap4_teoria.tex}
 
 \section{Ejercicios de deducción natural en LPO}
-\input{cap4_ejercicios.tex}
+\input{capitulos/cap4_ejercicios.tex}
 
 \chapter{Semántica de la lógica de primer orden}\label{cap:sem-lpo}
 \begin{resumentema}
@@ -157,10 +157,10 @@ propuestas por modelos de lenguaje.
   su naturaleza con el método constructivo de Kalmár.
 \end{resumentema}
 
-\input{cap5_teoria.tex}
+\input{capitulos/cap5_teoria.tex}
 
 \section{Ejercicios de formalización y semántica en LPO}
-\input{cap5_ejercicios.tex}
+\input{capitulos/cap5_ejercicios.tex}
 
 \chapter{El cálculo de tableaux}\label{cap:tableaux}
 \begin{resumentema}
@@ -176,10 +176,10 @@ propuestas por modelos de lenguaje.
   lógica de primer orden y su indecidibilidad (Church y Turing).
 \end{resumentema}
 
-\input{cap6_teoria.tex}
+\input{capitulos/cap6_teoria.tex}
 
 \section{Ejercicios de tableaux semánticos}
-\input{cap6_ejercicios.tex}
+\input{capitulos/cap6_ejercicios.tex}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \appendix
@@ -198,7 +198,7 @@ de finitud y numerabilidad, ilustrando cada noción con su aplicación
 en los temas del programa. 
 \end{resumentema}
 
-\input{cap_apendice_conjuntos.tex}
+\input{capitulos/cap_apendice_conjuntos.tex}
 
 \chapter{La demostración de Henkin (1949) del teorema de completud}\label{ap:henkin}
 \begin{resumentema}
@@ -208,13 +208,13 @@ en los temas del programa.
   Löwenheim-Skolem.
 \end{resumentema}
 
-\input{apendice_henkin.tex}
+\input{capitulos/apendice_henkin.tex}
 
 \chapter{Resumen de reglas}\label{ap:reglas}
-\input{apendice_resumen_reglas.tex}
+\input{capitulos/apendice_resumen_reglas.tex}
 
 \chapter{Soluciones de ejercicios seleccionados}\label{ap:soluciones}
-\input{apendice_soluciones.tex}
+\input{capitulos/apendice_soluciones.tex}
 
 \end{document}
 

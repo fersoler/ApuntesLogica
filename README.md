@@ -7,7 +7,12 @@ Apuntes de la asignatura Lógica, 2.º del Grado en Filosofía de la Universidad
 
 ## Contenido
 
-| Tema | Fichero |
+`ApuntesLogica.tex`, en la raíz, es el documento principal. El resto de los ficheros están en dos directorios:
+
+- **`comun/`:** el preámbulo (`preambulo_comun.tex`) y las marcas de revisión (`marcas_revision.tex`).
+- **`capitulos/`:** los temas y los apéndices.
+
+| Tema | Ficheros de `capitulos/` |
 |---|---|
 | 1. Deducción natural en lógica proposicional | `cap1_teoria.tex`, `cap1_ejercicios.tex` |
 | 2. Semántica de la lógica proposicional | `cap2_teoria.tex`, `cap2_ejercicios.tex` |
@@ -17,7 +22,7 @@ Apuntes de la asignatura Lógica, 2.º del Grado en Filosofía de la Universidad
 | 6. El cálculo de tableaux | `cap6_teoria.tex`, `cap6_ejercicios.tex` |
 | Apéndices A–D: conjuntos, Henkin, resumen de reglas, soluciones | `cap_apendice_conjuntos.tex`, `apendice_henkin.tex`, `apendice_resumen_reglas.tex`, `apendice_soluciones.tex` |
 
-`ApuntesLogica.tex` es el documento principal; `preambulo_comun.tex` y `marcas_revision.tex`, su preámbulo.
+`guia_aplicaciones.tex` es un documento aparte, con su PDF.
 
 ## Compilar
 
@@ -27,7 +32,7 @@ Con una instalación completa de TeX Live (usa, entre otros, los paquetes `fitch
 latexmk -pdf ApuntesLogica.tex
 ```
 
-La dirección de las aplicaciones está en la macro `\urlaplicaciones` de `preambulo_comun.tex`.
+La dirección de las aplicaciones está en la macro `\urlaplicaciones` de `comun/preambulo_comun.tex`.
 
 ## Erratas
 
