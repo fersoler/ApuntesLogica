@@ -36,6 +36,10 @@ La dirección de las aplicaciones está en la macro `\urlaplicaciones` de `comun
 
 Se pueden comunicar abriendo una *issue* en este repositorio.
 
+## Uso de herramientas de IA generativa
+
+Durante la elaboración de este material se ha usado Claude Code (Anthropic) para unificar materiales anteriores, redactar algunas secciones y generar ejemplos y ejercicios. El autor ha revisado el contenido y es responsable de él.
+
 ## Licencia
 
 [Creative Commons Atribución-CompartirIgual 4.0 Internacional (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/). El texto completo está en `LICENSE`.
